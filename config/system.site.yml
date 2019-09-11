@@ -1,7 +1,7 @@
 uuid: 60538b84-7510-475d-8065-28c6c1480f7a
 name: ugci-test
 mail: abanerji@uoguelph.ca
-slogan: ''
+slogan: 'Azure Test Site for CI'
 page:
   403: ''
   404: ''
