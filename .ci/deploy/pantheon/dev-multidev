@@ -13,7 +13,7 @@ set -eo pipefail
 # See: https://github.com/pantheon-systems/docker-build-tools-ci/blob/6.x/scripts/set-environment
 
 CI_BRANCH=${CI_BRANCH:-$BUILD_SOURCEBRANCHNAME}
-CI_BUILD_NUMBER=${CI_BUILD_NUMBER:-$BUILD_BUILDNUMBER}
+CI_BUILD_NUMBER=${CI_BUILD_NUMBER:-$BUILD_BUILDID}
 CI_PROJECT_NAME=${CI_PROJECT_NAME:-$BUILD_REPOSITORY_NAME}
 
 # Circle sets both $CIRCLE_PULL_REQUEST and $CI_PULL_REQUEST.
