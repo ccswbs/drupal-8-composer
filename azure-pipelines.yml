@@ -8,23 +8,29 @@ variables:
   phpVersion: 7.2
 
 steps:
-- displayName: 'Prepare build environment'
-  script: |
+- script: |
     sudo update-alternatives --set php /usr/bin/php$(phpVersion)
     sudo update-alternatives --set phar /usr/bin/phar$(phpVersion)
     sudo update-alternatives --set phpdbg /usr/bin/phpdbg$(phpVersion)
     sudo update-alternatives --set php-cgi /usr/bin/php-cgi$(phpVersion)
     sudo update-alternatives --set phar.phar /usr/bin/phar.phar$(phpVersion)
     php -version
+  displayName: 'Prepare build environment'
 
-- displayName: 'Static tests'
+- script: true
+  displayName: 'Static tests'
 
-- displayName: 'Build PHP'
+- script: true
+  displayName: 'Build PHP'
 
-- displayName: 'Deploy to Pantheon'
+- script: true
+  displayName: 'Deploy to Pantheon'
 
-- displayName: 'Behat tests'
+- script: true
+  displayName: 'Behat tests'
 
-- displayName: 'Visual regression test'
+- script: true
+  displayName: 'Visual regression test'
 
-- displayName: 'Composer lock updater'
+- script: true
+  displayName: 'Composer lock updater'
