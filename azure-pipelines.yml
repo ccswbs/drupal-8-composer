@@ -1,5 +1,20 @@
 # Build, test, and deploy the content hub.
 # See: https://docs.microsoft.com/azure/devops/pipelines/languages/php
+#=========================================================================
+# In addition to the environment variables defined in this file, also
+# add the following variables in the Azure Pipelines UI.
+#
+# See: https://docs.microsoft.com/en-us/azure/devops/pipelines/process/variables
+#
+# TERMINUS_SITE:  Name of the Pantheon site to run tests on, e.g. my_site
+# TERMINUS_TOKEN: The Pantheon machine token
+# DEVOPS_TOKEN:   The Azure DevOps personal access token
+# GIT_EMAIL:      The email address to use when making commits
+#
+# TEST_SITE_NAME: The name of the test site to provide when installing.
+# ADMIN_PASSWORD: The admin password to use when installing.
+# ADMIN_EMAIL:    The email address to give the admin when installing.
+#=========================================================================
 
 pool:
   vmImage: 'Ubuntu 16.04'
@@ -23,7 +38,7 @@ steps:
 - script: true
   displayName: 'Build PHP'
 
-- script: true
+- script: ./.ci/deploy/pantheon/dev-multidev
   displayName: 'Deploy to Pantheon'
 
 - script: true
