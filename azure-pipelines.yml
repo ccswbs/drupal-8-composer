@@ -1,0 +1,30 @@
+# Build, test, and deploy the content hub.
+# See: https://docs.microsoft.com/azure/devops/pipelines/languages/php
+
+pool:
+  vmImage: 'Ubuntu 16.04'
+
+variables:
+  phpVersion: 7.2
+
+steps:
+- displayName: 'Prepare build environment'
+  script: |
+    sudo update-alternatives --set php /usr/bin/php$(phpVersion)
+    sudo update-alternatives --set phar /usr/bin/phar$(phpVersion)
+    sudo update-alternatives --set phpdbg /usr/bin/phpdbg$(phpVersion)
+    sudo update-alternatives --set php-cgi /usr/bin/php-cgi$(phpVersion)
+    sudo update-alternatives --set phar.phar /usr/bin/phar.phar$(phpVersion)
+    php -version
+
+- displayName: 'Static tests'
+
+- displayName: 'Build PHP'
+
+- displayName: 'Deploy to Pantheon'
+
+- displayName: 'Behat tests'
+
+- displayName: 'Visual regression test'
+
+- displayName: 'Composer lock updater'
