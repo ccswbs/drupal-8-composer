@@ -19,7 +19,7 @@
 pool:
   vmImage: 'Ubuntu 16.04'
 
-container: swarmnyc/pantheon-build-tools-ci
+container: quay.io/pantheon-public/build-tools-ci:6.x
 
 variables:
   phpVersion: 7.2
