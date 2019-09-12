@@ -19,8 +19,6 @@
 pool:
   vmImage: 'Ubuntu 16.04'
 
-container: quay.io/pantheon-public/build-tools-ci:6.x
-
 variables:
   phpVersion: 7.2
 
