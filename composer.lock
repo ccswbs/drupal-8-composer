@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "8ef8cc53ed27c341b7fc658185d153b7",
+    "content-hash": "0b9b688210c136c268d070ab16e3c8a3",
     "packages": [
         {
             "name": "alchemy/zippy",
@@ -437,6 +437,54 @@
             "time": "2019-03-08T16:55:03+00:00"
         },
         {
+            "name": "consolidation/comments",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/consolidation/comments.git",
+                "reference": "908832ce3c8174a9414d741913543fd058aac5fb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/consolidation/comments/zipball/908832ce3c8174a9414d741913543fd058aac5fb",
+                "reference": "908832ce3c8174a9414d741913543fd058aac5fb",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.0"
+            },
+            "require-dev": {
+                "phpunit/php-code-coverage": "~2|~4",
+                "phpunit/phpunit": "^4.8",
+                "satooshi/php-coveralls": "^1.0",
+                "squizlabs/php_codesniffer": "^2.8",
+                "symfony/yaml": "^3.1"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Consolidation\\Comments\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Greg Anderson",
+                    "email": "greg.1.anderson@greenknowe.org"
+                }
+            ],
+            "description": "A tool for preserving comments, e.g. when parsing YAML files.",
+            "time": "2019-07-30T05:52:24+00:00"
+        },
+        {
             "name": "consolidation/config",
             "version": "1.2.1",
             "source": {
@@ -516,6 +564,73 @@
             ],
             "description": "Provide configuration services for a commandline tool.",
             "time": "2019-03-03T19:37:04+00:00"
+        },
+        {
+            "name": "consolidation/filter-via-dot-access-data",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/consolidation/filter-via-dot-access-data.git",
+                "reference": "a53e96c6b9f7f042f5e085bf911f3493cea823c6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/consolidation/filter-via-dot-access-data/zipball/a53e96c6b9f7f042f5e085bf911f3493cea823c6",
+                "reference": "a53e96c6b9f7f042f5e085bf911f3493cea823c6",
+                "shasum": ""
+            },
+            "require": {
+                "dflydev/dot-access-data": "^1.1.0",
+                "php": ">=5.5.0"
+            },
+            "require-dev": {
+                "consolidation/robo": "^1.2.3",
+                "g1a/composer-test-scenarios": "^3",
+                "knplabs/github-api": "^2.7",
+                "php-coveralls/php-coveralls": "^1",
+                "php-http/guzzle6-adapter": "^1.1",
+                "phpunit/phpunit": "^5",
+                "squizlabs/php_codesniffer": "^2.8",
+                "symfony/console": "^2.8|^3|^4"
+            },
+            "type": "library",
+            "extra": {
+                "scenarios": {
+                    "phpunit5": {
+                        "require-dev": {
+                            "phpunit/phpunit": "^5.7.27"
+                        },
+                        "remove": [
+                            "php-coveralls/php-coveralls"
+                        ],
+                        "config": {
+                            "platform": {
+                                "php": "5.6.33"
+                            }
+                        }
+                    }
+                },
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Consolidation\\Filter\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Greg Anderson",
+                    "email": "greg.1.anderson@greenknowe.org"
+                }
+            ],
+            "description": "This project uses dflydev/dot-access-data to provide simple output filtering for applications built with annotated-command / Robo.",
+            "time": "2019-01-18T06:05:07+00:00"
         },
         {
             "name": "consolidation/log",
@@ -3052,16 +3167,16 @@
         },
         {
             "name": "pantheon-systems/quicksilver-pushback",
-            "version": "2.0.0",
+            "version": "2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pantheon-systems/quicksilver-pushback.git",
-                "reference": "76336de6a5d6c8abe0829ff79b9edc70086751f0"
+                "reference": "e9e64afc0e3e02e611e87fa583075e4bd69876ca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pantheon-systems/quicksilver-pushback/zipball/76336de6a5d6c8abe0829ff79b9edc70086751f0",
-                "reference": "76336de6a5d6c8abe0829ff79b9edc70086751f0",
+                "url": "https://api.github.com/repos/pantheon-systems/quicksilver-pushback/zipball/e9e64afc0e3e02e611e87fa583075e4bd69876ca",
+                "reference": "e9e64afc0e3e02e611e87fa583075e4bd69876ca",
                 "shasum": ""
             },
             "require": {
@@ -3073,28 +3188,30 @@
                 "MIT"
             ],
             "description": "Push commits made via the Pantheon dashboard back to original GitHub repository.",
-            "time": "2019-08-28T09:58:06+00:00"
+            "time": "2019-09-12T18:18:26+00:00"
         },
         {
             "name": "pantheon-systems/terminus",
-            "version": "1.8.0",
+            "version": "2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pantheon-systems/terminus.git",
-                "reference": "5cdab290f4690f74630e238e434cc5d7c0a2e0e0"
+                "reference": "345a302a19737e086f2a9b976dedf4056c7b9b1d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pantheon-systems/terminus/zipball/5cdab290f4690f74630e238e434cc5d7c0a2e0e0",
-                "reference": "5cdab290f4690f74630e238e434cc5d7c0a2e0e0",
+                "url": "https://api.github.com/repos/pantheon-systems/terminus/zipball/345a302a19737e086f2a9b976dedf4056c7b9b1d",
+                "reference": "345a302a19737e086f2a9b976dedf4056c7b9b1d",
                 "shasum": ""
             },
             "require": {
                 "composer/semver": "^1.4",
-                "consolidation/output-formatters": "^3.2",
-                "consolidation/robo": "^1.1.0",
+                "consolidation/comments": "^1.0.2",
+                "consolidation/filter-via-dot-access-data": "^1.0",
+                "consolidation/output-formatters": "^3.5",
+                "consolidation/robo": "^1.4.4",
                 "guzzlehttp/guzzle": "^6.2",
-                "php": ">=5.5.9",
+                "php": ">=5.5.38",
                 "psy/psysh": "^0.8",
                 "symfony/console": "^3.3",
                 "symfony/finder": "~2.7|^3.2",
@@ -3103,10 +3220,9 @@
             },
             "require-dev": {
                 "behat/behat": "^3.2.2",
+                "php-coveralls/php-coveralls": "^2.1",
                 "php-vcr/php-vcr": "^1.4",
-                "phpunit/phpunit": "^4.0",
-                "satooshi/php-coveralls": "^1.0",
-                "sebastian/phpcpd": "^2.0",
+                "phpunit/phpunit": "^4.8.36",
                 "squizlabs/php_codesniffer": "^2.7"
             },
             "bin": [
@@ -3136,7 +3252,7 @@
                 "terminus",
                 "wordpress"
             ],
-            "time": "2018-03-30T07:56:54+00:00"
+            "time": "2019-09-03T21:08:45+00:00"
         },
         {
             "name": "paragonie/random_compat",
