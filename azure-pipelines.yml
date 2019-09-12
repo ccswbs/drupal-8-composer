@@ -20,7 +20,7 @@ steps:
 - script: ./.ci/test/static/run
   displayName: 'Static tests'
 
-- script: true
+- script: ./.ci/build/php
   displayName: 'Build PHP'
 
 - script: true
