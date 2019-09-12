@@ -55,18 +55,9 @@ TERMINUS_ENV=${TERMINUS_ENV:-$DEFAULT_ENV}
 # End of environment section
 # -----------------------------------------------------------------------------
 
-# Set git user information
-git config --global user.email "$GIT_EMAIL"
-git config --global user.name "$GIT_NAME"
-
-# Authenticate with Terminus
-$TERMINUS -n auth:login --machine-token="$TERMINUS_TOKEN"
 
 # Prepare for Pantheon
 composer run prepare-for-pantheon
-
-# Install build tools plugin
-composer run install-build-tools
 
 if [[ $CI_BRANCH != $DEFAULT_BRANCH ]]
 then

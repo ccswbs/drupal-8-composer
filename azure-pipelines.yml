@@ -23,14 +23,8 @@ variables:
   phpVersion: 7.2
 
 steps:
-- script: |
-    sudo update-alternatives --set php /usr/bin/php$(phpVersion)
-    sudo update-alternatives --set phar /usr/bin/phar$(phpVersion)
-    sudo update-alternatives --set phpdbg /usr/bin/phpdbg$(phpVersion)
-    sudo update-alternatives --set php-cgi /usr/bin/php-cgi$(phpVersion)
-    sudo update-alternatives --set phar.phar /usr/bin/phar.phar$(phpVersion)
-    php -version
-  displayName: 'Prepare build environment'
+- script: ./.ci/env/set
+  displayName: 'Initialize build environment'
 
 #- script: ./.ci/test/static/run
 #  displayName: 'Static tests'
@@ -49,3 +43,7 @@ steps:
 
 - script: true
   displayName: 'Composer lock updater'
+
+- script: ./.ci/env/clean
+  displayName: 'Clean up build environment'
+  condition: always()
