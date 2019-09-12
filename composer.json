@@ -54,7 +54,10 @@
         ]
     },
     "scripts": {
-        "install-build-tools": "composer create-project --no-dev -d $HOME/.terminus/plugins pantheon-systems/terminus-build-tools-plugin:^2.0.0-beta16",
+        "install-build-tools": [
+            "mkdir -p $HOME/.terminus/plugins",
+            "composer create-project --no-dev -d $HOME/.terminus/plugins pantheon-systems/terminus-build-tools-plugin:^2.0.0-beta16"
+        ],
         "build-assets": [
             "@prepare-for-pantheon",
             "composer install --optimize-autoloader --no-dev"
