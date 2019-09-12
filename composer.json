@@ -24,7 +24,7 @@
         "rvtraveller/qs-composer-installer": "^1.1",
         "webflo/drupal-core-strict": "^8.6.15",
         "zaporylie/composer-drupal-optimizations": "^1.0",
-        "pantheon-systems/terminus": "^2.0"
+        "pantheon-systems/terminus": "^1.0"
     },
     "require-dev": {
         "behat/behat": "3.*",
@@ -54,6 +54,7 @@
         ]
     },
     "scripts": {
+        "install-build-tools": "composer create-project --no-dev -d $HOME/.terminus/plugins pantheon-systems/terminus-build-tools-plugin:^2.0.0-beta12",
         "build-assets": [
             "@prepare-for-pantheon",
             "composer install --optimize-autoloader --no-dev"

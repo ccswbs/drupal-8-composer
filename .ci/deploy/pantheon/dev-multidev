@@ -18,6 +18,9 @@ $TERMINUS -n auth:login --machine-token="$TERMINUS_TOKEN"
 # Prepare for Pantheon
 composer run prepare-for-pantheon
 
+# Install build tools plugin
+composer run install-build-tools
+
 if [[ $BUILD_SOURCEBRANCHNAME != $DEFAULT_BRANCH ]]
 then
   # Create a new multidev environment (or push to an existing one)
