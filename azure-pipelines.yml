@@ -35,8 +35,8 @@ steps:
 #- script: ./.ci/test/static/run
 #  displayName: 'Static tests'
 
-#- script: ./.ci/build/php
-#  displayName: 'Build PHP'
+- script: ./.ci/build/php
+  displayName: 'Build PHP'
 
 - script: ./.ci/deploy/pantheon/dev-multidev
   displayName: 'Deploy to Pantheon'
