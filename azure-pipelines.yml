@@ -17,7 +17,7 @@ steps:
     php -version
   displayName: 'Prepare build environment'
 
-- script: true
+- script: ./.ci/test/static/run
   displayName: 'Static tests'
 
 - script: true
