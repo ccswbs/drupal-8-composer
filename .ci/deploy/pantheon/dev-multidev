@@ -62,30 +62,30 @@ composer run prepare-for-pantheon
 if [[ $CI_BRANCH != $DEFAULT_BRANCH ]]
 then
   # Create a new multidev environment (or push to an existing one)
-  $TERMINUS -n build:env:create "$TERMINUS_SITE.dev" "$TERMINUS_ENV" --yes
+  terminus -n build:env:create "$TERMINUS_SITE.dev" "$TERMINUS_ENV" --yes </dev/null
 else
   # Push to the dev environment
-  $TERMINUS -n build:env:push "$TERMINUS_SITE.dev" --yes
+  terminus -n build:env:push "$TERMINUS_SITE.dev" --yes </dev/null
 fi
 
 # Update the Drupal database
-$TERMINUS -n drush "$TERMINUS_SITE.$TERMINUS_ENV" -- updatedb -y
+terminus -n drush "$TERMINUS_SITE.$TERMINUS_ENV" -- updatedb -y </dev/null
 
 # If exported configuration is available, then import it.
 if [ -f "config/system.site.yml" ] ; then
-  $TERMINUS -n drush "$TERMINUS_SITE.$TERMINUS_ENV" -- config-import --yes
+  terminus -n drush "$TERMINUS_SITE.$TERMINUS_ENV" -- config-import --yes </dev/null
 fi
 
 # Clear Drupal cache
-$TERMINUS -n drush "$TERMINUS_SITE.$TERMINUS_ENV" -- cr
+terminus -n drush "$TERMINUS_SITE.$TERMINUS_ENV" -- cr </dev/null
 
 # Clear the environment cache
-$TERMINUS -n env:clear-cache $TERMINUS_SITE.$TERMINUS_ENV
+terminus -n env:clear-cache $TERMINUS_SITE.$TERMINUS_ENV </dev/null
 
 # Ensure secrets are set
-$TERMINUS -n secrets:set "$TERMINUS_SITE.$TERMINUS_ENV" token "$DEVOPS_TOKEN" --file='devops-secrets.json' --clear --skip-if-empty
+terminus -n secrets:set "$TERMINUS_SITE.$TERMINUS_ENV" token "$DEVOPS_TOKEN" --file='devops-secrets.json' --clear --skip-if-empty </dev/null
 
 # Delete old multidev environments associated
 # with a PR that has been merged or closed.
 # TODO: Make this work for Azure DevOps
-#$TERMINUS -n build:env:delete:pr $TERMINUS_SITE --yes
+#terminus -n build:env:delete:pr $TERMINUS_SITE --yes
