@@ -8,8 +8,53 @@ set -eo pipefail
 # Otherwise a multidev environment is used.
 #
 
-# Authenticate with Terminus
-terminus -n auth:login --machine-token="$TERMINUS_TOKEN"
+# -----------------------------------------------------------------------------
+# Set up environment
+# See: https://github.com/pantheon-systems/docker-build-tools-ci/blob/6.x/scripts/set-environment
+
+CI_BRANCH=${CI_BRANCH:-$BUILD_SOURCEBRANCHNAME}
+CI_BUILD_NUMBER=${CI_BUILD_NUMBER:-$BUILD_BUILDID}
+CI_PROJECT_NAME=${CI_PROJECT_NAME:-$BUILD_REPOSITORY_NAME}
+
+# Circle sets both $CIRCLE_PULL_REQUEST and $CI_PULL_REQUEST.
+PR_NUMBER=${PR_NUMBER:-$SYSTEM_PULLREQUEST_PULLREQUESTID}
+PR_NUMBER=${PR_NUMBER##*/}
+
+# Set up BASH_ENV if it was not set for us.
+BASH_ENV=${BASH_ENV:-$HOME/.bashrc}
+
+# Provide a default email address
+GIT_EMAIL=${GIT_EMAIL:-$BUILD_REQUESTEDFOREMAIL}
+GIT_NAME=${GIT_NAME:-$BUILD_REQUESTEDFORID}
+
+# We will also set the default site name to be the same as the repository name.
+DEFAULT_SITE=${DEFAULT_SITE:-$CI_PROJECT_NAME}
+# By default, we will make the main branch master.
+DEFAULT_BRANCH=${DEFAULT_BRANCH:-master}
+
+# If we are on the default branch.
+if [[ ${CI_BRANCH} == ${DEFAULT_BRANCH} ]] ; then
+  # Use dev as the environment.
+	DEFAULT_ENV=${DEFAULT_ENV:-dev}
+else
+  # Otherwise, name the environment after the CI build number.
+	DEFAULT_ENV=ci-$CI_BUILD_NUMBER
+fi
+
+# If there is a PR number provided, though, then we will use it instead.
+if [[ -n ${PR_NUMBER} ]] ; then
+  DEFAULT_ENV="pr-${PR_NUMBER}"
+fi
+
+CI_PR_URL=${CI_PR_URL:-$CIRCLE_PULL_REQUEST}
+CI_PROJECT_USERNAME=${CI_PROJECT_USERNAME:-$BUILD_REQUESTEDFORID}
+CI_PROJECT_REPONAME=${CI_PROJECT_REPONAME:-$BUILD_REPOSITORY_NAME}
+TERMINUS_SITE=${TERMINUS_SITE:-$DEFAULT_SITE}
+TERMINUS_ENV=${TERMINUS_ENV:-$DEFAULT_ENV}
+
+# End of environment section
+# -----------------------------------------------------------------------------
+
 
 # Prepare for Pantheon
 composer run prepare-for-pantheon
@@ -17,29 +62,30 @@ composer run prepare-for-pantheon
 if [[ $CI_BRANCH != $DEFAULT_BRANCH ]]
 then
   # Create a new multidev environment (or push to an existing one)
-  terminus -n build:env:create "$TERMINUS_SITE.dev" "$TERMINUS_ENV" --yes
+  terminus -n build:env:create "$TERMINUS_SITE.dev" "$TERMINUS_ENV" --yes </dev/null
 else
   # Push to the dev environment
-  terminus -n build:env:push "$TERMINUS_SITE.dev" --yes
+  terminus -n build:env:push "$TERMINUS_SITE.dev" --yes </dev/null
 fi
 
 # Update the Drupal database
-terminus -n drush "$TERMINUS_SITE.$TERMINUS_ENV" -- updatedb -y
+terminus -n drush "$TERMINUS_SITE.$TERMINUS_ENV" -- updatedb -y </dev/null
 
 # If exported configuration is available, then import it.
 if [ -f "config/system.site.yml" ] ; then
-  terminus -n drush "$TERMINUS_SITE.$TERMINUS_ENV" -- config-import --yes
+  terminus -n drush "$TERMINUS_SITE.$TERMINUS_ENV" -- config-import --yes </dev/null
 fi
 
 # Clear Drupal cache
-terminus -n drush "$TERMINUS_SITE.$TERMINUS_ENV" -- cr
+terminus -n drush "$TERMINUS_SITE.$TERMINUS_ENV" -- cr </dev/null
 
 # Clear the environment cache
-terminus -n env:clear-cache $TERMINUS_SITE.$TERMINUS_ENV
+terminus -n env:clear-cache $TERMINUS_SITE.$TERMINUS_ENV </dev/null
 
 # Ensure secrets are set
-terminus -n secrets:set "$TERMINUS_SITE.$TERMINUS_ENV" token "$GITHUB_TOKEN" --file='github-secrets.json' --clear --skip-if-empty
+terminus -n build:secrets:set "$TERMINUS_SITE.$TERMINUS_ENV" token "$DEVOPS_TOKEN" --file='devops-secrets.json' --clear --skip-if-empty </dev/null
 
 # Delete old multidev environments associated
 # with a PR that has been merged or closed.
-terminus -n build:env:delete:pr $TERMINUS_SITE --yes
+# TODO: Make this work for Azure DevOps
+#terminus -n build:env:delete:pr $TERMINUS_SITE --yes
