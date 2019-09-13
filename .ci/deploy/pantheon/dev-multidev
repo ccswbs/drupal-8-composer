@@ -83,7 +83,7 @@ terminus -n drush "$TERMINUS_SITE.$TERMINUS_ENV" -- cr </dev/null
 terminus -n env:clear-cache $TERMINUS_SITE.$TERMINUS_ENV </dev/null
 
 # Ensure secrets are set
-terminus -n secrets:set "$TERMINUS_SITE.$TERMINUS_ENV" token "$DEVOPS_TOKEN" --file='devops-secrets.json' --clear --skip-if-empty </dev/null
+terminus -n build:secrets:set "$TERMINUS_SITE.$TERMINUS_ENV" token "$DEVOPS_TOKEN" --file='devops-secrets.json' --clear --skip-if-empty </dev/null
 
 # Delete old multidev environments associated
 # with a PR that has been merged or closed.
