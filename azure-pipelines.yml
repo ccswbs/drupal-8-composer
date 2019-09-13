@@ -26,8 +26,8 @@ steps:
 - script: ./.ci/env/set
   displayName: 'Initialize build environment'
 
-#- script: ./.ci/test/static/run
-#  displayName: 'Static tests'
+- script: ./.ci/test/static/run
+  displayName: 'Static tests'
 
 - script: ./.ci/build/php
   displayName: 'Build PHP'
