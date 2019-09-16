@@ -5,7 +5,7 @@
 #
 
 # Authenticate with Terminus
-terminus -n auth:login --machine-token="$TERMINUS_TOKEN"
+terminus -n auth:login --machine-token="$TERMINUS_TOKEN" </dev/null
 
 # Source $BASH_ENV
 source $BASH_ENV
@@ -14,7 +14,7 @@ source $BASH_ENV
 set -ex
 
 # Create a drush alias file so that Behat tests can be executed against Pantheon.
-terminus alpha:aliases --no-db-url --only=$TERMINUS_SITE
+terminus alpha:aliases --no-db-url --only=$TERMINUS_SITE </dev/null
 drush sa @pantheon.$TERMINUS_SITE.$TERMINUS_ENV
 
 # Drush Behat driver fails without this option.

@@ -7,16 +7,16 @@ set -eo pipefail
 #
 
 # Authenticate with Terminus
-terminus -n auth:login --machine-token="$TERMINUS_TOKEN"
+terminus -n auth:login --machine-token="$TERMINUS_TOKEN" </dev/null
 
 # Restore the DB backup made before testing
 #terminus -n backup:restore $TERMINUS_SITE.$TERMINUS_ENV --element=database --yes
 
 # Clear Drupal cache
-terminus -n drush "$TERMINUS_SITE.$TERMINUS_ENV" cr
+terminus -n drush "$TERMINUS_SITE.$TERMINUS_ENV" cr </dev/null
 
 # Clear site cache
-terminus -n env:clear-cache $TERMINUS_SITE.$TERMINUS_ENV
+terminus -n env:clear-cache $TERMINUS_SITE.$TERMINUS_ENV </dev/null
 
 # Store artifacts
 export ARTIFACTS_DIR_URL="${CI_BUILD_URL}/artifacts/${CI_NODE_INDEX}/artifacts"
