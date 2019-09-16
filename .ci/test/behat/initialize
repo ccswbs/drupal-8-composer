@@ -7,11 +7,18 @@ set -eo pipefail
 # needed to run Behat tests.
 #
 
+echo "--------------"
+echo "TERMINUS_SITE: $TERMINUS_SITE"
+echo "TERMINUS_ENV: $TERMINUS_ENV"
+echo "--------------"
+
 # Authenticate with Terminus
 terminus -n auth:login --machine-token="$TERMINUS_TOKEN"
 
 # Run composer install again to get dev dependencies
 composer install --no-ansi --no-interaction --optimize-autoloader --no-progress
+
+echo "----Completed Composer Install----------"
 
 # Wake the multidev environment before running tests
 terminus -n env:wake $TERMINUS_SITE.$TERMINUS_ENV
