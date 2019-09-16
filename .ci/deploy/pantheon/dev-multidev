@@ -51,6 +51,7 @@ CI_PROJECT_USERNAME=${CI_PROJECT_USERNAME:-$BUILD_REQUESTEDFORID}
 CI_PROJECT_REPONAME=${CI_PROJECT_REPONAME:-$BUILD_REPOSITORY_NAME}
 TERMINUS_SITE=${TERMINUS_SITE:-$DEFAULT_SITE}
 TERMINUS_ENV=${TERMINUS_ENV:-$DEFAULT_ENV}
+echo "##vso[task.setvariable variable=TERMINUS_ENV]${TERMINUS_ENV}"
 
 # End of environment section
 # -----------------------------------------------------------------------------
