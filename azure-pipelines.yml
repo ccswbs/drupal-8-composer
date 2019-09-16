@@ -42,7 +42,7 @@ steps:
   displayName: 'Run Behat tests'
 
 - script: ./.ci/test/behat/cleanup
-  displayName: 'Run Behat tests'
+  displayName: 'Clean up Behat tests'
   condition: always()
 
 - script: true
