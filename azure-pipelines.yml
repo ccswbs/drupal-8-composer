@@ -45,6 +45,12 @@ steps:
   displayName: 'Clean up Behat tests'
   condition: always()
 
+- task: CopyFiles@2
+  displayName: "Copy Behat screenshots"
+  inputs:
+      contents: 'behat-screenshots/**'
+      targetFolder: '$(Build.ArtifactStagingDirectory)' 
+
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Behat artifacts'
   inputs:
