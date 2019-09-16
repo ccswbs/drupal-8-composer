@@ -20,8 +20,11 @@ composer create-project --no-dev -d $HOME/.terminus/plugins pantheon-systems/ter
 # Install Drush
 echo "----- installing drush ------"
 composer require drush/drush
+curl -OL https://github.com/drush-ops/drush-launcher/releases/download/0.6.0/drush.phar
+chmod +x drush.phar
+sudo mv drush.phar /usr/local/bin/drush
 drush status
-./drush status
+# ./drush status
 echo "----- completed installing drush ------"
 
 # Log in to Pantheon
