@@ -35,8 +35,15 @@ steps:
 - script: ./.ci/deploy/pantheon/dev-multidev
   displayName: 'Deploy to Pantheon'
 
-- script: true
-  displayName: 'Behat tests'
+- script: ./.ci/test/behat/initialize
+  displayName: 'Initialize Behat tests'
+
+- script: ./.ci/test/behat/run
+  displayName: 'Run Behat tests'
+
+- script: ./.ci/test/behat/cleanup
+  displayName: 'Run Behat tests'
+  condition: always()
 
 - script: true
   displayName: 'Visual regression test'
