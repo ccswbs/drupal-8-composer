@@ -13,17 +13,9 @@ source $BASH_ENV
 # Verbose mode and exit on errors
 set -ex
 
-echo "--------redirected-----"
 # Create a drush alias file so that Behat tests can be executed against Pantheon.
 terminus alpha:aliases --no-db-url --only=$TERMINUS_SITE </dev/null
-cat ~/.drush/pantheon.aliases.drushrc.php
-
-echo "--------not redirected-----"
-terminus alpha:aliases --no-db-url --only=$TERMINUS_SITE
-cat ~/.drush/pantheon.aliases.drushrc.php
-
-# drush sa @pantheon.$TERMINUS_SITE.$TERMINUS_ENV
-terminus -n drush sa @pantheon.$TERMINUS_SITE.$TERMINUS_ENV
+drush sa @pantheon.$TERMINUS_SITE.$TERMINUS_ENV
 
 # Drush Behat driver fails without this option.
 echo "\$options['strict'] = 0;" >> ~/.drush/pantheon.aliases.drushrc.php
