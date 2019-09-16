@@ -48,8 +48,8 @@ steps:
 - task: CopyFiles@2
   displayName: "Copy Behat screenshots"
   inputs:
-      contents: 'behat-screenshots/**'
-      targetFolder: '$(Build.ArtifactStagingDirectory)' 
+      sourceFolder: '$(Build.SourcesDirectory)'
+      contents: '**'
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Behat artifacts'

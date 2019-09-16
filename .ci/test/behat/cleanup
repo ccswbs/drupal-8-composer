@@ -22,7 +22,7 @@ terminus -n env:clear-cache $TERMINUS_SITE.$TERMINUS_ENV </dev/null
 # export ARTIFACTS_DIR_URL="${CI_BUILD_URL}/artifacts/${CI_NODE_INDEX}/artifacts"
 
 # Set ARTIFACT STAGING DIRECTORY
-# ARTIFACTS_FULL_DIR=${ARTIFACTS_FULL_DIR:-$BUILD_ARTIFACTSTAGINGDIRECTORY}
+ARTIFACTS_FULL_DIR=${ARTIFACTS_FULL_DIR:-$BUILD_ARTIFACTSTAGINGDIRECTORY}
 
 #Create the artifacts directory if needed
 # if [ ! -d "$ARTIFACTS_FULL_DIR" ]; then
@@ -30,11 +30,11 @@ terminus -n env:clear-cache $TERMINUS_SITE.$TERMINUS_ENV </dev/null
 # fi
 
 # Copy behat-screenshots files to ARTIFACTS_FULL_DIR
-# echo -e "\nCopying behat-screenshots files to $ARTIFACTS_FULL_DIR..."
-# if [ -d "$ARTIFACTS_FULL_DIR/behat-screenshots" ]; then
-#   rm -rf $ARTIFACTS_FULL_DIR/behat-screenshots
-# fi
+echo -e "\nCopying behat-screenshots files to $ARTIFACTS_FULL_DIR..."
+if [ -d "$ARTIFACTS_FULL_DIR/behat-screenshots" ]; then
+  rm -rf $ARTIFACTS_FULL_DIR/behat-screenshots
+fi
 
-# if [ -d behat-screenshots ]; then
-#     cp -r behat-screenshots $ARTIFACTS_FULL_DIR/
-# fi
+if [ -d behat-screenshots ]; then
+    cp -r behat-screenshots $ARTIFACTS_FULL_DIR/
+fi
