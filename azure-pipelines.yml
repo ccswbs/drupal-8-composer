@@ -49,6 +49,7 @@ steps:
 # Publish test results to Azure Pipelines
 - task: PublishTestResults@2
   displayName: 'Publish Behat test results'
+  condition: always()
   inputs:
     testResultsFormat: 'JUnit' # Options: JUnit, NUnit, VSTest, xUnit, cTest
     testResultsFiles: '$(Common.TestResultsDirectory)/*.xml' 
