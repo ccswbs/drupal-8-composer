@@ -17,7 +17,7 @@ Feature: Content
     When I go to "admin/content"
     Then I should see "Page one"
     And I should see "Page two"
-    And I should see "First article"
+    And I should see "First INTENTIONAL FAILURE article"
     And I should see "Second article"
 
   @api
