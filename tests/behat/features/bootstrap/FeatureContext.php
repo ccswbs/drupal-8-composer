@@ -65,7 +65,8 @@ use Behat\MinkExtension\Context\RawMinkContext;
     // }
 
     echo "-------------FEATURECONTEXT: SAVING SCREENSHOTS! -------";
-    echo("----- saving screenshot" . $filename . "to" . $path);
+    // echo("----- saving screenshot" . $filename . "to" . $path);
+    echo("----- saving screenshot" . $filename);
 
     // $this->saveScreenshot($filename, $path);
 
