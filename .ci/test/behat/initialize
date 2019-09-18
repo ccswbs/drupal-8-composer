@@ -30,3 +30,9 @@ terminus -n drush "$TERMINUS_SITE.$TERMINUS_ENV" -- cr </dev/null
 
 # Clear the environment cache
 terminus -n env:clear-cache $TERMINUS_SITE.$TERMINUS_ENV </dev/null
+
+echo "----- creating folders -------"
+# Create mkdir
+mkdir -p var/behat_screenshots/
+touch var/behat_screenshots/empty.txt
+echo "----- end of creating folders -------"
