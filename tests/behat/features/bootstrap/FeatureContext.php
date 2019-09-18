@@ -50,10 +50,10 @@ use Behat\MinkExtension\Context\RawMinkContext;
     //     return;
     // }
 
-    if (!getenv('BEHAT_SCREENSHOTS')) {
-      echo "-------------FEATURECONTEXT: NOT BEHAT_SCREENSHOTS! -------";
-        return;
-    }
+    // if (!getenv('BEHAT_SCREENSHOTS')) {
+    //   echo "-------------FEATURECONTEXT: NOT BEHAT_SCREENSHOTS! -------";
+    //     return;
+    // }
 
     echo "-------------FEATURECONTEXT: GETTING FILENAME AND PATH ! -------";
     $filename = microtime(true).'.png';
