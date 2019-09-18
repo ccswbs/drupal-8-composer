@@ -45,27 +45,28 @@ steps:
   displayName: 'Clean up Behat tests'
   condition: always()
 
+- task: CopyFiles@2
+  displayName: "Copy Behat screenshots to Test Results Directory"
+  condition: failed()
+  inputs:
+      sourceFolder: 'var/behat_screenshots'
+      contents: '**'
+      targetFolder: '$(Common.TestResultsDirectory)'
+      # targetFolder: '$(Build.ArtifactStagingDirectory)'
+
+# - task: PublishBuildArtifacts@1
+#   displayName: 'Publish Behat screenshots to Artifacts Directory'
+#   condition: failed()
+#   inputs:
+#     pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+#     artifactName: BehatTestFailureScreenshots
+
 - task: PublishTestResults@2
   displayName: 'Publish Behat test results'
   condition: always()
   inputs:
     testResultsFormat: 'JUnit' # Options: JUnit, NUnit, VSTest, xUnit, cTest
-    testResultsFiles: '$(Common.TestResultsDirectory)/*.xml' 
-
-- task: CopyFiles@2
-  displayName: "Copy Behat screenshots to Artifacts Directory"
-  condition: failed()
-  inputs:
-      sourceFolder: 'var/behat_screenshots'
-      contents: '**'
-      targetFolder: '$(Build.ArtifactStagingDirectory)'
-
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish Behat screenshots to Artifacts Directory'
-  condition: failed()
-  inputs:
-    pathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    artifactName: BehatTestFailureScreenshots
+    testResultsFiles: '$(Common.TestResultsDirectory)/*' 
 
 - script: true
   displayName: 'Visual regression test'
