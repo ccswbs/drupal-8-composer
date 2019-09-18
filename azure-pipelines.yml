@@ -46,19 +46,19 @@ steps:
   condition: always()
 
 - task: CopyFiles@2
-  displayName: "Copy Behat screenshots"
-  condition: always()
+  displayName: "Copy Behat screenshots to Artifacts Directory"
+  condition: failed()
   inputs:
       sourceFolder: 'var/behat_screenshots'
       contents: '**'
       targetFolder: '$(Build.ArtifactStagingDirectory)'
 
 - task: PublishBuildArtifacts@1
-  displayName: 'Publish Behat artifacts'
-  condition: always()
+  displayName: 'Publish Behat screenshots to Artifacts Directory'
+  condition: failed()
   inputs:
     pathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    artifactName: drop
+    artifactName: BehatTestFailureScreenshots
 
 - script: true
   displayName: 'Visual regression test'
