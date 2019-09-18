@@ -13,6 +13,9 @@ source $BASH_ENV
 # Verbose mode and exit on errors
 set -ex
 
+# Environment
+RESULTS=${COMMON_TESTRESULTSDIRECTORY:-TestResults}
+
 # Create a drush alias file so that Behat tests can be executed against Pantheon.
 terminus alpha:aliases --no-db-url --only=$TERMINUS_SITE </dev/null
 drush sa @pantheon.$TERMINUS_SITE.$TERMINUS_ENV
@@ -33,4 +36,4 @@ echo "::::::::::::::::::::::::::::::::::::::::::::::::"
 echo
 
 # Run the Behat tests
-./vendor/bin/behat --config=tests/behat/behat-pantheon.yml --strict --colors  "$@"
+./vendor/bin/behat --config=tests/behat/behat-pantheon.yml --format junit --out ${RESULTS} --strict --colors  "$@"
