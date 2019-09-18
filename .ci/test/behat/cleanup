@@ -2,6 +2,9 @@
 
 set -eo pipefail
 
+# Environment
+RESULTS=${COMMON_TESTRESULTSDIRECTORY:-TestResults}
+
 #
 # This script runs cleanup after Behat tests complete.
 #
@@ -17,3 +20,12 @@ terminus -n drush "$TERMINUS_SITE.$TERMINUS_ENV" cr </dev/null
 
 # Clear site cache
 terminus -n env:clear-cache $TERMINUS_SITE.$TERMINUS_ENV </dev/null
+
+# Export tests
+export BEHAT_PARAMS='{"extensions" : {"Behat\\MinkExtension" : {"base_url" : "http://'$MULTIDEV'-'$SITE'.pantheonsite.io"} }}'
+if [ -n "$AGENT_ID" ]
+then
+  vendor/bin/behat --config=tests/ug/config-ci.yml --format junit --out ${RESULTS} || true
+else
+  vendor/bin/behat --config=tests/ug/config-ci.yml 
+fi
