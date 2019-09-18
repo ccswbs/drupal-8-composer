@@ -45,21 +45,12 @@ steps:
   displayName: 'Clean up Behat tests'
   condition: always()
 
-# Publish Test Results
-# Publish test results to Azure Pipelines
 - task: PublishTestResults@2
   displayName: 'Publish Behat test results'
   condition: always()
   inputs:
     testResultsFormat: 'JUnit' # Options: JUnit, NUnit, VSTest, xUnit, cTest
     testResultsFiles: '$(Common.TestResultsDirectory)/*.xml' 
-    #searchFolder: '$(System.DefaultWorkingDirectory)' # Optional
-    #mergeTestResults: false # Optional
-    #failTaskOnFailedTests: false # Optional
-    #testRunTitle: # Optional
-    #buildPlatform: # Optional
-    #buildConfiguration: # Optional
-    publishRunAttachments: true # Optional
 
 - task: CopyFiles@2
   displayName: "Copy Behat screenshots to Artifacts Directory"

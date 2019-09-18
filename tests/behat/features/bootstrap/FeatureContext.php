@@ -14,7 +14,6 @@ use Behat\MinkExtension\Context\RawMinkContext;
 /**
  * Defines application features from the specific context.
  */
-// class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext {
   class FeatureContext extends RawMinkContext {
 
   /**
