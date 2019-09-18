@@ -47,13 +47,15 @@ steps:
 
 - task: CopyFiles@2
   displayName: "Copy Behat screenshots"
+  condition: always()
   inputs:
       sourceFolder: 'var/behat_screenshots'
       contents: '**'
-      targetFolder: '$(Build.ArtifactStagingDirectory)' 
+      targetFolder: '$(Build.ArtifactStagingDirectory)'
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Behat artifacts'
+  condition: always()
   inputs:
     pathtoPublish: '$(Build.ArtifactStagingDirectory)'
     artifactName: drop
