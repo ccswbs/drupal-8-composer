@@ -16,14 +16,13 @@
 # ADMIN_EMAIL:    The email address to give the admin when installing.
 #=========================================================================
 
-pool:
-  vmImage: 'Ubuntu 16.04'
-
 variables:
   phpVersion: 7.2
 
 jobs:
 - job: Deploy
+  pool:
+    vmImage: 'Ubuntu 16.04'
   steps:
   - script: ./.ci/env/set
     displayName: 'Initialize build environment'
@@ -39,6 +38,8 @@ jobs:
 
 - job: Test
   dependsOn: Deploy
+  pool:
+    vmImage: 'Ubuntu 16.04'
   steps:
   - script: ./.ci/test/behat/initialize
     displayName: 'Initialize Behat tests'
@@ -76,6 +77,8 @@ jobs:
     displayName: 'Visual regression test'
     
 - job: Cleanup
+  pool:
+    vmImage: 'Ubuntu 16.04'
   steps:
   - script: true
     displayName: 'Composer lock updater'
