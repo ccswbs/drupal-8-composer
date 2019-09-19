@@ -7,9 +7,6 @@
 # Authenticate with Terminus
 terminus -n auth:login --machine-token="$TERMINUS_TOKEN" </dev/null
 
-# Source $BASH_ENV
-source $BASH_ENV
-
 # Verbose mode and exit on errors
 set -ex
 
