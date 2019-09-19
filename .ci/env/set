@@ -17,6 +17,14 @@ sudo php installer.phar install --install-dir=/opt/terminus --bin-dir=/usr/bin
 mkdir -p $HOME/.terminus/plugins &&
 composer create-project --no-dev -d $HOME/.terminus/plugins pantheon-systems/terminus-build-tools-plugin:^2.0.0-beta16
 
+# Install Drush
+composer require drush/drush
+
+# Install Drush Launcher
+curl -OL https://github.com/drush-ops/drush-launcher/releases/download/0.6.0/drush.phar
+chmod +x drush.phar
+sudo mv drush.phar /usr/local/bin/drush
+
 # Log in to Pantheon
 terminus auth:login --machine-token="$TERMINUS_TOKEN" </dev/null
 

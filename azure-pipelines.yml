@@ -16,11 +16,11 @@
 # ADMIN_EMAIL:    The email address to give the admin when installing.
 #=========================================================================
 
-pool:
-  vmImage: 'Ubuntu 16.04'
-
 variables:
   phpVersion: 7.2
+
+pool:
+  vmImage: 'Ubuntu 16.04'
 
 steps:
 - script: ./.ci/env/set
@@ -35,8 +35,37 @@ steps:
 - script: ./.ci/deploy/pantheon/dev-multidev
   displayName: 'Deploy to Pantheon'
 
-- script: true
-  displayName: 'Behat tests'
+- script: ./.ci/test/behat/initialize
+  displayName: 'Initialize Behat tests'
+
+- script: ./.ci/test/behat/run
+  displayName: 'Run Behat tests'
+
+- script: ./.ci/test/behat/cleanup
+  displayName: 'Clean up Behat tests'
+  condition: always()
+
+- task: PublishTestResults@2
+  displayName: 'Publish Behat test results'
+  condition: always()
+  inputs:
+    testResultsFormat: 'JUnit' # Options: JUnit, NUnit, VSTest, xUnit, cTest
+    testResultsFiles: '$(Common.TestResultsDirectory)/*' 
+
+- task: CopyFiles@2
+  displayName: "Copy Behat screenshots to Artifacts Directory"
+  condition: failed()
+  inputs:
+      sourceFolder: 'var/behat_screenshots'
+      contents: '**'
+      targetFolder: '$(Build.ArtifactStagingDirectory)'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Behat screenshots to Artifacts Directory'
+  condition: failed()
+  inputs:
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    artifactName: BehatTestFailureScreenshots
 
 - script: true
   displayName: 'Visual regression test'
