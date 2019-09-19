@@ -1,5 +1,15 @@
 #!/bin/bash
 
+# Clean up old CI multidevs
+mds=`terminus env:list --format=list --field=id $TERMINUS_SITE | grep "^ci-" | sort -n | head --lines=-2`;
+
+for md in $mds
+do
+   echo "---deleting multidev $md---"
+   terminus multidev:delete -n --delete-branch $TERMINUS_SITE.$md </dev/null
+done
+
+
 # Remove SSH key from Pantheon
 terminus ssh-key:remove `terminus ssh-key:list --format=list </dev/null | tail -1` </dev/null
 
