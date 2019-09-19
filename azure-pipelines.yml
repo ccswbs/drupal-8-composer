@@ -19,75 +19,60 @@
 variables:
   phpVersion: 7.2
 
-jobs:
-- job: Deploy
-  pool:
-    vmImage: 'Ubuntu 16.04'
-  steps:
-  - script: ./.ci/env/set
-    displayName: 'Initialize build environment'
+pool:
+  vmImage: 'Ubuntu 16.04'
 
-  - script: ./.ci/test/static/run
-    displayName: 'Static tests'
+steps:
+- script: ./.ci/env/set
+  displayName: 'Initialize build environment'
 
-  - script: ./.ci/build/php
-    displayName: 'Build PHP'
+- script: ./.ci/test/static/run
+  displayName: 'Static tests'
 
-  - script: ./.ci/deploy/pantheon/dev-multidev
-    displayName: 'Deploy to Pantheon'
+- script: ./.ci/build/php
+  displayName: 'Build PHP'
 
-- job: Test
-  dependsOn: Deploy
-  condition: succeeded()
-  pool:
-    vmImage: 'Ubuntu 16.04'
-  steps:
-  - script: ./.ci/test/behat/initialize
-    displayName: 'Initialize Behat tests'
+- script: ./.ci/deploy/pantheon/dev-multidev
+  displayName: 'Deploy to Pantheon'
 
-  - script: ./.ci/test/behat/run
-    displayName: 'Run Behat tests'
+- script: ./.ci/test/behat/initialize
+  displayName: 'Initialize Behat tests'
 
-  - script: ./.ci/test/behat/cleanup
-    displayName: 'Clean up Behat tests'
-    condition: always()
+- script: ./.ci/test/behat/run
+  displayName: 'Run Behat tests'
 
-  - task: PublishTestResults@2
-    displayName: 'Publish Behat test results'
-    condition: always()
-    inputs:
-      testResultsFormat: 'JUnit' # Options: JUnit, NUnit, VSTest, xUnit, cTest
-      testResultsFiles: '$(Common.TestResultsDirectory)/*' 
+- script: ./.ci/test/behat/cleanup
+  displayName: 'Clean up Behat tests'
+  condition: always()
 
-  - task: CopyFiles@2
-    displayName: "Copy Behat screenshots to Artifacts Directory"
-    condition: failed()
-    inputs:
-        sourceFolder: 'var/behat_screenshots'
-        contents: '**'
-        targetFolder: '$(Build.ArtifactStagingDirectory)'
+- task: PublishTestResults@2
+  displayName: 'Publish Behat test results'
+  condition: always()
+  inputs:
+    testResultsFormat: 'JUnit' # Options: JUnit, NUnit, VSTest, xUnit, cTest
+    testResultsFiles: '$(Common.TestResultsDirectory)/*' 
 
-  - task: PublishBuildArtifacts@1
-    displayName: 'Publish Behat screenshots to Artifacts Directory'
-    condition: failed()
-    inputs:
-      pathtoPublish: '$(Build.ArtifactStagingDirectory)'
-      artifactName: BehatTestFailureScreenshots
+- task: CopyFiles@2
+  displayName: "Copy Behat screenshots to Artifacts Directory"
+  condition: failed()
+  inputs:
+      sourceFolder: 'var/behat_screenshots'
+      contents: '**'
+      targetFolder: '$(Build.ArtifactStagingDirectory)'
 
-  - script: true
-    displayName: 'Visual regression test'
-    
-- job: Cleanup
-  dependsOn:
-  - Deploy
-  - Test
-  condition: succeeded('Deploy')
-  pool:
-    vmImage: 'Ubuntu 16.04'
-  steps:
-  - script: true
-    displayName: 'Composer lock updater'
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Behat screenshots to Artifacts Directory'
+  condition: failed()
+  inputs:
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    artifactName: BehatTestFailureScreenshots
 
-  - script: ./.ci/env/clean
-    displayName: 'Clean up build environment'
-    condition: always()
+- script: true
+  displayName: 'Visual regression test'
+
+- script: true
+  displayName: 'Composer lock updater'
+
+- script: ./.ci/env/clean
+  displayName: 'Clean up build environment'
+  condition: always()
