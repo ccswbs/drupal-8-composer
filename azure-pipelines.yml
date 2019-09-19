@@ -38,6 +38,7 @@ jobs:
 
 - job: Test
   dependsOn: Deploy
+  condition: succeeded()
   pool:
     vmImage: 'Ubuntu 16.04'
   steps:
@@ -77,6 +78,10 @@ jobs:
     displayName: 'Visual regression test'
     
 - job: Cleanup
+  dependsOn:
+  - Deploy
+  - Test
+  condition: succeeded('Deploy')
   pool:
     vmImage: 'Ubuntu 16.04'
   steps:
