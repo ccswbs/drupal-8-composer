@@ -26,7 +26,7 @@ chmod +x drush.phar
 sudo mv drush.phar /usr/local/bin/drush
 
 # Install Backstop JS
-npm install backstopjs
+sudo npm install backstopjs -g
 
 echo -e "\nCheck backstop version"
 backstop --v
