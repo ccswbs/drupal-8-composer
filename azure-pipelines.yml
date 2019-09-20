@@ -67,7 +67,7 @@ steps:
     pathtoPublish: '$(Build.ArtifactStagingDirectory)'
     artifactName: BehatTestFailureScreenshots
 
-- script: true
+- script: ./.ci/test/visual-regression/run
   displayName: 'Visual regression test'
 
 - script: true
