@@ -26,7 +26,8 @@ chmod +x drush.phar
 sudo mv drush.phar /usr/local/bin/drush
 
 # Install Backstop JS
-npm install -g backstopjs
+node -v
+npm --v
 
 # Log in to Pantheon
 terminus auth:login --machine-token="$TERMINUS_TOKEN" </dev/null
