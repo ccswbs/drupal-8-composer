@@ -49,10 +49,6 @@ then
     if GIT_FILE_MODIFIED 'composer.json'
     then
         echo -e "\nSkipping visual regression tests since composer.json HAS changed"
-        echo "-------------"
-        COMPOSER_CHANGE="$(git diff origin/master composer.json)"
-        echo "${COMPOSER_CHANGE}"
-        echo "-------------"
         exit 0
     fi
 
@@ -62,11 +58,13 @@ fi
 
 # Ping the multidev environment to wake it from sleep
 echo -e "\nPinging the ${TERMINUS_ENV} multidev environment to wake it from sleep..."
-curl -I "$MULTIDEV_SITE_URL" >/dev/null
+# curl -I "$MULTIDEV_SITE_URL" >/dev/null
+terminus env:wake "$TERMINUS_SITE.$TERMINUS_ENV" >/dev/null
 
 # Ping the live environment to wake it from sleep
 echo -e "\nPinging the dev environment to wake it from sleep..."
-curl -I "$DEV_SITE_URL" >/dev/null
+terminus env:wake "$TERMINUS_SITE.dev" >/dev/null
+# curl -I "$DEV_SITE_URL" >/dev/null
 
 # Backstop visual regression
 echo -e "\nRunning backstop reference on ${DEV_SITE_URL}..."
