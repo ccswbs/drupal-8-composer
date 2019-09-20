@@ -66,6 +66,10 @@ echo -e "\nPinging the dev environment to wake it from sleep..."
 terminus env:wake "$TERMINUS_SITE.dev" >/dev/null
 # curl -I "$DEV_SITE_URL" >/dev/null
 
+# Backstop
+echo -e "\nCheck backstop version"
+backstop --v
+
 # Backstop visual regression
 echo -e "\nRunning backstop reference on ${DEV_SITE_URL}..."
 backstop reference --config=.ci/test/visual-regression/backstopConfig.js
