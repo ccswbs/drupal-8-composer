@@ -16,6 +16,12 @@ GIT_FILE_MODIFIED()
     # Stash list of changed files
     GIT_FILES_CHANGED="$(git diff origin/master --name-only)"
 
+    echo "Checking files that have changed"
+    echo "--------------------"
+    echo "${GIT_FILES_CHANGED}"
+    echo "--------------------"
+
+
     while read -r changedFile; do
         if [[ "${changedFile}" == "$1" ]]
         then
