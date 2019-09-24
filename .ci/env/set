@@ -26,7 +26,7 @@ chmod +x drush.phar
 sudo mv drush.phar /usr/local/bin/drush
 
 # Install Backstop JS
-sudo npm install -g backstopjs
+sudo npm install -g backstopjs --unsafe-perm=true --allow-root
 
 echo -e "\nCheck backstop version"
 backstop --v
