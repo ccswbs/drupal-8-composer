@@ -28,9 +28,6 @@ sudo mv drush.phar /usr/local/bin/drush
 # Install Backstop JS
 sudo npm install -g backstopjs --unsafe-perm=true --allow-root
 
-echo -e "\nCheck backstop version"
-backstop --v
-
 # Log in to Pantheon
 terminus auth:login --machine-token="$TERMINUS_TOKEN" </dev/null
 
