@@ -58,24 +58,15 @@ fi
 
 # Ping the multidev environment to wake it from sleep
 echo -e "\nPinging the ${TERMINUS_ENV} multidev environment to wake it from sleep..."
-# curl -I "$MULTIDEV_SITE_URL" >/dev/null
 terminus env:wake "$TERMINUS_SITE.$TERMINUS_ENV" >/dev/null
 MULTIDEV_SITE_URL="$(terminus env:view ${TERMINUS_SITE}.${TERMINUS_ENV} --print 2>/dev/null)"
-echo "##vso[task.setvariable variable=MULTIDEV_SITE_URL]${MULTIDEV_SITE_URL}"
 export MULTIDEV_SITE_URL=${MULTIDEV_SITE_URL}
-# echo %MULTIDEV_SITE_URL% env: MULTIDEV_SITE_URL: ${MULTIDEV_SITE_URL}
-# echo "%MULTIDEV_SITE_URL% env: MULTIDEV_SITE_URL: $(${MULTIDEV_SITE_URL})"
 
 # Ping the live environment to wake it from sleep
 echo -e "\nPinging the dev environment to wake it from sleep..."
 terminus env:wake "$TERMINUS_SITE.dev" >/dev/null
 DEV_SITE_URL="$(terminus env:view ${TERMINUS_SITE}.dev --print 2>/dev/null)"
-echo "##vso[task.setvariable variable=DEV_SITE_URL]${DEV_SITE_URL}"
 export DEV_SITE_URL=${DEV_SITE_URL}
-# echo %DEV_SITE_URL% env: DEV_SITE_URL: $(DEV_SITE_URL)
-# echo "%DEV_SITE_URL% env: DEV_SITE_URL: $(${DEV_SITE_URL})"
-
-# curl -I "$DEV_SITE_URL" >/dev/null
 
 # Backstop visual regression
 echo -e "\nRunning backstop reference on ${DEV_SITE_URL}..."
@@ -88,53 +79,52 @@ VISUAL_REGRESSION_RESULTS=$(backstop test --config=.ci/test/visual-regression/ba
 echo "${VISUAL_REGRESSION_RESULTS}"
 
 # Create the artifacts directory if needed
-if [ ! -d "$ARTIFACTS_FULL_DIR" ]; then
-  mkdir -p $ARTIFACTS_FULL_DIR
-fi
-
+# if [ ! -d "$ARTIFACTS_FULL_DIR" ]; then
+#   mkdir -p $ARTIFACTS_FULL_DIR
+# fi
 
 # Copy backstop_data files to ARTIFACTS_FULL_DIR
-echo -e "\nCopying backstop_data files to $ARTIFACTS_FULL_DIR..."
-rm -rf $ARTIFACTS_FULL_DIR/backstop_data
-cp -r backstop_data $ARTIFACTS_FULL_DIR/
+# echo -e "\nCopying backstop_data files to $ARTIFACTS_FULL_DIR..."
+# rm -rf $ARTIFACTS_FULL_DIR/backstop_data
+# cp -r backstop_data $ARTIFACTS_FULL_DIR/
 
-DIFF_IMAGE=$(find ./backstop_data -type f -name "*.png" | grep diff | grep desktop | head -n 1)
+# DIFF_IMAGE=$(find ./backstop_data -type f -name "*.png" | grep diff | grep desktop | head -n 1)
 
-if [ ! -f $DIFF_IMAGE ]; then
-	echo -e "\nDiff image file $DIFF_IMAGE not found!"
-fi
+# if [ ! -f $DIFF_IMAGE ]; then
+# 	echo -e "\nDiff image file $DIFF_IMAGE not found!"
+# fi
 
-DIFF_IMAGE_URL="$ARTIFACTS_DIR_URL/$DIFF_IMAGE"
+# DIFF_IMAGE_URL="$ARTIFACTS_DIR_URL/$DIFF_IMAGE"
 
-DIFF_REPORT="$ARTIFACTS_FULL_DIR/backstop_data/html_report/index.html"
+# DIFF_REPORT="$ARTIFACTS_FULL_DIR/backstop_data/html_report/index.html"
 
-if [ ! -f $DIFF_REPORT ]; then
-	echo -e "\nDiff report file $DIFF_REPORT not found!"
-	exit 1
-fi
+# if [ ! -f $DIFF_REPORT ]; then
+# 	echo -e "\nDiff report file $DIFF_REPORT not found!"
+# 	exit 1
+# fi
 
-DIFF_REPORT_URL="$ARTIFACTS_DIR_URL/backstop_data/html_report/index.html"
+# DIFF_REPORT_URL="$ARTIFACTS_DIR_URL/backstop_data/html_report/index.html"
 
-REPORT_LINK="[![Visual report]($DIFF_IMAGE_URL)]($DIFF_REPORT_URL)"
+# REPORT_LINK="[![Visual report]($DIFF_IMAGE_URL)]($DIFF_REPORT_URL)"
 
 if [[ ${VISUAL_REGRESSION_RESULTS} == *"Mismatch errors found"* ]]
 then
 	# visual regression failed
 	echo -e "\nVisual regression test failed!"
-	PR_MESSAGE="Visual regression test failed! $REPORT_LINK"
+	# PR_MESSAGE="Visual regression test failed! $REPORT_LINK"
 else
 	# visual regression passed
-	REPORT_LINK="\n\nView the [visual regression test report]($DIFF_REPORT_URL)"
+	# REPORT_LINK="\n\nView the [visual regression test report]($DIFF_REPORT_URL)"
 	echo -e "\n\nVisual regression test passed!"
-	PR_MESSAGE="Visual regression test passed! $REPORT_LINK"
+	# PR_MESSAGE="Visual regression test passed! $REPORT_LINK"
 fi
 
 # Post the image back to the pull request on GitHub
-if [[ -n ${CI_REPOSITORY_URL} && ${CI_REPOSITORY_URL} == *"github"* ]]
-then
-    echo -e "\nPosting visual regression results back to PR #$PR_NUMBER "
-    curl -s -i -u "$CI_PROJECT_USERNAME:$GITHUB_TOKEN" -d "{\"body\": \"$PR_MESSAGE\"}" $GITHUB_API_URL/issues/$PR_NUMBER/comments > /dev/null
-fi
+# if [[ -n ${CI_REPOSITORY_URL} && ${CI_REPOSITORY_URL} == *"github"* ]]
+# then
+#     echo -e "\nPosting visual regression results back to PR #$PR_NUMBER "
+#     curl -s -i -u "$CI_PROJECT_USERNAME:$GITHUB_TOKEN" -d "{\"body\": \"$PR_MESSAGE\"}" $GITHUB_API_URL/issues/$PR_NUMBER/comments > /dev/null
+# fi
 
 if [[ ${VISUAL_REGRESSION_RESULTS} == *"Mismatch errors found"* ]]
 then

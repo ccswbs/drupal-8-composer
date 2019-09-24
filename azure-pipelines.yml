@@ -70,6 +70,28 @@ steps:
 - script: ./.ci/test/visual-regression/run
   displayName: 'Visual regression test'
 
+- task: PublishTestResults@2
+  displayName: 'Publish BackstopJS test results'
+  condition: always()
+  inputs:
+    testResultsFormat: 'JUnit' # Options: JUnit, NUnit, VSTest, xUnit, cTest
+    testResultsFiles: 'backstop_data/*' 
+
+- task: CopyFiles@2
+  displayName: "Copy BackstopJS screenshots to Artifacts Directory"
+  condition: always()
+  inputs:
+      sourceFolder: 'backstop_data'
+      contents: '**'
+      targetFolder: '$(Build.ArtifactStagingDirectory)'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish BackstopJS screenshots to Artifacts Directory'
+  condition: always()
+  inputs:
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    artifactName: BackstopJSTestScreenshots
+
 - script: true
   displayName: 'Composer lock updater'
 
