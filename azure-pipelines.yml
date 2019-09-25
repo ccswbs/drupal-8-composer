@@ -75,7 +75,7 @@ steps:
   condition: always()
   inputs:
     testResultsFormat: 'JUnit' # Options: JUnit, NUnit, VSTest, xUnit, cTest
-    testResultsFiles: 'backstop_data/*' 
+    testResultsFiles: 'backstop_data/ci_report/*' 
 
 - task: CopyFiles@2
   displayName: "Copy BackstopJS screenshots to Artifacts Directory"
