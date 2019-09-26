@@ -58,15 +58,15 @@ fi
 
 # Ping the multidev environment to wake it from sleep
 echo -e "\nPinging the ${TERMINUS_ENV} multidev environment to wake it from sleep..."
-terminus env:wake "$TERMINUS_SITE.$TERMINUS_ENV" >/dev/null
+terminus env:wake "$TERMINUS_SITE.$TERMINUS_ENV" </dev/null
 MULTIDEV_SITE_URL="$(terminus env:view ${TERMINUS_SITE}.${TERMINUS_ENV} --print 2>/dev/null)"
-export MULTIDEV_SITE_URL=${MULTIDEV_SITE_URL}
+export MULTIDEV_SITE_URL
 
 # Ping the live environment to wake it from sleep
 echo -e "\nPinging the dev environment to wake it from sleep..."
-terminus env:wake "$TERMINUS_SITE.dev" >/dev/null
+terminus env:wake "$TERMINUS_SITE.dev" </dev/null
 DEV_SITE_URL="$(terminus env:view ${TERMINUS_SITE}.dev --print 2>/dev/null)"
-export DEV_SITE_URL=${DEV_SITE_URL}
+export DEV_SITE_URL
 
 # Backstop visual regression
 echo -e "\nRunning backstop reference on ${DEV_SITE_URL}..."
