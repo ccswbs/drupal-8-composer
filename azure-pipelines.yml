@@ -18,6 +18,9 @@
 
 variables:
   phpVersion: 7.2
+  MY_DEVOP_TOKEN: $(devops.token)
+  MY_DEVOP_URL: $(System.TeamFoundationCollectionUri)
+  MY_DEVOP_PROJ: $(System.TeamProject)
 
 pool:
   vmImage: 'Ubuntu 16.04'

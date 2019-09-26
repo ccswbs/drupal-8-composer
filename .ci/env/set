@@ -25,6 +25,9 @@ curl -OL https://github.com/drush-ops/drush-launcher/releases/download/0.6.0/dru
 chmod +x drush.phar
 sudo mv drush.phar /usr/local/bin/drush
 
+# Install jq utility
+sudo apt-get install jq
+
 # Log in to Pantheon
 terminus auth:login --machine-token="$TERMINUS_TOKEN" </dev/null
 
