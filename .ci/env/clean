@@ -1,14 +1,41 @@
 #!/bin/bash
 
 # Clean up old CI multidevs
-mds=`terminus env:list --format=list --field=id $TERMINUS_SITE | grep "^ci-" | sort -n | head --lines=-2`;
+echo "Running ci multidev cleanup..."
+
+mds=`terminus env:list --format=list --field=id $TERMINUS_SITE </dev/null | grep "^ci-" | sort -n | head --lines=-2`;
 
 for md in $mds
 do
    echo "---deleting multidev $md---"
-   terminus multidev:delete -n --delete-branch $TERMINUS_SITE.$md </dev/null
+   terminus multidev:delete -y --delete-branch $TERMINUS_SITE.$md </dev/null
 done
 
+# Clean up old PR multidevs
+echo "Running pr multidev cleanup..."
+
+mds=`terminus env:list --format=list --field=id $TERMINUS_SITE </dev/null | grep "^pr-"`;
+prs_url=`echo $MY_DEVOP_URL$MY_DEVOP_PROJ/_apis/git/pullrequests?api-version=5.1 | sed 's/ /\%20/'`
+echo "${prs_url}";
+
+open_prs=`curl -su "ccswds:$MY_DEVOP_TOKEN" "${prs_url}" | jq '.value[].pullRequestId'`;
+
+echo "Open pull requests: [$open_prs]";
+
+if [ -n "$open_prs" ]; then
+
+  for md in $mds
+  do
+   pr=`echo $md | sed 's/pr-//'`
+   match=`echo $open_prs | grep $pr`
+
+   if [ -z "$match" ]; then
+     echo "---deleting multidev $md---"
+     terminus multidev:delete -y --delete-branch $TERMINUS_SITE.$md </dev/null
+   fi
+  done
+
+fi
 
 # Remove SSH key from Pantheon
 terminus ssh-key:remove `terminus ssh-key:list --format=list </dev/null | tail -1` </dev/null
