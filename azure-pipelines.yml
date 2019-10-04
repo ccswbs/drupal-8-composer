@@ -26,6 +26,9 @@ pool:
   vmImage: 'Ubuntu 16.04'
 
 steps:
+
+# Setup and Deploy
+
 - script: ./.ci/env/set
   displayName: 'Initialize build environment'
 
@@ -37,6 +40,8 @@ steps:
 
 - script: ./.ci/deploy/pantheon/dev-multidev
   displayName: 'Deploy to Pantheon'
+
+# Behat Tests
 
 - script: ./.ci/test/behat/initialize
   displayName: 'Initialize Behat tests'
@@ -71,21 +76,28 @@ steps:
     pathtoPublish: '$(Build.ArtifactStagingDirectory)'
     artifactName: BehatTestFailureScreenshots
 
+# Visual Regression Tests
+
 - script: ./.ci/test/visual-regression/run
   displayName: 'Visual regression test'
 
+- bash: |
+    if [ -d backstop_data ]; then
+      echo "##vso[task.setVariable variable=BACKSTOP_DATA_EXISTS]true"
+    fi
+  displayName: 'Check if BackstopJS test results exist'
+
 - task: PublishTestResults@2
   displayName: 'Publish BackstopJS test results'
-  condition: always()
+  condition: eq(variables.BACKSTOP_DATA_EXISTS, 'true')
   inputs:
     testResultsFormat: 'JUnit' # Options: JUnit, NUnit, VSTest, xUnit, cTest
     testResultsFiles: 'backstop_data/ci_report/*' 
     testRunTitle: 'BackstopJS Test Results'
-    publishRunAttachments: true
 
 - task: CopyFiles@2
   displayName: "Copy BackstopJS screenshots to Artifacts Directory"
-  condition: always()
+  condition: eq(variables.BACKSTOP_DATA_EXISTS, 'true')
   inputs:
       sourceFolder: 'backstop_data'
       contents: '**'
@@ -93,13 +105,17 @@ steps:
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish BackstopJS screenshots to Artifacts Directory'
-  condition: always()
+  condition: eq(variables.BACKSTOP_DATA_EXISTS, 'true')
   inputs:
     pathtoPublish: '$(Build.ArtifactStagingDirectory)'
     artifactName: BackstopJSTestScreenshots
 
+# Composer Lock Updater
+
 - script: true
   displayName: 'Composer lock updater'
+
+# Clean up
 
 - script: ./.ci/env/clean
   displayName: 'Clean up build environment'
