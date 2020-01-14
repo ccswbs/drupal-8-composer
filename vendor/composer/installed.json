@@ -1966,17 +1966,17 @@
     },
     {
         "name": "drush/drush",
-        "version": "8.3.1",
-        "version_normalized": "8.3.1.0",
+        "version": "8.3.2",
+        "version_normalized": "8.3.2.0",
         "source": {
             "type": "git",
             "url": "https://github.com/drush-ops/drush.git",
-            "reference": "346536f579a55a2e895d1434324521bab71459f9"
+            "reference": "60306a27347f6c69517dc2d91bb2fd5d1a41abec"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/drush-ops/drush/zipball/346536f579a55a2e895d1434324521bab71459f9",
-            "reference": "346536f579a55a2e895d1434324521bab71459f9",
+            "url": "https://api.github.com/repos/drush-ops/drush/zipball/60306a27347f6c69517dc2d91bb2fd5d1a41abec",
+            "reference": "60306a27347f6c69517dc2d91bb2fd5d1a41abec",
             "shasum": ""
         },
         "require": {
@@ -2007,7 +2007,7 @@
             "drush/config-extra": "Provides configuration workflow commands, such as config-merge.",
             "ext-pcntl": "*"
         },
-        "time": "2019-10-24T23:13:00+00:00",
+        "time": "2019-11-26T22:34:50+00:00",
         "bin": [
             "drush",
             "drush.launcher",
@@ -2017,7 +2017,7 @@
         "type": "library",
         "extra": {
             "branch-alias": {
-                "dev-master": "8.0.x-dev"
+                "dev-master": "8.3.x-dev"
             }
         },
         "installation-source": "dist",
@@ -5176,7 +5176,8 @@
         "license": [
             "GPL-2.0-or-later"
         ],
-        "description": "Locked core dependencies"
+        "description": "Locked core dependencies",
+        "abandoned": "drupal/core-recommended"
     },
     {
         "name": "webflo/drupal-finder",
@@ -5468,7 +5469,8 @@
             "http",
             "psr",
             "psr-7"
-        ]
+        ],
+        "abandoned": "laminas/laminas-diactoros"
     },
     {
         "name": "zendframework/zend-escaper",
@@ -5514,7 +5516,8 @@
         "keywords": [
             "escaper",
             "zf2"
-        ]
+        ],
+        "abandoned": "laminas/laminas-escaper"
     },
     {
         "name": "zendframework/zend-feed",
@@ -5577,7 +5580,8 @@
         "keywords": [
             "feed",
             "zf2"
-        ]
+        ],
+        "abandoned": "laminas/laminas-feed"
     },
     {
         "name": "zendframework/zend-stdlib",
@@ -5624,6 +5628,7 @@
         "keywords": [
             "stdlib",
             "zf2"
-        ]
+        ],
+        "abandoned": "laminas/laminas-stdlib"
     }
 ]

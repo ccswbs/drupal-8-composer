@@ -1917,16 +1917,16 @@
         },
         {
             "name": "drush/drush",
-            "version": "8.3.1",
+            "version": "8.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drush-ops/drush.git",
-                "reference": "346536f579a55a2e895d1434324521bab71459f9"
+                "reference": "60306a27347f6c69517dc2d91bb2fd5d1a41abec"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/drush-ops/drush/zipball/346536f579a55a2e895d1434324521bab71459f9",
-                "reference": "346536f579a55a2e895d1434324521bab71459f9",
+                "url": "https://api.github.com/repos/drush-ops/drush/zipball/60306a27347f6c69517dc2d91bb2fd5d1a41abec",
+                "reference": "60306a27347f6c69517dc2d91bb2fd5d1a41abec",
                 "shasum": ""
             },
             "require": {
@@ -1966,7 +1966,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "8.0.x-dev"
+                    "dev-master": "8.3.x-dev"
                 }
             },
             "autoload": {
@@ -2026,7 +2026,7 @@
             ],
             "description": "Drush is a command line shell and scripting interface for Drupal, a veritable Swiss Army knife designed to make life easier for those of us who spend some of our working hours hacking away at the command prompt.",
             "homepage": "http://www.drush.org",
-            "time": "2019-10-24T23:13:00+00:00"
+            "time": "2019-11-26T22:34:50+00:00"
         },
         {
             "name": "easyrdf/easyrdf",
@@ -5024,6 +5024,7 @@
                 "GPL-2.0-or-later"
             ],
             "description": "Locked core dependencies",
+            "abandoned": "drupal/core-recommended",
             "time": "2019-09-04T10:30:46+00:00"
         },
         {
@@ -5304,6 +5305,7 @@
                 "psr",
                 "psr-7"
             ],
+            "abandoned": "laminas/laminas-diactoros",
             "time": "2017-08-17T21:21:00+00:00"
         },
         {
@@ -5348,6 +5350,7 @@
                 "escaper",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-escaper",
             "time": "2016-06-30T19:48:38+00:00"
         },
         {
@@ -5409,6 +5412,7 @@
                 "feed",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-feed",
             "time": "2016-02-11T18:54:29+00:00"
         },
         {
@@ -5454,6 +5458,7 @@
                 "stdlib",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-stdlib",
             "time": "2016-04-12T21:19:36+00:00"
         }
     ],
@@ -5957,6 +5962,7 @@
             ],
             "description": "Promoting the interoperability of container objects (DIC, SL, etc.)",
             "homepage": "https://github.com/container-interop/container-interop",
+            "abandoned": "psr/container",
             "time": "2017-02-14T19:40:03+00:00"
         },
         {
