@@ -18,6 +18,7 @@
 
 variables:
   phpVersion: 7.2
+  TERMINUS_TOKEN: $(terminus.token)
   MY_DEVOP_TOKEN: $(devops.token)
   MY_DEVOP_URL: $(System.TeamFoundationCollectionUri)
   MY_DEVOP_PROJ: $(System.TeamProject)
