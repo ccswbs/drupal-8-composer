@@ -33,13 +33,13 @@ DEFAULT_SITE=${DEFAULT_SITE:-$CI_PROJECT_NAME}
 DEFAULT_BRANCH=${DEFAULT_BRANCH:-master}
 
 # If we are on the default branch.
-if [[ ${CI_BRANCH} == ${DEFAULT_BRANCH} ]] ; then
+# if [[ ${CI_BRANCH} == ${DEFAULT_BRANCH} ]] ; then
   # Use dev as the environment.
-	DEFAULT_ENV=${DEFAULT_ENV:-dev}
-else
+	# DEFAULT_ENV=${DEFAULT_ENV:-dev}
+# else
   # Otherwise, name the environment after the CI build number.
 	DEFAULT_ENV=ci-$CI_BUILD_NUMBER
-fi
+# fi
 
 # If there is a PR number provided, though, then we will use it instead.
 if [[ -n ${PR_NUMBER} ]] ; then
@@ -62,14 +62,14 @@ echo "##vso[task.setvariable variable=CI_PROJECT_REPONAME]${CI_PROJECT_REPONAME}
 # Prepare for Pantheon
 composer run prepare-for-pantheon
 
-if [[ $CI_BRANCH != $DEFAULT_BRANCH ]]
-then
+# if [[ $CI_BRANCH != $DEFAULT_BRANCH ]]
+# then
   # Create a new multidev environment (or push to an existing one)
   terminus -n build:env:create "$TERMINUS_SITE.dev" "$TERMINUS_ENV" --yes </dev/null
-else
+# else
   # Push to the dev environment
-  terminus -n build:env:push "$TERMINUS_SITE.dev" --yes </dev/null
-fi
+  # terminus -n build:env:push "$TERMINUS_SITE.dev" --yes </dev/null
+# fi
 
 # Update the Drupal database
 terminus -n drush "$TERMINUS_SITE.$TERMINUS_ENV" -- updatedb -y </dev/null
@@ -87,6 +87,9 @@ terminus -n env:clear-cache $TERMINUS_SITE.$TERMINUS_ENV </dev/null
 
 # Ensure secrets are set
 terminus -n build:secrets:set "$TERMINUS_SITE.$TERMINUS_ENV" token "$DEVOPS_TOKEN" --file='devops-secrets.json' --clear --skip-if-empty </dev/null
+
+# Apply upstream updates
+terminus upstream:updates:apply --updatedb --accept-upstream -- "$TERMINUS_SITE.$TERMINUS_ENV"
 
 # Delete old multidev environments associated
 # with a PR that has been merged or closed.

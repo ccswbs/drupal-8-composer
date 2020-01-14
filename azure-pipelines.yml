@@ -38,9 +38,6 @@ steps:
 - script: ./.ci/build/php
   displayName: 'Build PHP'
 
-#- script: ./.ci/deploy/pantheon/dev-multidev
-#displayName: 'Deploy to Pantheon'
-
 - script: |
     git config user.name '$(Build.RequestedFor)'
     git config user.email '$(Build.RequestedForEmail)'
@@ -48,6 +45,9 @@ steps:
     git commit -m 'Build $(Build.BuildId)'
     git push --force https://$(pat)@github.com/ccswbs/drupal-8-composer.git HEAD:master
   displayName: 'Push to upstream'
+
+- script: ./.ci/deploy/pantheon/dev-multidev
+  displayName: 'Deploy to Pantheon'
 
 # Behat Tests
 
