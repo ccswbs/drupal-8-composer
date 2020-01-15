@@ -30,7 +30,11 @@ steps:
 
 # Setup and Deploy
 
-- script: ./.ci/env/set
+- script: |
+    ./.ci/env/set
+    terminus auth:login --machine-token=$(terminus.token) </dev/null
+    ssh-keygen -N "" -f ~/.ssh/id_rsa &&
+    terminus ssh-key:add ~/.ssh/id_rsa.pub </dev/null
   displayName: 'Initialize build environment'
 
 - script: ./.ci/test/static/run
@@ -48,11 +52,7 @@ steps:
     git push --force https://$(pat)@github.com/ccswbs/drupal-8-composer.git HEAD:master
   displayName: 'Push to upstream'
 
-- script: |
-    ./.ci/deploy/pantheon/dev-multidev
-    terminus auth:login --machine-token=$(terminus.token) </dev/null
-    ssh-keygen -N "" -f ~/.ssh/id_rsa &&
-    terminus ssh-key:add ~/.ssh/id_rsa.pub </dev/null
+- script: ./.ci/deploy/pantheon/dev-multidev
   displayName: 'Deploy to Pantheon'
 
 # Behat Tests
