@@ -22,6 +22,7 @@ variables:
   MY_DEVOP_TOKEN: $(devops.token)
   MY_DEVOP_URL: $(System.TeamFoundationCollectionUri)
   MY_DEVOP_PROJ: $(System.TeamProject)
+  RUN_TESTS: $(run.tests)
 
 pool:
   vmImage: 'Ubuntu 16.04'
@@ -54,17 +55,19 @@ steps:
 
 - script: ./.ci/test/behat/initialize
   displayName: 'Initialize Behat tests'
+  condition: eq(RUN_TESTS, 'true')
 
 - script: ./.ci/test/behat/run
   displayName: 'Run Behat tests'
+  condition: eq(RUN_TESTS, 'true')
 
 - script: ./.ci/test/behat/cleanup
   displayName: 'Clean up Behat tests'
-  condition: always()
+  condition: and(always(), eq(RUN_TESTS, 'true'))
 
 - task: PublishTestResults@2
   displayName: 'Publish Behat test results'
-  condition: always()
+  condition: and(always(), eq(RUN_TESTS, 'true'))
   inputs:
     testResultsFormat: 'JUnit' # Options: JUnit, NUnit, VSTest, xUnit, cTest
     testRunTitle: 'Behat Test Results'
@@ -72,7 +75,7 @@ steps:
 
 - task: CopyFiles@2
   displayName: "Copy Behat screenshots to Artifacts Directory"
-  condition: failed()
+  condition: and(failed(), eq(RUN_TESTS, 'true'))
   inputs:
       sourceFolder: 'var/behat_screenshots'
       contents: '**'
@@ -80,7 +83,7 @@ steps:
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Behat screenshots to Artifacts Directory'
-  condition: failed()
+  condition: and(failed(), eq(RUN_TESTS, 'true'))
   inputs:
     pathtoPublish: '$(Build.ArtifactStagingDirectory)'
     artifactName: BehatTestFailureScreenshots
@@ -89,16 +92,18 @@ steps:
 
 - script: ./.ci/test/visual-regression/run
   displayName: 'Visual regression test'
+  condition: eq(RUN_TESTS, 'true')
 
 - bash: |
     if [ -d backstop_data ]; then
       echo "##vso[task.setVariable variable=BACKSTOP_DATA_EXISTS]true"
     fi
   displayName: 'Check if BackstopJS test results exist'
+  condition: eq(RUN_TESTS, 'true')
 
 - task: PublishTestResults@2
   displayName: 'Publish BackstopJS test results'
-  condition: eq(variables.BACKSTOP_DATA_EXISTS, 'true')
+  condition: and(eq(variables.BACKSTOP_DATA_EXISTS, 'true'),eq(RUN_TESTS, 'true'))
   inputs:
     testResultsFormat: 'JUnit' # Options: JUnit, NUnit, VSTest, xUnit, cTest
     testResultsFiles: 'backstop_data/ci_report/*' 
@@ -106,7 +111,7 @@ steps:
 
 - task: CopyFiles@2
   displayName: "Copy BackstopJS screenshots to Artifacts Directory"
-  condition: eq(variables.BACKSTOP_DATA_EXISTS, 'true')
+  condition: and(eq(variables.BACKSTOP_DATA_EXISTS, 'true'),eq(RUN_TESTS, 'true'))
   inputs:
       sourceFolder: 'backstop_data'
       contents: '**'
@@ -114,7 +119,7 @@ steps:
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish BackstopJS screenshots to Artifacts Directory'
-  condition: eq(variables.BACKSTOP_DATA_EXISTS, 'true')
+  condition: and(eq(variables.BACKSTOP_DATA_EXISTS, 'true'),eq(RUN_TESTS, 'true'))
   inputs:
     pathtoPublish: '$(Build.ArtifactStagingDirectory)'
     artifactName: BackstopJSTestScreenshots
