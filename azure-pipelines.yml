@@ -28,6 +28,9 @@ pool:
 
 steps:
 
+- checkout: self
+  persistCredentials: true
+
 # Setup and Deploy
 
 - script: |
