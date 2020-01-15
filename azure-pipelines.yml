@@ -57,6 +57,7 @@ steps:
 
 - script: ./.ci/deploy/pantheon/dev-multidev
   displayName: 'Deploy to Pantheon'
+  condition: eq(variables.RUN_TESTS, 'true')
 
 # Behat Tests
 
