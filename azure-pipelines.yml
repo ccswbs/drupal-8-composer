@@ -18,7 +18,6 @@
 
 variables:
   phpVersion: 7.2
-  MY_TERMINUS_TOKEN: $(terminus.token)
   MY_DEVOP_TOKEN: $(devops.token)
   MY_DEVOP_URL: $(System.TeamFoundationCollectionUri)
   MY_DEVOP_PROJ: $(System.TeamProject)
@@ -36,6 +35,7 @@ steps:
 
 - script: ./.ci/test/static/run
   displayName: 'Static tests'
+  condition: eq(variables.RUN_TESTS, 'true')
 
 - script: ./.ci/build/php
   displayName: 'Build PHP'
@@ -48,7 +48,11 @@ steps:
     git push --force https://$(pat)@github.com/ccswbs/drupal-8-composer.git HEAD:master
   displayName: 'Push to upstream'
 
-- script: ./.ci/deploy/pantheon/dev-multidev
+- script: |
+    ./.ci/deploy/pantheon/dev-multidev
+    terminus auth:login --machine-token=$(terminus.token) </dev/null
+    ssh-keygen -N "" -f ~/.ssh/id_rsa &&
+    terminus ssh-key:add ~/.ssh/id_rsa.pub </dev/null
   displayName: 'Deploy to Pantheon'
 
 # Behat Tests

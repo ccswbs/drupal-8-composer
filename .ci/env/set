@@ -31,13 +31,6 @@ sudo npm install -g backstopjs --unsafe-perm=true --allow-root
 # Install jq utility
 sudo apt-get install jq
 
-# Log in to Pantheon
-terminus auth:login --machine-token="$MY_TERMINUS_TOKEN" </dev/null
-
-# Generate an SSH key pair
-ssh-keygen -N "" -f ~/.ssh/id_rsa &&
-terminus ssh-key:add ~/.ssh/id_rsa.pub </dev/null
-
 # Configure Git user
 git config --global user.email "$BUILD_REQUESTEDFOREMAIL"
 git config --global user.name "$BUILD_REQUESTEDFORID"
