@@ -21,6 +21,7 @@ variables:
   MY_DEVOP_TOKEN: $(devops.token)
   MY_DEVOP_URL: $(System.TeamFoundationCollectionUri)
   MY_DEVOP_PROJ: $(System.TeamProject)
+  COMPOSER_CACHE_DIR: $(Pipeline.Workspace)/.composer
   RUN_TESTS: $(run.tests)
 
 pool:
@@ -32,6 +33,11 @@ steps:
   persistCredentials: true
 
 # Setup
+- task: CacheBeta@1
+  inputs:
+    key: 'env_cache | "$(Agent.OS)" | "$(Build.SourceBranch)" | "$(terminus.site)"'
+    path: $(COMPOSER_CACHE_DIR)
+  displayName: 'Retrieve cached composer'
 
 - script: |
     ./.ci/env/set
@@ -41,7 +47,6 @@ steps:
   displayName: 'Initialize build environment'
 
 # Run Static Tests
-
 - script: ./.ci/test/static/run
   displayName: 'Static tests'
   condition: eq(variables.RUN_TESTS, 'true')
@@ -64,7 +69,6 @@ steps:
   condition: eq(variables.RUN_TESTS, 'true')
 
 # Behat Tests
-
 - script: ./.ci/test/behat/initialize
   displayName: 'Initialize Behat tests'
   condition: eq(variables.RUN_TESTS, 'true')
@@ -101,7 +105,6 @@ steps:
     artifactName: BehatTestFailureScreenshots
 
 # Visual Regression Tests
-
 - script: ./.ci/test/visual-regression/run
   displayName: 'Visual regression test'
   condition: eq(variables.RUN_TESTS, 'true')
@@ -137,12 +140,10 @@ steps:
     artifactName: BackstopJSTestScreenshots
 
 # Composer Lock Updater
-
 - script: true
   displayName: 'Composer lock updater'
 
 # Clean up
-
 - script: ./.ci/env/clean
   displayName: 'Clean up build environment'
   condition: always()
