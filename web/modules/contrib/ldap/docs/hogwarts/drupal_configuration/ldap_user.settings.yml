@@ -1,0 +1,99 @@
+drupalAcctProvisionServer: hogwarts
+ldapEntryProvisionServer: hogwarts
+drupalAcctProvisionTriggers:
+  drupal_on_login: drupal_on_login
+  drupal_on_update_create: drupal_on_update_create
+ldapEntryProvisionTriggers:
+  ldap_on_update_create: ldap_on_update_create
+  ldap_on_delete: ldap_on_delete
+  ldap_on_login: '0'
+  drupal_on_manual_creation: '0'
+orphanedDrupalAcctBehavior: ldap_user_orphan_do_not_check
+orphanedCheckQty: 100
+userConflictResolve: resolve
+manualAccountConflict: conflict_show_option
+acctCreation: ldap_behaviour
+ldapUserSyncMappings:
+  drupal:
+    field-mail:
+      ldap_attr: '[mail]'
+      user_attr: '[field.mail]'
+      convert: 0
+      direction: drupal
+      user_tokens: ''
+      config_module: ldap_user
+      prov_module: ldap_user
+      enabled: true
+      prov_events:
+        - create_drupal_user
+  ldap:
+    cn:
+      ldap_attr: '[cn]'
+      user_attr: '[property.name]'
+      convert: false
+      direction: ldap
+      user_tokens: ''
+      config_module: ldap_user
+      prov_module: ldap_user
+      enabled: true
+      prov_events:
+        - create_ldap_entry
+        - sync_to_ldap_entry
+    mail:
+      ldap_attr: '[mail]'
+      user_attr: '[property.mail]'
+      convert: false
+      direction: ldap
+      user_tokens: ''
+      config_module: ldap_user
+      prov_module: ldap_user
+      enabled: true
+      prov_events:
+        - create_ldap_entry
+        - sync_to_ldap_entry
+    dn:
+      ldap_attr: '[dn]'
+      user_attr: user_tokens
+      convert: false
+      direction: ldap
+      user_tokens: 'cn=[property.name],ou=people,dc=hogwarts,dc=edu '
+      config_module: ldap_user
+      prov_module: ldap_user
+     enabled: true
+      prov_events:
+        - create_ldap_entry
+        - sync_to_ldap_entry
+    'objectClass:0':
+      ldap_attr: '[objectClass:0]'
+      user_attr: user_tokens
+      convert: false
+      direction: ldap
+      user_tokens: organizationalPerson
+      config_module: ldap_user
+      prov_module: ldap_user
+      enabled: true
+      prov_events:
+        - create_ldap_entry
+    'objectClass:1 ':
+      ldap_attr: '[objectClass:1] '
+      user_attr: user_tokens
+      convert: false
+      direction: ldap
+      user_tokens: person
+      config_module: ldap_user
+      prov_module: ldap_user
+      enabled: true
+      prov_events:
+        - create_ldap_entry
+    'objectClass:2 ':
+      ldap_attr: '[objectClass:2] '
+      user_attr: user_tokens
+      convert: false
+      direction: ldap
+      user_tokens: inetOrgPerson
+      config_module: ldap_user
+      prov_module: ldap_user
+      enabled: true
+      prov_events:
+        - create_ldap_entry
+orphanedAccountCheckInterval: always

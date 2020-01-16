@@ -2022,6 +2022,80 @@
         ]
     },
     {
+        "name": "drupal/ldap",
+        "version": "3.0.0-beta3",
+        "version_normalized": "3.0.0.0-beta3",
+        "source": {
+            "type": "git",
+            "url": "https://git.drupalcode.org/project/ldap.git",
+            "reference": "8.x-3.0-beta3"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://ftp.drupal.org/files/projects/ldap-8.x-3.0-beta3.zip",
+            "reference": "8.x-3.0-beta3",
+            "shasum": "0ffbcf564c95deb911e06d184b2bb59443378f64"
+        },
+        "require": {
+            "drupal/core": "~8.0"
+        },
+        "require-dev": {
+            "drupal/authorization": "*",
+            "drupal/externalauth": "*",
+            "drupal/ldap_servers": "*",
+            "drupal/ldap_user": "*"
+        },
+        "type": "drupal-module",
+        "extra": {
+            "branch-alias": {
+                "dev-3.x": "3.x-dev"
+            },
+            "drupal": {
+                "version": "8.x-3.0-beta3",
+                "datestamp": "1529163524",
+                "security-coverage": {
+                    "status": "not-covered",
+                    "message": "Beta releases are not covered by Drupal security advisories."
+                }
+            }
+        },
+        "installation-source": "dist",
+        "notification-url": "https://packages.drupal.org/8/downloads",
+        "license": [
+            "GPL-2.0-or-later"
+        ],
+        "authors": [
+            {
+                "name": "dgtlmoon",
+                "homepage": "https://www.drupal.org/user/25027"
+            },
+            {
+                "name": "grahl",
+                "homepage": "https://www.drupal.org/user/146040"
+            },
+            {
+                "name": "johnbarclay",
+                "homepage": "https://www.drupal.org/user/225037"
+            },
+            {
+                "name": "larowlan",
+                "homepage": "https://www.drupal.org/user/395439"
+            },
+            {
+                "name": "queenvictoria",
+                "homepage": "https://www.drupal.org/user/856454"
+            },
+            {
+                "name": "welly",
+                "homepage": "https://www.drupal.org/user/354705"
+            }
+        ],
+        "homepage": "https://www.drupal.org/project/ldap",
+        "support": {
+            "source": "https://git.drupalcode.org/project/ldap"
+        }
+    },
+    {
         "name": "drush-ops/behat-drush-endpoint",
         "version": "9.3.0",
         "version_normalized": "9.3.0.0",

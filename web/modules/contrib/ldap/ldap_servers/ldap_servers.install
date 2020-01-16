@@ -1,0 +1,80 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the LDAP API module.
+ */
+
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_requirements().
+ */
+function ldap_servers_requirements($phase) {
+  $requirements = [];
+
+  if ($phase == 'install') {
+    $requirements['php'] = [
+      'title' => t('PHP'),
+      'value' => ($phase == 'runtime') ? \Drupal::l(phpversion(), new Url('system.php')) : phpversion(),
+    ];
+    if (version_compare(phpversion(), '5.6.0') < 0) {
+      $requirements['php']['description'] = t('Your PHP installation is too old. Please upgrade to at least %version.', ['%version' => '5.6.0']);
+      $requirements['php']['severity'] = REQUIREMENT_ERROR;
+    }
+
+    $requirements['ldap_extension_loaded']['title'] = t('LDAP Extension Loaded');
+    if (extension_loaded('ldap')) {
+      $requirements['ldap_extension_loaded']['severity'] = REQUIREMENT_OK;
+    }
+    else {
+      $requirements['ldap_extension_loaded']['severity'] = REQUIREMENT_ERROR;
+      $requirements['ldap_extension_loaded']['description'] = t('No LDAP PHP Extension is loaded for PHP, so LDAP will not work properly.');
+    }
+  }
+
+  if ($phase == 'runtime' && !extension_loaded('ldap')) {
+    $requirements['ldap_extension_loaded']['title'] = t('LDAP Extension Loaded');
+    $requirements['ldap_extension_loaded']['severity'] = REQUIREMENT_ERROR;
+    $requirements['ldap_extension_loaded']['description'] = t('No LDAP PHP Extension is loaded for PHP, so LDAP will not work properly.');
+  }
+  // Check that ldapauth not installed.
+  return $requirements;
+}
+
+/**
+ * Updates bind method to new value.
+ */
+function ldap_servers_update_8301() {
+  $factory = \Drupal::service('ldap.servers');
+  /** @var \Drupal\ldap_servers\ServerFactory $factory */
+  $servers = $factory->getAllServers();
+  foreach ($servers as $server) {
+    $currentMethod = $server->get('bind_method');
+    if ($currentMethod == 1) {
+      $server->set('bind_method', 'service_account');
+    }
+    elseif ($currentMethod == 2) {
+      $server->set('bind_method', 'user');
+    }
+    elseif ($currentMethod == 3) {
+      $server->set('bind_method', 'anon');
+    }
+    elseif ($currentMethod == 4) {
+      $server->set('bind_method', 'anon_user');
+    }
+    $server->save();
+  }
+}
+
+/**
+ * Removes HTTPS checking.
+ */
+function ldap_servers_update_8302() {
+  $config_factory = \Drupal::configFactory();
+  $config = $config_factory->getEditable('ldap_servers.settings');
+  $config->delete();
+
+  return t('HTTPS validation was removed, if you need mixed mode consider another module such as securelogin for this. Mixed mode is strongly discouraged.');
+
+}

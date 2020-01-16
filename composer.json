@@ -20,6 +20,7 @@
         "drupal/core": "^8.8",
         "drupal/core-recommended": "^8.8",
         "drupal/domain": "^1.0@alpha",
+        "drupal/ldap": "^3.0",
         "drush-ops/behat-drush-endpoint": "^9.3",
         "drush/drush": "~8.3",
         "pantheon-systems/quicksilver-pushback": "^2",
