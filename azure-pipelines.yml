@@ -40,15 +40,13 @@ steps:
     terminus ssh-key:add ~/.ssh/id_rsa.pub </dev/null
   displayName: 'Initialize build environment'
 
-- script: composer install --no-ansi --no-interaction --optimize-autoloader --no-progress
-  displayName: 'Composer Install'
-
 # Run Static Tests
 
 - script: ./.ci/test/static/run
   displayName: 'Static tests'
   condition: eq(variables.RUN_TESTS, 'true')
 
+# Build Assets (Composer Install)
 - script: ./.ci/build/php
   displayName: 'Build PHP'
 

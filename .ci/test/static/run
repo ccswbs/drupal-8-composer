@@ -9,6 +9,9 @@ set -eo pipefail
 # Some example are code sniffing and unit testing
 #
 
+# Run composer install to get the vendor directory
+composer install --no-ansi --no-interaction --optimize-autoloader --no-progress
+
 # Run unit tests
 composer -n unit-test
 
