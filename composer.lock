@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "116f1e627f97cf2bcbb6efcfbb23297b",
+    "content-hash": "00867bec988d52fef098084235042779",
     "packages": [
         {
             "name": "alchemy/zippy",
@@ -1252,8 +1252,7 @@
             "homepage": "https://www.drupal.org/project/authorization",
             "support": {
                 "source": "https://git.drupalcode.org/project/authorization"
-            },
-            "time": "2019-12-29T14:06:29+00:00"
+            }
         },
         {
             "name": "drupal/config_direct_save",
@@ -8309,8 +8308,8 @@
     "stability-flags": {
         "drupal/authorization": 20,
         "drupal/domain": 15,
-        "drupal/ldap_servers": 10,
-        "drupal/ldap": 10
+        "drupal/ldap": 10,
+        "drupal/ldap_servers": 10
     },
     "prefer-stable": true,
     "prefer-lowest": false,
