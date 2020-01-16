@@ -20,6 +20,7 @@
         "drupal/core": "^8.8",
         "drupal/core-recommended": "^8.8",
         "drupal/domain": "^1.0@alpha",
+        "drupal/externalauth": "^1.2",
         "drupal/ldap": "^3.0@beta",
         "drupal/pathauto": "^1.6",
         "drupal/token": "^1.6",
