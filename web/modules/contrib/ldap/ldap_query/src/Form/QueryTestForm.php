@@ -6,7 +6,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\ldap_query\Controller\QueryController;
 use Drupal\ldap_servers\Form\ServerTestForm;
-use Drupal\ldap_servers\Helper\MassageAttributes;
 
 /**
  * Test form for queries.
@@ -54,8 +53,7 @@ class QueryTestForm extends FormBase {
       foreach ($data as $entry) {
         $row = [$entry['dn']];
         foreach ($attributes as $attribute_data) {
-          $massager = new MassageAttributes();
-          $processedAttributeName = $massager->processAttributeName($attribute_data);
+          $processedAttributeName = mb_strtolower($attribute_data);
           if (!isset($entry[$processedAttributeName])) {
             $row[] = 'No data';
           }

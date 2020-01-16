@@ -85,11 +85,22 @@ class ServerForm extends EntityForm {
     ];
 
     $form['server']['port'] = [
-      '#type' => 'textfield',
+      '#type' => 'number',
       '#title' => $this->t('Server port'),
-      '#maxlength' => 11,
+      '#min' => 1,
+      '#max' => 65535,
       '#default_value' => $server->get('port') ? $server->get('port') : 389,
       '#description' => $this->t("The TCP/IP port on the above server which accepts LDAP connections. Must be an integer."),
+      '#required' => TRUE,
+    ];
+
+    $form['server']['timeout'] = [
+      '#type' => 'number',
+      '#title' => $this->t('Network timeout'),
+      '#min' => -1,
+      '#max' => 999,
+      '#default_value' => $server->get('timeout') ? $server->get('timeout') : 10,
+      '#description' => $this->t("How long to wait for a response from the LDAP server in seconds."),
       '#required' => TRUE,
     ];
 
@@ -469,6 +480,25 @@ class ServerForm extends EntityForm {
           $this->entity->set('bindpw', $oldConfiguration->get('bindpw'));
         }
       }
+    }
+
+    $fields = [
+      'user_attr',
+      'account_name_attr',
+      'mail_attr',
+      'mail_template',
+      'picture_attr',
+      'unique_persistent_attr',
+      'user_dn_expression',
+      'grp_memb_attr',
+      'grp_object_cat',
+      'grp_memb_attr_match_user_attr',
+      'grp_user_memb_attr',
+      'grp_derive_from_dn_attr',
+    ];
+
+    foreach ($fields as $field) {
+      $this->entity->set($field, mb_strtolower(trim($this->entity->get($field))));
     }
 
     $status = $this->entity->save();

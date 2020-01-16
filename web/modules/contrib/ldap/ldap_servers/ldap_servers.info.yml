@@ -3,12 +3,11 @@ description: 'Implements LDAP Server Configuration'
 type: module
 # core: 8.x
 package: 'Lightweight Directory Access Protocol'
-dependencies: {  }
 
 configure: entity.ldap_server.collection
 
-# Information added by Drupal.org packaging script on 2017-08-27
-version: '8.x-3.0-beta3'
+# Information added by Drupal.org packaging script on 2019-05-31
+version: '8.x-3.0-beta7'
 core: '8.x'
 project: 'ldap'
-datestamp: 1503842947
+datestamp: 1559320103

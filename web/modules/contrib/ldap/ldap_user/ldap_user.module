@@ -7,12 +7,10 @@
 
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\ldap_servers\OrphanProcessor;
-use Drupal\ldap_servers\Processor\TokenProcessor;
-use Drupal\ldap_user\LdapUserAttributesInterface;
+use Drupal\ldap_servers\Helper\CredentialsStorage;
+use Drupal\ldap_servers\LdapUserAttributesInterface;
 use Drupal\ldap_user\Helper\LdapConfiguration;
 use Drupal\ldap_user\Processor\DrupalUserProcessor;
-use Drupal\ldap_user\Processor\GroupUserUpdateProcessor;
 use Drupal\ldap_user\Processor\LdapUserProcessor;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -25,19 +23,15 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 function ldap_user_cron() {
   $check_orphans = \Drupal::config('ldap_user.settings')->get('orphanedDrupalAcctBehavior');
   if ($check_orphans != 'ldap_user_orphan_do_not_check') {
-    $processor = new OrphanProcessor();
-    $result = $processor->checkOrphans();
-    if ($result !== TRUE) {
-      \Drupal::logger('ldap_user')->error('Check for orphaned LDAP provisioned Drupal accounts failed.');
-    }
+    $processor = \Drupal::service('ldap_user.orphan_processor');
+    $processor->checkOrphans();
   }
 
   $ldapUpdateQuery = \Drupal::config('ldap_user.settings')->get('userUpdateCronQuery');
-  if (\Drupal::moduleHandler()->moduleExists('ldap_query') &&
-    $ldapUpdateQuery != NULL && $ldapUpdateQuery != 'none') {
-    $processor = new GroupUserUpdateProcessor($ldapUpdateQuery);
+  if (\Drupal::moduleHandler()->moduleExists('ldap_query') && $ldapUpdateQuery != NULL && $ldapUpdateQuery != 'none') {
+    $processor = \Drupal::service('ldap_user.group_user_update_processor');
     if ($processor->updateDue()) {
-      $processor->runQuery();
+      $processor->runQuery($ldapUpdateQuery);
     }
   }
 }
@@ -91,6 +85,19 @@ function ldap_user_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
+ * Implements hook_module_implements_alter().
+ */
+function ldap_user_module_implements_alter(&$implementations, $hook) {
+  // We are moving authorization to the end because its user saving causes
+  // issues.
+  if ($hook == 'user_login' && isset($implementations['authorization'])) {
+    $group = $implementations['authorization'];
+    unset($implementations['authorization']);
+    $implementations['authorization'] = $group;
+  }
+}
+
+/**
  * Implements hook_user_login().
  */
 function ldap_user_user_login($account) {
@@ -112,14 +119,6 @@ function ldap_user_user_insert($account) {
 function ldap_user_user_update($account) {
   $processor = new DrupalUserProcessor();
   $processor->drupalUserUpdated($account);
-}
-
-/**
- * Implements hook_ENTITY_TYPE_presave().
- */
-function ldap_user_user_presave($account) {
-  $processor = new DrupalUserProcessor();
-  $processor->drupalUserPreSave($account);
 }
 
 /**
@@ -218,12 +217,12 @@ function ldap_user_grab_password_validate($form, FormState &$form_state) {
   // to update email.
   if (!empty($form_state->getValue('current_pass_required_values'))) {
     if (!empty($form_state->getValue('current_pass')) && empty($form_state->getValue('pass'))) {
-      TokenProcessor::passwordStorage('set', $form_state->getValue('current_pass'));
+      CredentialsStorage::storeUserPassword($form_state->getValue('current_pass'));
     }
   }
   // Otherwise a logon form.
   elseif (!empty($form_state->getValue('pass'))) {
-    TokenProcessor::passwordStorage('set', $form_state->getValue('pass'));
+    CredentialsStorage::storeUserPassword($form_state->getValue('pass'));
   }
 }
 
@@ -238,6 +237,14 @@ function ldap_user_form_user_register_form_alter(&$form, $form_state) {
 
   if (!\Drupal::currentUser()->hasPermission('administer users')) {
     return;
+  }
+
+  if (\Drupal::config('ldap_user.settings')->get('disableAdminPasswordField') == TRUE) {
+    $form['account']['pass']['#type'] = 'value';
+    $form['account']['pass']['#value'] = user_password(40);
+    $form['account']['pass_disabled']['#type'] = 'fieldset';
+    $form['account']['pass_disabled']['#title'] = t('Password');
+    $form['account']['pass_disabled'][]['#markup'] = t('LDAP has disabled the password field and generated a random password.');
   }
 
   $form['ldap_user_fields']['#type'] = 'fieldset';

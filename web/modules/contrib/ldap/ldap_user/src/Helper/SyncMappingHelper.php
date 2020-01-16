@@ -3,8 +3,8 @@
 namespace Drupal\ldap_user\Helper;
 
 use Drupal\ldap_servers\Entity\Server;
-use Drupal\ldap_servers\Processor\TokenProcessor;
-use Drupal\ldap_user\LdapUserAttributesInterface;
+use Drupal\ldap_servers\Helper\ConversionHelper;
+use Drupal\ldap_servers\LdapUserAttributesInterface;
 
 /**
  * Helper class to process user field synchronisation mappings.
@@ -106,7 +106,7 @@ class SyncMappingHelper implements LdapUserAttributesInterface {
     // general implementation and could be its own class.
     foreach ($directions as $direction) {
       if (!empty($this->config->get('ldapUserSyncMappings')[$direction])) {
-        foreach ($this->config->get('ldapUserSyncMappings')[$direction] as $attribute => $mapping) {
+        foreach ($this->config->get('ldapUserSyncMappings')[$direction] as $mapping) {
           if (!empty($mapping['prov_events'])) {
             $result = count(array_intersect($prov_events, $mapping['prov_events']));
             if ($result) {
@@ -235,8 +235,7 @@ class SyncMappingHelper implements LdapUserAttributesInterface {
         if (count(array_intersect($prov_events, $detail['prov_events']))) {
           // Add the attribute to our array.
           if ($detail['ldap_attr']) {
-            $tokenProcessor = new TokenProcessor();
-            $tokenProcessor->extractTokenAttributes($required_attributes, $detail['ldap_attr']);
+            ConversionHelper::extractTokenAttributes($required_attributes, $detail['ldap_attr']);
           }
         }
       }

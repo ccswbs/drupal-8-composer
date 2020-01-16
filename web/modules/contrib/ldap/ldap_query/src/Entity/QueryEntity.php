@@ -23,14 +23,13 @@ use Drupal\ldap_query\QueryEntityInterface;
  *     },
  *   },
  *   config_prefix = "ldap_query_entity",
- *   admin_permission = "administer site configuration",
+ *   admin_permission = "administer ldap",
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",
  *     "uuid" = "uuid"
  *   },
  *   links = {
- *     "canonical" = "/admin/config/people/ldap/query/{ldap_query_entity}",
  *     "add-form" = "/admin/config/people/ldap/query/add",
  *     "edit-form" = "/admin/config/people/ldap/query/{ldap_query_entity}/edit",
  *     "delete-form" = "/admin/config/people/ldap/query/{ldap_query_entity}/delete",

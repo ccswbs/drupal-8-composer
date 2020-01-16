@@ -8,13 +8,19 @@
 use Drupal\Core\Url;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Utility\UpdateException;
-use Drupal\ldap_user\LdapUserAttributesInterface;
+use Drupal\ldap_servers\LdapUserAttributesInterface;
 
 /**
- * Implements hook_install().
+ * Implements hook_module_preinstall().
  */
-function ldap_user_install() {
-  \Drupal::service('router.builder')->rebuild();
+function ldap_user_module_preinstall($module) {
+  if ($module == 'ldap_user') {
+    $type = \Drupal::entityTypeManager()->getDefinition('user');
+    $fields = ldap_user_entity_base_field_info($type);
+    foreach ($fields as $name => $data) {
+      \Drupal::entityDefinitionUpdateManager()->installFieldStorageDefinition($name, 'user', 'ldap_user', $data);
+    }
+  }
 }
 
 /**
@@ -104,9 +110,11 @@ function ldap_user_update_8304() {
   $config_factory = \Drupal::configFactory();
   $config = $config_factory->getEditable('ldap_user.settings');
   $data = $config->get('ldap_user_conf');
-  $config->clear('ldap_user_conf');
-  $config->setData($data);
-  $config->save(TRUE);
+  if ($data) {
+    $config->clear('ldap_user_conf');
+    $config->setData($data);
+    $config->save(TRUE);
+  }
 }
 
 /**

@@ -3,30 +3,37 @@
 namespace Drupal\ldap_authorization\Plugin\authorization\Provider;
 
 use Drupal\authorization\AuthorizationSkipAuthorization;
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\authorization\Provider\ProviderPluginBase;
+use Drupal\ldap_servers\Entity\Server;
 use Drupal\ldap_servers\Helper\ConversionHelper;
 use Drupal\ldap_user\Helper\ExternalAuthenticationHelper;
+use Drupal\user\UserInterface;
 
 /**
  * The LDAP authorization provider for authorization module.
  *
  * @AuthorizationProvider(
  *   id = "ldap_provider",
- *   label = @Translation("LDAP Authorization"),
- *   description = @Translation("Provider for LDAP group authorization.")
+ *   label = @Translation("LDAP Authorization")
  * )
  */
 class LDAPAuthorizationProvider extends ProviderPluginBase {
 
-  public $providerType = 'ldap';
-  public $handlers = ['ldap', 'ldap_authentication'];
+  /**
+   * {@inheritdoc}
+   */
+  protected $handlers = ['ldap', 'ldap_authentication'];
 
-  public $syncOnLogon = TRUE;
+  /**
+   * {@inheritdoc}
+   */
+  protected $syncOnLogonSupported = TRUE;
 
-  public $revokeProviderProvisioned;
-  public $regrantProviderProvisioned;
+  /**
+   * {@inheritdoc}
+   */
+  protected $revocationSupported = TRUE;
 
   /**
    * {@inheritdoc}
@@ -102,7 +109,7 @@ class LDAPAuthorizationProvider extends ProviderPluginBase {
         <li><code>cn=gryffindor,ou=groups,dc=hogwarts,dc=edu</code></li>
         <li><code>cn=faculty,ou=groups,dc=hogwarts,dc=edu</code></li>
         </ul>
-        <strong>Warning: If you enable "Create <em>@consumer_namePlural</em> if they do not exist" under conditions, all LDAP groups will be synced!</strong>', $tokens),
+        <strong>Warning: If you enable "Create <em>@consumer_name</em> targets if they do not exist" under conditions, all LDAP groups will be synced!</strong>', $tokens),
       '#collapsible' => TRUE,
     ];
 
@@ -117,17 +124,7 @@ class LDAPAuthorizationProvider extends ProviderPluginBase {
   }
 
   /**
-   * Build the form for the individual row.
-   *
-   * @param array $form
-   *   Form.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   Form state.
-   * @param int $index
-   *   Index.
-   *
-   * @return array
-   *   Returns form row.
+   * {@inheritdoc}
    */
   public function buildRowForm(array $form, FormStateInterface $form_state, $index = 0) {
     $row = [];
@@ -137,42 +134,22 @@ class LDAPAuthorizationProvider extends ProviderPluginBase {
     $row['query'] = [
       '#type' => 'textfield',
       '#title' => t('LDAP query'),
-      '#default_value' => isset($mappings[$index]) ? $mappings[$index]['query'] : NULL,
+      '#default_value' => isset($mappings[$index]['query']) ? $mappings[$index]['query'] : NULL,
     ];
     $row['is_regex'] = [
       '#type' => 'checkbox',
       '#title' => t('Is this query a regular expression?'),
-      '#default_value' => isset($mappings[$index]) ? $mappings[$index]['is_regex'] : NULL,
+      '#default_value' => isset($mappings[$index]['is_regex']) ? $mappings[$index]['is_regex'] : NULL,
     ];
 
     return $row;
   }
 
   /**
-   * Get valid proposals.
-   *
-   * @param \Drupal\user\Entity\User|mixed $user
-   *   Drupal user.
-   * @param mixed $op
-   *   Operation, unknown, unused.
-   * @param mixed $identifier
-   *   Module identifier, unknown, unused.
-   *
-   * @return array|null
-   *   Returns proposals.
-   *
-   * @throws \Drupal\authorization\AuthorizationSkipAuthorization
+   * {@inheritdoc}
    */
-  public function getProposals($user, $op, $identifier) {
-    // In 7.x-2.x we get groups from Server via three methods
-    // and then filter out the ones we don't want
-    // https://www.drupal.org/node/1498558
-    // Server->groupUserMembershipsFromDn($user)
-    // https://www.drupal.org/node/1487018
-    // https://www.drupal.org/node/1499172
-    // Server->groupMembershipsFromUser($user, 'group_dns')
-    // So what does the 'query' do then? Is it the filter?
-    // Configure this provider.
+  public function getProposals(UserInterface $user) {
+
     // Do not continue if user should be excluded from LDAP authentication.
     if (ExternalAuthenticationHelper::excludeUser($user)) {
       throw new AuthorizationSkipAuthorization();
@@ -183,10 +160,16 @@ class LDAPAuthorizationProvider extends ProviderPluginBase {
 
     // Load the correct server.
     $server_id = $config['status']['server'];
+    /** @var \Drupal\ldap_servers\ServerFactory $factory */
     $factory = \Drupal::service('ldap.servers');
     /** @var \Drupal\ldap_servers\Entity\Server $server */
     $server = $factory->getServerByIdEnabled($server_id);
     $ldapUserData = $factory->getUserDataFromServerByAccount($user, $server_id);
+
+    if (!$ldapUserData && $user->isNew()) {
+      // If we don't have a real user yet, fall back to the account name.
+      $ldapUserData = $factory->getUserDataFromServerByIdentifier($user->getAccountName(), $server_id);
+    }
 
     if (!$ldapUserData && $this->configuration['status']['only_ldap_authenticated'] == TRUE) {
       throw new AuthorizationSkipAuthorization();
@@ -206,34 +189,23 @@ class LDAPAuthorizationProvider extends ProviderPluginBase {
 
     $proposed_ldap_authorizations = array_merge($derive_from_dn_authorizations, $group_dns);
     $proposed_ldap_authorizations = array_unique($proposed_ldap_authorizations);
-    if (\Drupal::config('ldap_help.settings')->get('watchdog_detail')) {
-      \Drupal::logger('ldap_authorization')->debug(
+    \Drupal::service('ldap.detail_log')->log(
         'Available authorizations to test: @authorizations',
-        ['@authorizations' => implode("\n", $proposed_ldap_authorizations)]
+        ['@authorizations' => implode("\n", $proposed_ldap_authorizations)],
+        'ldap_authorization'
       );
-    }
 
     return (count($proposed_ldap_authorizations)) ? array_combine($proposed_ldap_authorizations, $proposed_ldap_authorizations) : [];
   }
 
   /**
-   * Filter the proposals.
-   *
-   * @param array|mixed $proposed_ldap_authorizations
-   *   Authorizations to check.
-   * @param null|string $op
-   *   Operation to apply it on.
-   * @param array|mixed $provider_mapping
-   *   The provider mapping.
-   *
-   * @return array
-   *   Filtered proposals.
+   * {@inheritdoc}
    */
-  public function filterProposals($proposed_ldap_authorizations, $op, $provider_mapping) {
+  public function filterProposals(array $proposedLdapAuthorizations, array $providerMapping) {
     $filtered_proposals = [];
-    foreach ($proposed_ldap_authorizations as $key => $value) {
-      if ($provider_mapping['is_regex']) {
-        $pattern = $provider_mapping['query'];
+    foreach ($proposedLdapAuthorizations as $key => $value) {
+      if ($providerMapping['is_regex']) {
+        $pattern = $providerMapping['query'];
         try {
           if (preg_match($pattern, $value, $matches)) {
             // If there is a sub-pattern then return the first one.
@@ -253,7 +225,7 @@ class LDAPAuthorizationProvider extends ProviderPluginBase {
             );
         }
       }
-      elseif ($value == $provider_mapping['query']) {
+      elseif ($value == $providerMapping['query']) {
         $filtered_proposals[$key] = $value;
       }
     }
@@ -261,36 +233,27 @@ class LDAPAuthorizationProvider extends ProviderPluginBase {
   }
 
   /**
-   * Sanitizes given proposals.
-   *
-   * @param array|mixed $proposals
-   *   Proposals to sanitize.
-   * @param mixed $op
-   *   Operation, unknown, unused.
-   *
-   * @return array
-   *   Sanitized proposals.
+   * {@inheritdoc}
    */
-  public function sanitizeProposals($proposals, $op = NULL) {
+  public function sanitizeProposals(array $proposals) {
     // Configure this provider.
     /** @var \Drupal\authorization\Entity\AuthorizationProfile $profile */
     $profile = $this->configuration['profile'];
     $config = $profile->getProviderConfig();
-    $factory = \Drupal::service('ldap.servers');
     foreach ($proposals as $key => $authorization_id) {
       if ($config['filter_and_mappings']['use_first_attr_as_groupid']) {
-        $attr_parts = $factory->ldapExplodeDn($authorization_id, 0);
-        if (count($attr_parts) > 0) {
+        $attr_parts = Server::ldapExplodeDn($authorization_id, 0);
+        if ( is_array($attr_parts) && count($attr_parts) > 0) {
           $first_part = explode('=', $attr_parts[0]);
           if (count($first_part) > 1) {
             // @FIXME: Potential bug on trim.
             $authorization_id = ConversionHelper::unescapeDnValue(trim($first_part[1]));
           }
         }
-        $new_key = Unicode::strtolower($authorization_id);
+        $new_key = mb_strtolower($authorization_id);
       }
       else {
-        $new_key = Unicode::strtolower($key);
+        $new_key = mb_strtolower($key);
       }
       $proposals[$new_key] = $authorization_id;
       if ($key != $new_key) {
@@ -301,7 +264,7 @@ class LDAPAuthorizationProvider extends ProviderPluginBase {
   }
 
   /**
-   * Validates the form row.
+   * {@inheritdoc}
    */
   public function validateRowForm(array &$form, FormStateInterface $form_state) {
     parent::validateRowForm($form, $form_state);

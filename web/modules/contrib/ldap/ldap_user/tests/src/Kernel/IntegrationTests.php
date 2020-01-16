@@ -15,7 +15,12 @@ class IntegrationTests extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['ldap_servers', 'ldap_user', 'user'];
+  public static $modules = [
+    'authorization',
+    'ldap_servers',
+    'ldap_user',
+    'user',
+  ];
 
   private $configFactory;
 
@@ -42,9 +47,10 @@ class IntegrationTests extends KernelTestBase {
   public function brokenTestProcessor() {
     $processor = new DrupalUserProcessor();
     $result = $processor->provisionDrupalAccount(['name' => 'hpotter']);
+    $user = $processor->getUserAccount();
     // @TODO: Inject a server configuration for the provisioning server,
     // override the server factory to provide a dummy server.
-    $this->assertInstanceOf('\Drupal\user\Entity\User', $result);
+    $this->assertInstanceOf('\Drupal\user\Entity\User', $user);
     // @TODO: Amend test scenario to user update, user insert, user delete.
     // @TODO: Amend test scenario to log user in, i.e. drupalUserLogsIn().
   }

@@ -2,11 +2,15 @@
 
 namespace Drupal\ldap_servers;
 
+use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Link;
+use Drupal\Core\Logger\LoggerChannelInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
-use Drupal\ldap_servers\Entity\Server;
-use Drupal\ldap_servers\Processor\TokenProcessor;
+use Drupal\ldap_servers\Helper\ConversionHelper;
 use Drupal\ldap_user\Helper\ExternalAuthenticationHelper;
-use Drupal\ldap_user\LdapUserAttributesInterface;
 use Drupal\ldap_user\Helper\LdapConfiguration;
 use Drupal\user\UserInterface;
 
@@ -20,17 +24,34 @@ use Drupal\user\UserInterface;
  */
 class ServerFactory implements LdapUserAttributesInterface {
 
+  use StringTranslationTrait;
+
+  protected $config;
+  protected $logger;
+  protected $entityManager;
+  protected $cache;
+
+  /**
+   * Constructor.
+   */
+  public function __construct(ConfigFactoryInterface $config_factory, LoggerChannelInterface $logger, EntityTypeManagerInterface $entity_type_manager, CacheBackendInterface $cache) {
+    $this->config = $config_factory;
+    $this->logger = $logger;
+    $this->entityManager = $entity_type_manager->getStorage('ldap_server');
+    $this->cache = $cache;
+  }
+
   /**
    * Fetch server by ID.
    *
    * @param string $sid
    *   Server id.
    *
-   * @return \Drupal\ldap_servers\Entity\Server
+   * @return \Drupal\Core\Entity\EntityInterface|\Drupal\ldap_servers\Entity\Server
    *   Server entity.
    */
   public function getServerById($sid) {
-    return Server::load($sid);
+    return $this->entityManager->load($sid);
   }
 
   /**
@@ -39,11 +60,11 @@ class ServerFactory implements LdapUserAttributesInterface {
    * @param string $sid
    *   Server id.
    *
-   * @return bool|\Drupal\ldap_servers\Entity\Server
+   * @return bool|EntityInterface|\Drupal\ldap_servers\Entity\Server
    *   Server entity if enabled or false.
    */
   public function getServerByIdEnabled($sid) {
-    $server = Server::load($sid);
+    $server = $this->entityManager->load($sid);
     if ($server && $server->status()) {
       return $server;
     }
@@ -55,26 +76,27 @@ class ServerFactory implements LdapUserAttributesInterface {
   /**
    * Fetch all servers.
    *
-   * @return \Drupal\ldap_servers\Entity\Server[]
+   * @return \Drupal\Core\Entity\EntityInterface[]|\Drupal\ldap_servers\Entity\Server[]
    *   An array of all servers.
    */
   public function getAllServers() {
-    $query = \Drupal::entityQuery('ldap_server');
-    $ids = $query->execute();
-    return Server::loadMultiple($ids);
+    $ids = $this->entityManager->getQuery()->execute();
+    return $this->entityManager->loadMultiple($ids);
   }
 
   /**
    * Fetch all enabled servers.
    *
-   * @return \Drupal\ldap_servers\Entity\Server[]
+   * @return \Drupal\Core\Entity\EntityInterface[]|\Drupal\ldap_servers\Entity\Server[]
    *   An array of all enabled servers.
    */
   public function getEnabledServers() {
-    $query = \Drupal::entityQuery('ldap_server')
-      ->condition('status', 1);
-    $ids = $query->execute();
-    return Server::loadMultiple($ids);
+    $ids = $this->entityManager
+      ->getQuery()
+      ->condition('status', 1)
+      ->execute();
+
+    return $this->entityManager->loadMultiple($ids);
   }
 
   /**
@@ -90,7 +112,7 @@ class ServerFactory implements LdapUserAttributesInterface {
    */
   public function getUserDataFromServerByIdentifier($identifier, $id) {
     // Try to retrieve the user from the cache.
-    $cache = \Drupal::cache()->get('ldap_servers:user_data:' . $identifier);
+    $cache = $this->cache->get('ldap_servers:user_data:' . $identifier);
     if ($cache && $cache->data) {
       return $cache->data;
     }
@@ -98,7 +120,7 @@ class ServerFactory implements LdapUserAttributesInterface {
     $server = $this->getServerByIdEnabled($id);
 
     if (!$server) {
-      \Drupal::logger('ldap_servers')->error('Failed to load server object %sid in _ldap_servers_get_user_ldap_data', ['%sid' => $id]);
+      $this->logger->error('Failed to load server object %sid in _ldap_servers_get_user_ldap_data', ['%sid' => $id]);
       return FALSE;
     }
 
@@ -108,7 +130,7 @@ class ServerFactory implements LdapUserAttributesInterface {
       $ldap_user['id'] = $id;
       $cache_expiry = 5 * 60 + time();
       $cache_tags = ['ldap', 'ldap_servers', 'ldap_servers.user_data'];
-      \Drupal::cache()->set('ldap_servers:user_data:' . $identifier, $ldap_user, $cache_expiry, $cache_tags);
+      $this->cache->set('ldap_servers:user_data:' . $identifier, $ldap_user, $cache_expiry, $cache_tags);
     }
 
     return $ldap_user;
@@ -152,7 +174,7 @@ class ServerFactory implements LdapUserAttributesInterface {
    *   Returns data or FALSE.
    */
   public function getUserDataByAccount(UserInterface $account, array $ldap_context = NULL) {
-    $provisioningServer = \Drupal::config('ldap_user.settings')->get('drupalAcctProvisionServer');
+    $provisioningServer = $this->config('ldap_user.settings')->get('drupalAcctProvisionServer');
     $id = NULL;
     if (!$account) {
       return FALSE;
@@ -176,26 +198,11 @@ class ServerFactory implements LdapUserAttributesInterface {
         $id = $ids[0];
       }
       else {
-        \Drupal::logger('ldap_user')->error('Multiple servers enabled, one has to be set up for user provision.');
+        $this->logger->error('Multiple servers enabled, one has to be set up for user provision.');
         return FALSE;
       }
     }
     return $this->getUserDataFromServerByAccount($account, $id, $ldap_context);
-  }
-
-  /**
-   * Duplicate function in Server due to test complications.
-   *
-   * @param string $dn
-   *   DN to process.
-   * @param int $attribute
-   *   Attributes to explode.
-   *
-   * @return array
-   *   Exploded DN.
-   */
-  public function ldapExplodeDn($dn, $attribute) {
-    return ldap_explode_dn($dn, $attribute);
   }
 
   /**
@@ -210,9 +217,8 @@ class ServerFactory implements LdapUserAttributesInterface {
    *   Altered attributes.
    */
   public function alterLdapAttributes(array &$attributes, array $params) {
-    $token_helper = new TokenProcessor();
     // Force this data type.
-    $attributes['dn'] = TokenProcessor::setAttributeMap(@$attributes['dn'], 'ldap_dn');
+    $attributes['dn'] = ConversionHelper::setAttributeMap(@$attributes['dn'], 'ldap_dn');
 
     // Puid attributes are server specific.
     if (isset($params['sid']) && $params['sid']) {
@@ -224,22 +230,22 @@ class ServerFactory implements LdapUserAttributesInterface {
           // mail_template, and user_dn_expression are needed for all
           // functionality.
           if (!isset($attributes[$ldap_server->get('mail_attr')])) {
-            $attributes[$ldap_server->get('mail_attr')] = TokenProcessor::setAttributeMap();
+            $attributes[$ldap_server->get('mail_attr')] = ConversionHelper::setAttributeMap();
           }
           if ($ldap_server->get('picture_attr') && !isset($attributes[$ldap_server->get('picture_attr')])) {
-            $attributes[$ldap_server->get('picture_attr')] = TokenProcessor::setAttributeMap();
+            $attributes[$ldap_server->get('picture_attr')] = ConversionHelper::setAttributeMap();
           }
           if ($ldap_server->get('unique_persistent_attr') && !isset($attributes[$ldap_server->get('unique_persistent_attr')])) {
-            $attributes[$ldap_server->get('unique_persistent_attr')] = TokenProcessor::setAttributeMap();
+            $attributes[$ldap_server->get('unique_persistent_attr')] = ConversionHelper::setAttributeMap();
           }
           if ($ldap_server->get('user_dn_expression')) {
-            $token_helper->extractTokenAttributes($attributes, $ldap_server->get('user_dn_expression'));
+            ConversionHelper::extractTokenAttributes($attributes, $ldap_server->get('user_dn_expression'));
           }
           if ($ldap_server->get('mail_template')) {
-            $token_helper->extractTokenAttributes($attributes, $ldap_server->get('mail_template'));
+            ConversionHelper::extractTokenAttributes($attributes, $ldap_server->get('mail_template'));
           }
           if (!isset($attributes[$ldap_server->get('user_attr')])) {
-            $attributes[$ldap_server->get('user_attr')] = TokenProcessor::setAttributeMap();
+            $attributes[$ldap_server->get('user_attr')] = ConversionHelper::setAttributeMap();
           }
         }
       }
@@ -267,7 +273,7 @@ class ServerFactory implements LdapUserAttributesInterface {
 
       $url = Url::fromRoute('entity.ldap_server.collection');
       $tokens = [
-        '%edit_link' => \Drupal::l($url->toString(), $url),
+        '%edit_link' => Link::fromTextAndUrl($url->toString(), $url)->toString(),
         '%sid' => $ldap_server->id(),
       ];
 
@@ -285,7 +291,7 @@ class ServerFactory implements LdapUserAttributesInterface {
             'field.ldap_user_puid',
             'field.ldap_user_puid_property',
           ];
-          foreach ($attributes as $i => $property_id) {
+          foreach ($attributes as $property_id) {
             $property_token = '[' . $property_id . ']';
             if (!isset($available_user_attrs[$property_token]) || !is_array($available_user_attrs[$property_token])) {
               $available_user_attrs[$property_token] = [];
@@ -293,10 +299,10 @@ class ServerFactory implements LdapUserAttributesInterface {
           }
 
           $available_user_attrs['[field.ldap_user_puid_sid]'] = [
-            'name' => t('Field: sid providing PUID'),
+            'name' => $this->t('Field: sid providing PUID'),
             'configurable_to_drupal' => 0,
             'configurable_to_ldap' => 1,
-            'source' => t('%sid', $tokens),
+            'source' => $this->t('%sid', $tokens),
             'notes' => 'not configurable',
             'direction' => self::PROVISION_TO_DRUPAL,
             'enabled' => TRUE,
@@ -306,7 +312,7 @@ class ServerFactory implements LdapUserAttributesInterface {
           ] + $available_user_attrs['[field.ldap_user_puid_sid]'];
 
           $available_user_attrs['[field.ldap_user_puid]'] = [
-            'name' => t('Field: PUID', $tokens),
+            'name' => $this->t('Field: PUID', $tokens),
             'configurable_to_drupal' => 0,
             'configurable_to_ldap' => 1,
             'source' => '[' . $ldap_server->get('unique_persistent_attr') . ']',
@@ -321,7 +327,7 @@ class ServerFactory implements LdapUserAttributesInterface {
 
           $available_user_attrs['[field.ldap_user_puid_property]'] =
             [
-              'name' => t('Field: PUID Attribute', $tokens),
+              'name' => $this->t('Field: PUID Attribute', $tokens),
               'configurable_to_drupal' => 0,
               'configurable_to_ldap' => 1,
               'source' => $ldap_server->get('unique_persistent_attr'),
@@ -340,7 +346,7 @@ class ServerFactory implements LdapUserAttributesInterface {
         }
         $available_user_attrs[$token] =
           [
-            'name' => t('Field: Most Recent DN', $tokens),
+            'name' => $this->t('Field: Most Recent DN', $tokens),
             'configurable_to_drupal' => 0,
             'configurable_to_ldap' => 0,
             'source' => '[dn]',

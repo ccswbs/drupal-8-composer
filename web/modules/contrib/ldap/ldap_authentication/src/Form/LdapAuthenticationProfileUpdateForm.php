@@ -2,10 +2,12 @@
 
 namespace Drupal\ldap_authentication\Form;
 
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\ldap_authentication\Routing\EmailTemplateService;
-use Drupal\user\Entity\User;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Profile update form.
@@ -16,11 +18,32 @@ use Drupal\user\Entity\User;
  */
 class LdapAuthenticationProfileUpdateForm extends FormBase {
 
+  protected $currentUser;
+  protected $entityTypeManager;
+
   /**
    * {@inheritdoc}
    */
   public function getFormId() {
     return 'ldap_authentication_profile_update_form';
+  }
+
+  /**
+   * Constructor.
+   */
+  public function __construct(AccountInterface $current_user, EntityTypeManagerInterface $entity_type_manager) {
+    $this->currentUser = $current_user;
+    $this->entityTypeManager = $entity_type_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('current_user'),
+      $container->get('entity_type.manager')
+    );
   }
 
   /**
@@ -57,7 +80,7 @@ class LdapAuthenticationProfileUpdateForm extends FormBase {
     if ($existing) {
       $form_state->setErrorByName('mail', $this->t('This email address is already in use.'));
     }
-    $pattern = \Drupal::config('ldap_authentication.settings')->get('emailTemplateUsagePromptRegex');
+    $pattern = $this->configFactory()->get('ldap_authentication.settings')->get('emailTemplateUsagePromptRegex');
     $regex = '`' . $pattern . '`i';
     if (preg_match($regex, $form_state->getValue(['mail']))) {
       $form_state->setErrorByName('mail', $this->t('This email address still matches the invalid email template.'));
@@ -68,8 +91,8 @@ class LdapAuthenticationProfileUpdateForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $proxy = \Drupal::currentUser();
-    $user = User::load($proxy->id());
+    /** @var \Drupal\user\Entity\User $user */
+    $user = $this->entityTypeManager->getStorage('user')->load($this->currentUser->id());
     $user->set('mail', $form_state->getValue('mail'));
     $user->save();
     drupal_set_message($this->t('Your profile has been updated.'));
