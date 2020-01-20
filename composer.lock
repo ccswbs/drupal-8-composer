@@ -1252,8 +1252,7 @@
             "homepage": "https://www.drupal.org/project/authorization",
             "support": {
                 "source": "https://git.drupalcode.org/project/authorization"
-            },
-            "time": "2019-12-29T14:06:29+00:00"
+            }
         },
         {
             "name": "drupal/config_direct_save",
