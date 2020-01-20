@@ -1,0 +1,3 @@
+domain_menu_access.menu_enabled:
+  type: sequence
+  label: 'Menu enabled'
