@@ -33,11 +33,11 @@ steps:
   persistCredentials: true
 
 # Setup
-- task: CacheBeta@1
-  inputs:
-    key: 'env_cache | "$(Agent.OS)" | "$(Build.SourceBranch)" | "$(terminus.site)"'
-    path: $(COMPOSER_CACHE_DIR)
-  displayName: 'Retrieve cached composer'
+# - task: CacheBeta@1
+#   inputs:
+#     key: 'env_cache | "$(Agent.OS)" | "$(Build.SourceBranch)" | "$(terminus.site)"'
+#     path: $(COMPOSER_CACHE_DIR)
+#   displayName: 'Retrieve cached composer'
 
 - script: |
     ./.ci/env/set
