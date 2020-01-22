@@ -8,6 +8,9 @@ sudo update-alternatives --set php-cgi /usr/bin/php-cgi$PHPVERSION
 sudo update-alternatives --set phar.phar /usr/bin/phar.phar$PHPVERSION
 php -version
 
+# Disable xdebug
+sudo phpdismod -s cli xdebug
+
 # Install Terminus
 sudo mkdir -p /opt/terminus &&
 curl -O https://raw.githubusercontent.com/pantheon-systems/terminus-installer/master/builds/installer.phar &&
