@@ -20,6 +20,7 @@
         "drupal/core": "^8.8",
         "drupal/core-recommended": "^8.8",
         "drupal/domain": "^1.0@alpha",
+        "drupal/domain_entity": "^1.0@alpha",
         "drupal/domain_menu_access": "^1.0",
         "drupal/externalauth": "^1.2",
         "drupal/jsonapi_extras": "^3.13",
