@@ -20,12 +20,12 @@ class LdapHelpRedirect extends ControllerBase {
    *   Redirect response.
    */
   public function redirectUrl() {
-    $url = $this->configFactory
-      ->get('ldap_authentication.settings')
+    $url = $this->config('ldap_authentication.settings')
       ->get('ldapUserHelpLinkUrl');
     $response = new TrustedRedirectResponse($url);
-    $response->addCacheableDependency(new CacheableMetadata())
-      ->setCacheMaxAge(0);
+    $cacheable_metadata = new CacheableMetadata();
+    $cacheable_metadata->setCacheMaxAge(0);
+    $response->addCacheableDependency($cacheable_metadata);
     return $response;
   }
 
