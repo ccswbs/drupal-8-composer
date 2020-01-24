@@ -99,6 +99,11 @@
             "drush/Commands/contrib/{$name}": ["type:drupal-drush"],
             "web/private/scripts/quicksilver/{$name}/": ["type:quicksilver-script"]
         },
+        "patches": {
+            "drupal/ldap":{
+                "Fix LDAP Help Redirect Link": "https://www.drupal.org/files/issues/2019-09-03/3076155-ldap-help-redirect-4.patch"
+            }
+        },
         "build-env": {
             "install-cms": [
                 "drush site-install standard --account-mail={account-mail} --account-name={account-name} --account-pass={account-pass} --site-mail={site-mail} --site-name={site-name} --yes"
