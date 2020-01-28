@@ -107,6 +107,9 @@
             },
             "drupal/build_hooks":{
                 "Response event should send frontend environment entity instead of plugin": "https://www.drupal.org/files/issues/2019-06-03/3059157-build_hooks-event-2.patch" 
+            },
+            "drupal/build_hooks_azure":{
+                "Our patch for build request format": "https://raw.githubusercontent.com/ccswbs/drupal-8-composer/buildhooks-patch-1/bha_id.patch"
             }
         },
         "build-env": {
