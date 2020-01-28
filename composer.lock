@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "b1e1916ab5fc41e42bba4691d93c6b80",
+    "content-hash": "c78c96d585d6a8346bbb490293ce49b9",
     "packages": [
         {
             "name": "alchemy/zippy",
@@ -1337,6 +1337,9 @@
                         "status": "not-covered",
                         "message": "Project has not opted into security advisory coverage!"
                     }
+                },
+                "patches_applied": {
+                    "Our patch for build request format": "https://raw.githubusercontent.com/ccswbs/drupal-8-composer/buildhooks-patch-1/bha_id.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
