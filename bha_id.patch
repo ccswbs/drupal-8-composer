@@ -1,0 +1,12 @@
+diff --git a/src/AzureManager.php b/src/AzureManager.php
+index 566a4cf..ee5433b 100755
+--- a/src/AzureManager.php
++++ b/src/AzureManager.php
+@@ -114,7 +114,7 @@ class AzureManager implements AzureManagerInterface {
+     $buildHookDetails->setMethod('POST');
+     $option = $this->getAuth($config);
+
+-    $option['json'] = ['definitionId' => $config['trigger_id']];
++    $option['json'] = ['definition' => ['id' => $config['trigger_id']]];
+     // Set header token.
+     $buildHookDetails->setBody($option);
