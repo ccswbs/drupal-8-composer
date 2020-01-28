@@ -1,10 +1,4 @@
-# Ignore Drupal's modules directory
-web/modules
 
-# Ignore vendor directory
-vendor
-
-# :::::::::::::::::::::: cut ::::::::::::::::::::::
 
 ###
 ### Pantheon site .gitignore section
