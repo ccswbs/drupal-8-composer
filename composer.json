@@ -104,7 +104,7 @@
         "patches": {
             "drupal/ldap":{
                 "Fix LDAP Help Redirect Link": "https://www.drupal.org/files/issues/2019-09-03/3076155-ldap-help-redirect-4.patch"
-            }
+            },
             "drupal/build_hooks":{
                 "Response event should send frontend environment entity instead of plugin": "https://www.drupal.org/files/issues/2019-06-03/3059157-build_hooks-event-2.patch" 
             }
