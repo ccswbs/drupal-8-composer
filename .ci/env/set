@@ -8,9 +8,6 @@ sudo update-alternatives --set php-cgi /usr/bin/php-cgi$PHPVERSION
 sudo update-alternatives --set phar.phar /usr/bin/phar.phar$PHPVERSION
 php -version
 
-# Debug composer
-composer diagnose
-
 # Disable xdebug
 sudo phpdismod -s cli xdebug
 
@@ -20,23 +17,33 @@ curl -O https://raw.githubusercontent.com/pantheon-systems/terminus-installer/ma
 sudo php installer.phar install --install-dir=/opt/terminus --bin-dir=/usr/bin
 
 # Install Terminus Build Tools plugin
-mkdir -p $HOME/.terminus/plugins &&
-composer create-project --no-dev -d $HOME/.terminus/plugins pantheon-systems/terminus-build-tools-plugin:^2.0.0-beta16
+# mkdir -p $HOME/.terminus/plugins &&
+# sudo composer create-project --no-dev -d $HOME/.terminus/plugins pantheon-systems/terminus-build-tools-plugin:^2.0.0-beta16
 
 # Install Drush
-# composer require drush/drush:~8.3
+sudo composer global require drush/drush:~8.3
 
 # Install Drush Launcher
-# curl -OL https://github.com/drush-ops/drush-launcher/releases/download/0.6.0/drush.phar
-# chmod +x drush.phar
-# sudo mv drush.phar /usr/local/bin/drush
+curl -OL https://github.com/drush-ops/drush-launcher/releases/download/0.6.0/drush.phar
+sudo chmod +x drush.phar
+sudo mv drush.phar /usr/local/bin/drush
+
+# Check Versions
+composer --version
+terminus --version
+drush --version
 
 # Install Backstop JS
-sudo npm install -g backstopjs --unsafe-perm=true --allow-root
+# sudo npm install -g backstopjs --unsafe-perm=true --allow-root
 
 # Install jq utility
-sudo apt-get install jq
+# sudo apt-get install jq
 
 # Configure Git user
 git config --global user.email "$BUILD_REQUESTEDFOREMAIL"
 git config --global user.name "$BUILD_REQUESTEDFORID"
+
+# Authenticate terminus
+terminus auth:login --machine-token="$TERMINUS_TOKEN" </dev/null
+ssh-keygen -N "" -f ~/.ssh/id_rsa &&
+terminus ssh-key:add ~/.ssh/id_rsa.pub </dev/null

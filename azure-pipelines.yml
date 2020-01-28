@@ -21,7 +21,8 @@ variables:
   MY_DEVOP_TOKEN: $(devops.token)
   MY_DEVOP_URL: $(System.TeamFoundationCollectionUri)
   MY_DEVOP_PROJ: $(System.TeamProject)
-  COMPOSER_CACHE_DIR: $(Pipeline.Workspace)/.composer
+  DIR_TERMINUS: $(Pipeline.Workspace)/.terminus
+  DIR_DRUSH: /usr/local/bin/drush
   RUN_TESTS: $(run.tests)
 
 pool:
@@ -32,28 +33,114 @@ steps:
 - checkout: self
   persistCredentials: true
 
-# Setup
+# Cache drush
 # - task: CacheBeta@1
 #   inputs:
-#     key: 'env_cache | "$(Agent.OS)" | "$(Build.SourceBranch)" | "$(terminus.site)"'
-#     path: $(COMPOSER_CACHE_DIR)
-#   displayName: 'Retrieve cached composer'
+#     key: 'drush_cache | "$(Agent.OS)" | "$(Build.SourceBranch)" | "$(terminus.site)"'
+#     path: $(DIR_DRUSH)
+#   displayName: 'Retrieve cached drush'
 
-- script: |
-    ./.ci/env/set
-    terminus auth:login --machine-token=$(terminus.token) </dev/null
-    ssh-keygen -N "" -f ~/.ssh/id_rsa &&
-    terminus ssh-key:add ~/.ssh/id_rsa.pub </dev/null
+# Cache terminus
+# - task: CacheBeta@1
+#   inputs:
+#     key: 'terminus_cache | "$(Agent.OS)" | "$(Build.SourceBranch)" | "$(terminus.site)"'
+#     path: $(DIR_TERMINUS)
+#   displayName: 'Retrieve cached terminus'
+
+- script: ./.ci/env/set
   displayName: 'Initialize build environment'
 
-# Run Static Tests
-- script: ./.ci/test/static/run
-  displayName: 'Static tests'
+- script: ./.ci/env/set-tests
+  displayName: 'Initialize test environment'
   condition: eq(variables.RUN_TESTS, 'true')
+
+# Run Static Tests
+# - script: ./.ci/test/static/run
+#   displayName: 'Static tests'
+#   condition: and(succeededOrFailed(), eq(variables.RUN_TESTS, 'true'))
 
 # Build Assets (Composer Install)
 - script: ./.ci/build/php
   displayName: 'Build PHP'
+
+- script: ./.ci/deploy/pantheon/dev-multidev
+  displayName: 'Deploy to Pantheon'
+  condition: and(succeededOrFailed(), eq(variables.RUN_TESTS, 'true'))
+
+# Behat Tests
+# - script: ./.ci/test/behat/initialize
+#   displayName: 'Initialize Behat tests'
+#   condition: and(succeededOrFailed(), eq(variables.RUN_TESTS, 'true'))
+
+# - script: ./.ci/test/behat/run
+#   displayName: 'Run Behat tests'
+#   condition: and(succeededOrFailed(), eq(variables.RUN_TESTS, 'true'))
+
+# - script: ./.ci/test/behat/cleanup
+#   displayName: 'Clean up Behat tests'
+#   condition: and(succeededOrFailed(), eq(variables.RUN_TESTS, 'true'))
+
+# - task: PublishTestResults@2
+#   displayName: 'Publish Behat test results'
+#   condition: and(succeededOrFailed(), eq(variables.RUN_TESTS, 'true'))
+#   inputs:
+#     testResultsFormat: 'JUnit' # Options: JUnit, NUnit, VSTest, xUnit, cTest
+#     testRunTitle: 'Behat Test Results'
+#     testResultsFiles: '$(Common.TestResultsDirectory)/*' 
+
+# - task: CopyFiles@2
+#   displayName: "Copy Behat screenshots to Artifacts Directory"
+#   condition: and(failed(), eq(variables.RUN_TESTS, 'true'))
+#   inputs:
+#       sourceFolder: 'var/behat_screenshots'
+#       contents: '**'
+#       targetFolder: '$(Build.ArtifactStagingDirectory)'
+
+# - task: PublishBuildArtifacts@1
+#   displayName: 'Publish Behat screenshots to Artifacts Directory'
+#   condition: and(failed(), eq(variables.RUN_TESTS, 'true'))
+#   inputs:
+#     pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+#     artifactName: BehatTestFailureScreenshots
+
+# Visual Regression Tests
+# - script: ./.ci/test/visual-regression/run
+#   displayName: 'Visual regression test'
+#   condition: and(succeededOrFailed(), eq(variables.RUN_TESTS, 'true'))
+
+# - bash: |
+#     if [ -d backstop_data ]; then
+#       echo "##vso[task.setVariable variable=BACKSTOP_DATA_EXISTS]true"
+#     fi
+#   displayName: 'Check if BackstopJS test results exist'
+#   condition: and(succeededOrFailed(), eq(variables.RUN_TESTS, 'true'))
+
+# - task: PublishTestResults@2
+#   displayName: 'Publish BackstopJS test results'
+#   condition: and(succeededOrFailed(),eq(variables.BACKSTOP_DATA_EXISTS, 'true'),eq(variables.RUN_TESTS, 'true'))
+#   inputs:
+#     testResultsFormat: 'JUnit' # Options: JUnit, NUnit, VSTest, xUnit, cTest
+#     testResultsFiles: 'backstop_data/ci_report/*' 
+#     testRunTitle: 'BackstopJS Test Results'
+
+# - task: CopyFiles@2
+#   displayName: "Copy BackstopJS screenshots to Artifacts Directory"
+#   condition: and(succeededOrFailed(),eq(variables.BACKSTOP_DATA_EXISTS, 'true'),eq(variables.RUN_TESTS, 'true'))
+#   inputs:
+#       sourceFolder: 'backstop_data'
+#       contents: '**'
+#       targetFolder: '$(Build.ArtifactStagingDirectory)'
+
+# - task: PublishBuildArtifacts@1
+#   displayName: 'Publish BackstopJS screenshots to Artifacts Directory'
+#   condition: and(succeededOrFailed(),eq(variables.BACKSTOP_DATA_EXISTS, 'true'),eq(variables.RUN_TESTS, 'true'))
+#   inputs:
+#     pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+#     artifactName: BackstopJSTestScreenshots
+
+# Composer Lock Updater
+- script: true
+  displayName: 'Composer lock updater'
 
 # Deploy to Upstream
 - script: |
@@ -63,85 +150,7 @@ steps:
     git commit -m 'Build $(Build.BuildId)'
     git push --force https://$(pat)@github.com/ccswbs/drupal-8-composer.git HEAD:master
   displayName: 'Push to upstream'
-
-- script: ./.ci/deploy/pantheon/dev-multidev
-  displayName: 'Deploy to Pantheon'
-  condition: eq(variables.RUN_TESTS, 'true')
-
-# Behat Tests
-- script: ./.ci/test/behat/initialize
-  displayName: 'Initialize Behat tests'
-  condition: eq(variables.RUN_TESTS, 'true')
-
-- script: ./.ci/test/behat/run
-  displayName: 'Run Behat tests'
-  condition: eq(variables.RUN_TESTS, 'true')
-
-- script: ./.ci/test/behat/cleanup
-  displayName: 'Clean up Behat tests'
-  condition: and(always(), eq(variables.RUN_TESTS, 'true'))
-
-- task: PublishTestResults@2
-  displayName: 'Publish Behat test results'
-  condition: and(always(), eq(variables.RUN_TESTS, 'true'))
-  inputs:
-    testResultsFormat: 'JUnit' # Options: JUnit, NUnit, VSTest, xUnit, cTest
-    testRunTitle: 'Behat Test Results'
-    testResultsFiles: '$(Common.TestResultsDirectory)/*' 
-
-- task: CopyFiles@2
-  displayName: "Copy Behat screenshots to Artifacts Directory"
-  condition: and(failed(), eq(variables.RUN_TESTS, 'true'))
-  inputs:
-      sourceFolder: 'var/behat_screenshots'
-      contents: '**'
-      targetFolder: '$(Build.ArtifactStagingDirectory)'
-
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish Behat screenshots to Artifacts Directory'
-  condition: and(failed(), eq(variables.RUN_TESTS, 'true'))
-  inputs:
-    pathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    artifactName: BehatTestFailureScreenshots
-
-# Visual Regression Tests
-- script: ./.ci/test/visual-regression/run
-  displayName: 'Visual regression test'
-  condition: eq(variables.RUN_TESTS, 'true')
-
-- bash: |
-    if [ -d backstop_data ]; then
-      echo "##vso[task.setVariable variable=BACKSTOP_DATA_EXISTS]true"
-    fi
-  displayName: 'Check if BackstopJS test results exist'
-  condition: eq(variables.RUN_TESTS, 'true')
-
-- task: PublishTestResults@2
-  displayName: 'Publish BackstopJS test results'
-  condition: and(eq(variables.BACKSTOP_DATA_EXISTS, 'true'),eq(variables.RUN_TESTS, 'true'))
-  inputs:
-    testResultsFormat: 'JUnit' # Options: JUnit, NUnit, VSTest, xUnit, cTest
-    testResultsFiles: 'backstop_data/ci_report/*' 
-    testRunTitle: 'BackstopJS Test Results'
-
-- task: CopyFiles@2
-  displayName: "Copy BackstopJS screenshots to Artifacts Directory"
-  condition: and(eq(variables.BACKSTOP_DATA_EXISTS, 'true'),eq(variables.RUN_TESTS, 'true'))
-  inputs:
-      sourceFolder: 'backstop_data'
-      contents: '**'
-      targetFolder: '$(Build.ArtifactStagingDirectory)'
-
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish BackstopJS screenshots to Artifacts Directory'
-  condition: and(eq(variables.BACKSTOP_DATA_EXISTS, 'true'),eq(variables.RUN_TESTS, 'true'))
-  inputs:
-    pathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    artifactName: BackstopJSTestScreenshots
-
-# Composer Lock Updater
-- script: true
-  displayName: 'Composer lock updater'
+  condition: and(succeeded(),eq(variables['Build.SourceBranch'],'refs/heads/master'))
 
 # Clean up
 - script: ./.ci/env/clean

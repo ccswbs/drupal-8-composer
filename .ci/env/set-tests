@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Install Terminus Build Tools plugin
+mkdir -p $HOME/.terminus/plugins &&
+sudo composer create-project --no-dev -d $HOME/.terminus/plugins pantheon-systems/terminus-build-tools-plugin:^2.0.0-beta16
+
+# Install Backstop JS
+sudo npm install -g backstopjs --unsafe-perm=true --allow-root
+
+# Install jq utility
+sudo apt-get install jq

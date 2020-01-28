@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Clean up old CI multidevs
-echo "Running ci multidev cleanup..."
+echo "Running ci multidev cleanup (deletes all ci multidevs except the latest 2)..."
 
 mds=`terminus env:list --format=list --field=id $TERMINUS_SITE </dev/null | grep "^ci-" | sort -n | head --lines=-2`;
 
