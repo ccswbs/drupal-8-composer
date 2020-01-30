@@ -150,7 +150,7 @@ steps:
     git commit -m 'Build $(Build.BuildId)'
     git push --force https://$(pat)@github.com/ccswbs/drupal-8-composer.git HEAD:master
   displayName: 'Push to upstream'
-  condition: and(succeeded(),eq(variables['Build.SourceBranch'],'refs/heads/master'))
+  condition: and(succeeded(),eq(variables['Build.SourceBranch'],'refs/heads/develop'))
 
 # Clean up
 - script: ./.ci/env/clean
