@@ -1,4 +1,0 @@
-services:
-  domain_entity.mapper:
-    class: Drupal\domain_entity\DomainEntityMapper
-    arguments: ['@entity_type.manager']
