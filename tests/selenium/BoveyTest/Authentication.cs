@@ -28,9 +28,13 @@ namespace BoveyTest
             
             // Go to LDAP Send test queries page
             DrupalGet("/admin/config/people/ldap/server/ug/test");
+
+            // Test connection using test LDAP user name
             Check(editAuthenticationNameField);
             Type(editAuthenticationNameField, ldapTestUserName);
             Click(editAuthenticationSubmitBtn);
+
+            // Check if successful message appears after testing connection
             var successfulLDAPConnectionMessage = Driver.FindElementsByXPath($"//table/tr/td[contains(text(), 'Successfully bound to server')]");
             Assert.AreEqual(successfulLDAPConnectionMessage.Count, 0);
         }
