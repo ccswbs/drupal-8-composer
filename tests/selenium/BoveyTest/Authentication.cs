@@ -31,8 +31,8 @@ namespace BoveyTest
             Check(editAuthenticationNameField);
             Type(editAuthenticationNameField, ldapTestUserName);
             Click(editAuthenticationSubmitBtn);
-            var userTokenSamples = Driver.FindElementsByXPath($"//h2[contains(text()[2], 'User Token Samples')]");
-            Assert.AreEqual(userTokenSamples.Count, 0);
+            var successfulLDAPConnectionMessage = Driver.FindElementsByXPath($"//table/tr/td[contains(text(), 'Successfully bound to server')]");
+            Assert.AreEqual(successfulLDAPConnectionMessage.Count, 0);
         }
     }
 }
