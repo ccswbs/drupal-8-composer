@@ -18,6 +18,11 @@
 
 variables:
   phpVersion: 7.2
+  TestQAUsername: $(test.site.username)
+  TestQAPassword: $(test.site.password)
+  # _service_keyvault: $(ServiceKeyvault)
+  # _service_keyvault_rg: $(ServiceKeyvaultRG)
+  # _service_connection: $(ServiceConnection)
   MY_DEVOP_TOKEN: $(devops.token)
   MY_DEVOP_URL: $(System.TeamFoundationCollectionUri)
   MY_DEVOP_PROJ: $(System.TeamProject)
@@ -66,6 +71,44 @@ steps:
 - script: ./.ci/deploy/pantheon/dev-multidev
   displayName: 'Deploy to Pantheon'
   condition: and(succeededOrFailed(), eq(variables.RUN_TESTS, 'true'))
+
+# Run Selenium Tests
+- task: NuGetAuthenticate@0
+  inputs:
+    nuGetServiceConnections: DrupalTestServiceConnection
+
+- task: DotNetCoreCLI@2
+  displayName: Restore Selenium packages
+  inputs:
+    command: restore
+    projects: '$(Build.SourcesDirectory)/tests/selenium/**/*.csproj'
+    feedsToUse: select
+    vstsFeed: 'CCS/DrupalTest'
+    includeNuGetOrg: true
+
+# Azure Key Vault
+# Download Azure Key Vault secrets
+# - task: AzureKeyVault@1
+#   inputs:
+#     azureSubscription: $(_service_connection)
+#     keyVaultName: $(_service_keyvault)
+#     secretsFilter: 'BoveyQAUsername, BoveyQAPassword'
+
+# File transform
+- task: FileTransform@1
+  displayName: 'Replace tokens in appsettings.json file with variables'
+  inputs:
+    folderPath: '$(Build.SourcesDirectory)/tests/selenium/BoveyTest'
+    fileType: json
+    targetFiles: appsettings.json
+
+- task: DotNetCoreCLI@2
+  displayName: Run Selenium tests
+  condition: succeededOrFailed()
+  inputs:
+    command: test
+    projects: '$(Build.SourcesDirectory)/tests/selenium/**/*.csproj'
+    publishTestResults: true
 
 # Behat Tests
 # - script: ./.ci/test/behat/initialize
