@@ -101,7 +101,7 @@
         },
         "patches": {
             "drupal/ldap":{
-                "Fix LDAP Help Redirect Link": "https://www.drupal.org/files/issues/2019-09-03/3076155-ldap-help-redirect-4.patch"
+                "edit - Fix LDAP Help Redirect Link": "https://www.drupal.org/files/issues/2019-09-03/3076155-ldap-help-redirect-4.patch"
             }
         },
         "build-env": {
