@@ -30,11 +30,12 @@ variables:
   DIR_DRUSH: /usr/local/bin/drush
   RUN_TESTS: $(run.tests)
 
-pool:
-  vmImage: 'Ubuntu 16.04'
-
 pr:
 - develop
+- master
+
+pool:
+  vmImage: 'Ubuntu 16.04'
 
 steps:
 
@@ -77,13 +78,13 @@ steps:
 
 # Run Selenium Tests
 - task: NuGetAuthenticate@0
-  displayName: '[SELENIUM] Authenticate to get packages'
+  displayName: '[Selenium] Authenticate to get packages'
   condition: and(succeededOrFailed(), eq(variables.RUN_TESTS, 'true'))
   inputs:
     nuGetServiceConnections: DrupalTestServiceConnection
 
 - task: DotNetCoreCLI@2
-  displayName: '[SELENIUM] Restore packages'
+  displayName: '[Selenium] Restore packages'
   condition: and(succeededOrFailed(), eq(variables.RUN_TESTS, 'true'))
   inputs:
     command: restore
@@ -101,7 +102,7 @@ steps:
 
 # File transform
 - task: FileTransform@1
-  displayName: '[SELENIUM] Replace site-specific tokens in appsettings.json'
+  displayName: '[Selenium] Replace site-specific tokens in appsettings.json'
   condition: and(succeededOrFailed(), eq(variables.RUN_TESTS, 'true'))
   inputs:
     folderPath: '$(Build.SourcesDirectory)/tests/selenium/BoveyTest'
@@ -109,7 +110,7 @@ steps:
     targetFiles: appsettings.json
 
 - task: DotNetCoreCLI@2
-  displayName: '[SELENIUM] Run tests'
+  displayName: '[Selenium] Run tests'
   condition: and(succeededOrFailed(), eq(variables.RUN_TESTS, 'true'))
   inputs:
     command: test
@@ -118,19 +119,19 @@ steps:
 
 # Behat Tests
 - script: ./.ci/test/behat/initialize
-  displayName: '[BEHAT] Initialize tests'
+  displayName: '[Behat] Initialize tests'
   condition: and(succeededOrFailed(), eq(variables.RUN_TESTS, 'true'))
 
 - script: ./.ci/test/behat/run
-  displayName: '[BEHAT] Run tests'
+  displayName: '[Behat] Run tests'
   condition: and(succeededOrFailed(), eq(variables.RUN_TESTS, 'true'))
 
 - script: ./.ci/test/behat/cleanup
-  displayName: '[BEHAT] Clean up tests'
+  displayName: '[Behat] Clean up tests'
   condition: and(succeededOrFailed(), eq(variables.RUN_TESTS, 'true'))
 
 - task: PublishTestResults@2
-  displayName: '[BEHAT] Publish results'
+  displayName: '[Behat] Publish results'
   condition: and(succeededOrFailed(), eq(variables.RUN_TESTS, 'true'))
   inputs:
     testResultsFormat: 'JUnit' # Options: JUnit, NUnit, VSTest, xUnit, cTest
@@ -138,7 +139,7 @@ steps:
     testResultsFiles: '$(Common.TestResultsDirectory)/*' 
 
 - task: CopyFiles@2
-  displayName: "[BEHAT] Copy screenshots to Artifacts Directory"
+  displayName: "[Behat] Copy screenshots to Artifacts Directory"
   condition: and(failed(), eq(variables.RUN_TESTS, 'true'))
   inputs:
       sourceFolder: 'var/behat_screenshots'
@@ -146,7 +147,7 @@ steps:
       targetFolder: '$(Build.ArtifactStagingDirectory)'
 
 - task: PublishBuildArtifacts@1
-  displayName: '[BEHAT] Publish screenshots to Artifacts Directory'
+  displayName: '[Behat] Publish screenshots to Artifacts Directory'
   condition: and(failed(), eq(variables.RUN_TESTS, 'true'))
   inputs:
     pathtoPublish: '$(Build.ArtifactStagingDirectory)'
@@ -154,18 +155,18 @@ steps:
 
 # Visual Regression Tests
 - script: ./.ci/test/visual-regression/run
-  displayName: '[BACKSTOPJS] Run visual regression tests'
+  displayName: '[BackstopJS] Run visual regression tests'
   condition: and(succeededOrFailed(), eq(variables.RUN_TESTS, 'true'))
 
 - bash: |
     if [ -d backstop_data ]; then
       echo "##vso[task.setVariable variable=BACKSTOP_DATA_EXISTS]true"
     fi
-  displayName: '[BACKSTOPJS] Check if test results exist'
+  displayName: '[BackstopJS] Check if test results exist'
   condition: and(succeededOrFailed(), eq(variables.RUN_TESTS, 'true'))
 
 - task: PublishTestResults@2
-  displayName: '[BACKSTOPJS] Publish test results'
+  displayName: '[BackstopJS] Publish test results'
   condition: and(succeededOrFailed(),eq(variables.BACKSTOP_DATA_EXISTS, 'true'),eq(variables.RUN_TESTS, 'true'))
   inputs:
     testResultsFormat: 'JUnit' # Options: JUnit, NUnit, VSTest, xUnit, cTest
@@ -173,7 +174,7 @@ steps:
     testRunTitle: 'BackstopJS Test Results'
 
 - task: CopyFiles@2
-  displayName: "[BACKSTOPJS] Copy screenshots to Artifacts Directory"
+  displayName: "[BackstopJS] Copy screenshots to Artifacts Directory"
   condition: and(succeededOrFailed(),eq(variables.BACKSTOP_DATA_EXISTS, 'true'),eq(variables.RUN_TESTS, 'true'))
   inputs:
       sourceFolder: 'backstop_data'
@@ -181,7 +182,7 @@ steps:
       targetFolder: '$(Build.ArtifactStagingDirectory)'
 
 - task: PublishBuildArtifacts@1
-  displayName: '[BACKSTOPJS] Publish screenshots to Artifacts Directory'
+  displayName: '[BackstopJS] Publish screenshots to Artifacts Directory'
   condition: and(succeededOrFailed(),eq(variables.BACKSTOP_DATA_EXISTS, 'true'),eq(variables.RUN_TESTS, 'true'))
   inputs:
     pathtoPublish: '$(Build.ArtifactStagingDirectory)'
