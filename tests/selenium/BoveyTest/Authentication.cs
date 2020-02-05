@@ -19,6 +19,12 @@ namespace BoveyTest
             DrupalLogin(config["TestQAUsername"], config["TestQAPassword"]);
         }
 
+        [TestCleanup]
+        override public void Cleanup()
+        {
+            _driver.Quit();
+        }
+
         [TestMethod]
         public void TestLDAPConnection()
         {
