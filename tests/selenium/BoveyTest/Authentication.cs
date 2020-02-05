@@ -16,7 +16,7 @@ namespace BoveyTest
                 .AddJsonFile("appsettings.json")
                 .Build();
             base.Initialize(config["hostname"], config["basePath"]);
-            DrupalLogin(config["username"], config["password"]);
+            DrupalLogin(config["TestQAUsername"], config["TestQAPassword"]);
         }
 
         [TestMethod]
