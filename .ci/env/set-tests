@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# Install Drush
+sudo composer global require drush/drush:~8.3
+
+# Install Drush Launcher
+curl -OL https://github.com/drush-ops/drush-launcher/releases/download/0.6.0/drush.phar
+sudo chmod +x drush.phar
+sudo mv drush.phar /usr/local/bin/drush
+
 # Install Terminus Build Tools plugin
 mkdir -p $HOME/.terminus/plugins &&
 sudo composer create-project --no-dev -d $HOME/.terminus/plugins pantheon-systems/terminus-build-tools-plugin:^2.0.0-beta16
