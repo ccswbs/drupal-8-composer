@@ -18,12 +18,22 @@
 
 variables:
   phpVersion: 7.2
+  TestQAUsername: $(test.site.username)
+  TestQAPassword: $(test.site.password)
+  # (TODO) Use variables to access Azure Key Vault once available
+  # _service_keyvault: $(ServiceKeyvault)
+  # _service_connection: $(ServiceConnection)
   MY_DEVOP_TOKEN: $(devops.token)
   MY_DEVOP_URL: $(System.TeamFoundationCollectionUri)
   MY_DEVOP_PROJ: $(System.TeamProject)
   DIR_TERMINUS: $(Pipeline.Workspace)/.terminus
   DIR_DRUSH: /usr/local/bin/drush
   RUN_TESTS: $(run.tests)
+
+trigger: none
+pr:
+- develop
+- master
 
 pool:
   vmImage: 'Ubuntu 16.04'
@@ -67,21 +77,62 @@ steps:
   displayName: 'Deploy to Pantheon'
   condition: and(succeededOrFailed(), eq(variables.RUN_TESTS, 'true'))
 
+# Run Selenium Tests
+- task: NuGetAuthenticate@0
+  displayName: '[Selenium] Authenticate to get packages'
+  condition: and(succeeded(), eq(variables.RUN_TESTS, 'true'))
+  inputs:
+    nuGetServiceConnections: DrupalTestServiceConnection
+
+- task: DotNetCoreCLI@2
+  displayName: '[Selenium] Restore packages'
+  condition: and(succeeded(), eq(variables.RUN_TESTS, 'true'))
+  inputs:
+    command: restore
+    projects: '$(Build.SourcesDirectory)/tests/selenium/**/*.csproj'
+    feedsToUse: select
+    vstsFeed: 'CCS/DrupalTest'
+    includeNuGetOrg: true
+
+# (TODO) Use Azure Key Vault once available
+# - task: AzureKeyVault@1
+#   inputs:
+#     azureSubscription: $(_service_connection)
+#     keyVaultName: $(_service_keyvault)
+#     secretsFilter: 'BoveyQAUsername, BoveyQAPassword'
+
+# File transform
+- task: FileTransform@1
+  displayName: '[Selenium] Replace site-specific tokens in appsettings.json'
+  condition: and(succeeded(), eq(variables.RUN_TESTS, 'true'))
+  inputs:
+    folderPath: '$(Build.SourcesDirectory)/tests/selenium/BoveyTest'
+    fileType: json
+    targetFiles: appsettings.json
+
+- task: DotNetCoreCLI@2
+  displayName: '[Selenium] Run tests'
+  condition: and(succeeded(), eq(variables.RUN_TESTS, 'true'))
+  inputs:
+    command: test
+    projects: '$(Build.SourcesDirectory)/tests/selenium/**/*.csproj'
+    publishTestResults: true
+
 # Behat Tests
 # - script: ./.ci/test/behat/initialize
-#   displayName: 'Initialize Behat tests'
+#   displayName: '[Behat] Initialize tests'
 #   condition: and(succeededOrFailed(), eq(variables.RUN_TESTS, 'true'))
 
 # - script: ./.ci/test/behat/run
-#   displayName: 'Run Behat tests'
+#   displayName: '[Behat] Run tests'
 #   condition: and(succeededOrFailed(), eq(variables.RUN_TESTS, 'true'))
 
 # - script: ./.ci/test/behat/cleanup
-#   displayName: 'Clean up Behat tests'
+#   displayName: '[Behat] Clean up tests'
 #   condition: and(succeededOrFailed(), eq(variables.RUN_TESTS, 'true'))
 
 # - task: PublishTestResults@2
-#   displayName: 'Publish Behat test results'
+#   displayName: '[Behat] Publish results'
 #   condition: and(succeededOrFailed(), eq(variables.RUN_TESTS, 'true'))
 #   inputs:
 #     testResultsFormat: 'JUnit' # Options: JUnit, NUnit, VSTest, xUnit, cTest
@@ -89,7 +140,7 @@ steps:
 #     testResultsFiles: '$(Common.TestResultsDirectory)/*' 
 
 # - task: CopyFiles@2
-#   displayName: "Copy Behat screenshots to Artifacts Directory"
+#   displayName: "[Behat] Copy screenshots to Artifacts Directory"
 #   condition: and(failed(), eq(variables.RUN_TESTS, 'true'))
 #   inputs:
 #       sourceFolder: 'var/behat_screenshots'
@@ -97,7 +148,7 @@ steps:
 #       targetFolder: '$(Build.ArtifactStagingDirectory)'
 
 # - task: PublishBuildArtifacts@1
-#   displayName: 'Publish Behat screenshots to Artifacts Directory'
+#   displayName: '[Behat] Publish screenshots to Artifacts Directory'
 #   condition: and(failed(), eq(variables.RUN_TESTS, 'true'))
 #   inputs:
 #     pathtoPublish: '$(Build.ArtifactStagingDirectory)'
@@ -105,18 +156,18 @@ steps:
 
 # Visual Regression Tests
 # - script: ./.ci/test/visual-regression/run
-#   displayName: 'Visual regression test'
+#   displayName: '[BackstopJS] Run visual regression tests'
 #   condition: and(succeededOrFailed(), eq(variables.RUN_TESTS, 'true'))
 
 # - bash: |
 #     if [ -d backstop_data ]; then
 #       echo "##vso[task.setVariable variable=BACKSTOP_DATA_EXISTS]true"
 #     fi
-#   displayName: 'Check if BackstopJS test results exist'
+#   displayName: '[BackstopJS] Check if test results exist'
 #   condition: and(succeededOrFailed(), eq(variables.RUN_TESTS, 'true'))
 
 # - task: PublishTestResults@2
-#   displayName: 'Publish BackstopJS test results'
+#   displayName: '[BackstopJS] Publish test results'
 #   condition: and(succeededOrFailed(),eq(variables.BACKSTOP_DATA_EXISTS, 'true'),eq(variables.RUN_TESTS, 'true'))
 #   inputs:
 #     testResultsFormat: 'JUnit' # Options: JUnit, NUnit, VSTest, xUnit, cTest
@@ -124,7 +175,7 @@ steps:
 #     testRunTitle: 'BackstopJS Test Results'
 
 # - task: CopyFiles@2
-#   displayName: "Copy BackstopJS screenshots to Artifacts Directory"
+#   displayName: "[BackstopJS] Copy screenshots to Artifacts Directory"
 #   condition: and(succeededOrFailed(),eq(variables.BACKSTOP_DATA_EXISTS, 'true'),eq(variables.RUN_TESTS, 'true'))
 #   inputs:
 #       sourceFolder: 'backstop_data'
@@ -132,7 +183,7 @@ steps:
 #       targetFolder: '$(Build.ArtifactStagingDirectory)'
 
 # - task: PublishBuildArtifacts@1
-#   displayName: 'Publish BackstopJS screenshots to Artifacts Directory'
+#   displayName: '[BackstopJS] Publish screenshots to Artifacts Directory'
 #   condition: and(succeededOrFailed(),eq(variables.BACKSTOP_DATA_EXISTS, 'true'),eq(variables.RUN_TESTS, 'true'))
 #   inputs:
 #     pathtoPublish: '$(Build.ArtifactStagingDirectory)'
