@@ -13,7 +13,7 @@ set -eo pipefail
 sudo composer install --no-ansi --no-interaction --optimize-autoloader --no-progress
 
 # Run unit tests
-composer -n unit-test
+sudo composer -n unit-test
 
 # Delete and reset the web directory
 # This is necessary so that third-party
@@ -21,7 +21,7 @@ composer -n unit-test
 git clean -fdX web
 
 # Lint php code for syntax errors
-composer -n lint
+sudo composer -n lint
 
 # Check coding standards
-composer -n code-sniff
+sudo composer -n code-sniff
