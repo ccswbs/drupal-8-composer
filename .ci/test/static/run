@@ -18,7 +18,7 @@ sudo composer -n unit-test
 # Delete and reset the web directory
 # This is necessary so that third-party
 # dependencies are not tested
-git clean -fdX web
+sudo git clean -fdX web
 
 # Lint php code for syntax errors
 sudo composer -n lint
