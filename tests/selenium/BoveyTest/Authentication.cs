@@ -41,8 +41,8 @@ namespace BoveyTest
             Click(editAuthenticationSubmitBtn);
 
             // Check if successful message appears after testing connection
-            var successfulLDAPConnectionMessage = Driver.FindElementsByXPath($"//table/tr/td[contains(text(), 'Successfully bound to server')]");
-            Assert.AreEqual(successfulLDAPConnectionMessage.Count, 0);
+            var successfulLDAPConnectionMessage = Driver.FindElementsByXPath($"//table/tbody/tr/td[contains(text(),'Successfully bound to server')]");
+            Assert.AreEqual(successfulLDAPConnectionMessage.Count, 1);
         }
     }
 }
