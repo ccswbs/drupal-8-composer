@@ -30,7 +30,9 @@ variables:
   DIR_DRUSH: /usr/local/bin/drush
   RUN_TESTS: $(run.tests)
 
-trigger: none
+trigger:
+- develop
+
 pr:
 - develop
 - master
