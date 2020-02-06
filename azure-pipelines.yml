@@ -80,13 +80,13 @@ steps:
 # Run Selenium Tests
 - task: NuGetAuthenticate@0
   displayName: '[Selenium] Authenticate to get packages'
-  condition: and(succeededOrFailed(), eq(variables.RUN_TESTS, 'true'))
+  condition: and(succeeded(), eq(variables.RUN_TESTS, 'true'))
   inputs:
     nuGetServiceConnections: DrupalTestServiceConnection
 
 - task: DotNetCoreCLI@2
   displayName: '[Selenium] Restore packages'
-  condition: and(succeededOrFailed(), eq(variables.RUN_TESTS, 'true'))
+  condition: and(succeeded(), eq(variables.RUN_TESTS, 'true'))
   inputs:
     command: restore
     projects: '$(Build.SourcesDirectory)/tests/selenium/**/*.csproj'
@@ -104,7 +104,7 @@ steps:
 # File transform
 - task: FileTransform@1
   displayName: '[Selenium] Replace site-specific tokens in appsettings.json'
-  condition: and(succeededOrFailed(), eq(variables.RUN_TESTS, 'true'))
+  condition: and(succeeded(), eq(variables.RUN_TESTS, 'true'))
   inputs:
     folderPath: '$(Build.SourcesDirectory)/tests/selenium/BoveyTest'
     fileType: json
@@ -112,7 +112,7 @@ steps:
 
 - task: DotNetCoreCLI@2
   displayName: '[Selenium] Run tests'
-  condition: and(succeededOrFailed(), eq(variables.RUN_TESTS, 'true'))
+  condition: and(succeeded(), eq(variables.RUN_TESTS, 'true'))
   inputs:
     command: test
     projects: '$(Build.SourcesDirectory)/tests/selenium/**/*.csproj'
