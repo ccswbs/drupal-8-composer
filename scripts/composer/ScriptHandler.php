@@ -70,6 +70,7 @@ class ScriptHandler
         ->name('.git')
       as $dir) {
       $dirsToDelete[] = $dir;
+      echo("Deleting:" . $dir . "\n");
     }
     $fs = new Filesystem();
     $fs->remove($dirsToDelete);
