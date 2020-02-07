@@ -58,8 +58,6 @@ class ScriptHandler
     // n.b. Ideally, there are none of these, as removing them may
     // impair Composer's ability to update them later. However, leaving
     // them in place prevents us from pushing to Pantheon.
-
-    echo("PREPARE FOR PANTHEON SCRIPT");
     $dirsToDelete = [];
     $finder = new Finder();
     foreach (
@@ -72,7 +70,6 @@ class ScriptHandler
         ->name('.git')
       as $dir) {
       $dirsToDelete[] = $dir;
-      echo("Deleting:" . $dir . "\n");
     }
     $fs = new Filesystem();
     $fs->remove($dirsToDelete);
@@ -82,5 +79,16 @@ class ScriptHandler
     $gitignoreContents = file_get_contents($gitignoreFile);
     $gitignoreContents = preg_replace('/.*::: cut :::*/s', '', $gitignoreContents);
     file_put_contents($gitignoreFile, $gitignoreContents);
+  }
+
+  // Get rid of any .git directories that Composer may have added.
+  // n.b. Ideally, there are none of these, as removing them may
+  // impair Composer's ability to update them later. However, leaving
+  // them in place prevents us from pushing to Pantheon.
+  public static function removeGitDirectories() {
+    echo("SCRIPT --- removeGitDirectories()");
+    $root = static::getDrupalRoot(getcwd());
+    exec('find' . $root . ' -name \'.git\' | xargs rm -rf');
+    echo("SCRIPT COMPLETED --- removeGitDirectories()");
   }
 }
