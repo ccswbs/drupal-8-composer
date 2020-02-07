@@ -58,6 +58,8 @@ class ScriptHandler
     // n.b. Ideally, there are none of these, as removing them may
     // impair Composer's ability to update them later. However, leaving
     // them in place prevents us from pushing to Pantheon.
+
+    echo("PREPARE FOR PANTHEON SCRIPT");
     $dirsToDelete = [];
     $finder = new Finder();
     foreach (
