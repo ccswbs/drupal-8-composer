@@ -14,6 +14,8 @@
         "composer/installers": "^1.0.20",
         "cweagans/composer-patches": "^1.0",
         "drupal-composer/drupal-scaffold": "^2.0.1",
+        "drupal/build_hooks": "^2.2",
+        "drupal/build_hooks_azure": "2.0-beta2",
         "drupal/config_direct_save": "^1.0",
         "drupal/config_installer": "^1.0",
         "drupal/console": "^1",
@@ -102,6 +104,12 @@
         "patches": {
             "drupal/ldap":{
                 "Fix LDAP Help Redirect Link": "https://www.drupal.org/files/issues/2019-09-03/3076155-ldap-help-redirect-4.patch"
+            },
+            "drupal/build_hooks":{
+                "Response event should send frontend environment entity instead of plugin": "https://www.drupal.org/files/issues/2019-06-03/3059157-build_hooks-event-2.patch" 
+            },
+            "drupal/build_hooks_azure":{
+                "Our patch for build request format": "https://gist.githubusercontent.com/abanuog/0a71bcea22d71c413fe863f1de8e50c2/raw/dd19c4aceae92fa20d88d49ab8cb1b911b526617/bha_id.patch"
             }
         },
         "build-env": {
