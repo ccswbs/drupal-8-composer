@@ -85,10 +85,9 @@ class ScriptHandler
   // n.b. Ideally, there are none of these, as removing them may
   // impair Composer's ability to update them later. However, leaving
   // them in place prevents us from pushing to Pantheon.
+  // See https://github.com/drupal-composer/drupal-project/issues/223#issuecomment-266417254
   public static function removeGitDirectories() {
-    echo("SCRIPT --- removeGitDirectories()");
     $root = static::getDrupalRoot(getcwd());
     exec('find ' . $root . ' -name \'.git\' | xargs rm -rf');
-    echo("SCRIPT COMPLETED --- removeGitDirectories()");
   }
 }
