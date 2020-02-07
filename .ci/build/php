@@ -8,5 +8,7 @@ set -eo pipefail
 # need to be persisted to other jobs.
 #
 
+composer clearcache
+
 # Build Composer Assets
 composer -n build-assets
