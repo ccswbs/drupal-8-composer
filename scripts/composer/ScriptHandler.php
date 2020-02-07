@@ -88,7 +88,7 @@ class ScriptHandler
   public static function removeGitDirectories() {
     echo("SCRIPT --- removeGitDirectories()");
     $root = static::getDrupalRoot(getcwd());
-    exec('find' . $root . ' -name \'.git\' | xargs rm -rf');
+    exec('find ' . $root . ' -name \'.git\' | xargs rm -rf');
     echo("SCRIPT COMPLETED --- removeGitDirectories()");
   }
 }
