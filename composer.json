@@ -137,7 +137,7 @@
     },
     "config": {
         "optimize-autoloader": true,
-        "preferred-install": "dist",
+        "preferred-install": "source",
         "sort-packages": true,
         "platform": {
             "php": "7.0.8"
