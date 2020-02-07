@@ -203,7 +203,7 @@ steps:
     git commit -m 'Build $(Build.BuildId)'
     git push --force https://$(pat)@github.com/ccswbs/drupal-8-composer.git HEAD:add-auth-full
   displayName: 'Push to upstream [TROUBLESHOOTING]'
-  condition: and(succeeded(),eq(variables['Build.SourceBranch'],'refs/heads/add-auth'))
+  # condition: and(succeeded(),eq(variables['Build.SourceBranch'],'refs/heads/add-auth'))
 
 # Clean up
 - script: ./.ci/env/clean
