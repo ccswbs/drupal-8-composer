@@ -14,7 +14,6 @@
         "composer/installers": "^1.0.20",
         "cweagans/composer-patches": "^1.0",
         "drupal-composer/drupal-scaffold": "^2.0.1",
-        "drupal/authorization": "1.x-dev",
         "drupal/build_hooks": "^2.2",
         "drupal/build_hooks_azure": "2.0-beta2",
         "drupal/config_direct_save": "^1.0",
