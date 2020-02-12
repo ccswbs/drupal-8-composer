@@ -80,4 +80,14 @@ class ScriptHandler
     $gitignoreContents = preg_replace('/.*::: cut :::*/s', '', $gitignoreContents);
     file_put_contents($gitignoreFile, $gitignoreContents);
   }
+
+  // Get rid of any .git directories that Composer may have added.
+  // n.b. Ideally, there are none of these, as removing them may
+  // impair Composer's ability to update them later. However, leaving
+  // them in place prevents us from pushing to Pantheon.
+  // See https://github.com/drupal-composer/drupal-project/issues/223#issuecomment-266417254
+  public static function removeGitDirectories() {
+    $root = static::getDrupalRoot(getcwd());
+    exec('find ' . $root . ' -name \'.git\' | xargs rm -rf');
+  }
 }

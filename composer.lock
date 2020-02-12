@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c78c96d585d6a8346bbb490293ce49b9",
+    "content-hash": "92b57544c69e9d8ce0dfeb940c1dde01",
     "packages": [
         {
             "name": "alchemy/zippy",
@@ -1252,7 +1252,8 @@
             "homepage": "https://www.drupal.org/project/authorization",
             "support": {
                 "source": "https://git.drupalcode.org/project/authorization"
-            }
+            },
+            "time": "2019-12-29T14:06:29+00:00"
         },
         {
             "name": "drupal/build_hooks",
@@ -1339,7 +1340,7 @@
                     }
                 },
                 "patches_applied": {
-                    "Our patch for build request format": "https://raw.githubusercontent.com/ccswbs/drupal-8-composer/buildhooks-patch-1/bha_id.patch"
+                    "Our patch for build request format": "https://gist.githubusercontent.com/abanuog/0a71bcea22d71c413fe863f1de8e50c2/raw/dd19c4aceae92fa20d88d49ab8cb1b911b526617/bha_id.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
