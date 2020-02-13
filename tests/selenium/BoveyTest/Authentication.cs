@@ -28,7 +28,7 @@ namespace BoveyTest
         [TestMethod]
         public void TestLDAPConnection()
         {
-            var ldapTestUserName = "wsadmin";
+            var ldapTestUserName = "ithelp";
             var editAuthenticationNameField = "edit-testing-drupal-username";
             var editAuthenticationSubmitBtn = "edit-submit";
             
