@@ -199,11 +199,15 @@ steps:
 - script: |
     git config user.name '$(Build.RequestedFor)'
     git config user.email '$(Build.RequestedForEmail)'
+    git checkout master
+    git pull origin/master
+    git merge --no-commit develop
+    composer -n build-assets
     git add --force -A .
     git commit -m 'Build $(Build.BuildId)'
-    git push --force https://$(pat)@github.com/ccswbs/drupal-8-composer.git HEAD:master
+    # git push --force https://$(pat)@github.com/ccswbs/drupal-8-composer.git HEAD:master
   displayName: 'Push to upstream'
-  condition: and(succeeded(),eq(variables['Build.SourceBranch'],'refs/heads/develop'))
+  condition: and(succeeded(),eq(variables['Build.SourceBranch'],'refs/heads/fix-master-push'))
 
 # Clean up
 - script: ./.ci/env/clean
