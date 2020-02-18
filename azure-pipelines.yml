@@ -200,12 +200,13 @@ steps:
     git config user.name '$(Build.RequestedFor)'
     git config user.email '$(Build.RequestedForEmail)'
     
-    git branch
     git remote -v
+    git fetch origin master
+    git branch
 
-    # git checkout master
-    # git merge --no-commit develop
-    # composer -n build-assets
+    git checkout master
+    git merge --no-commit fix-master-push
+    composer -n build-assets
 
     git add --force -A .
     git commit -m 'Build $(Build.BuildId)'
