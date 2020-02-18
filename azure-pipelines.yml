@@ -72,8 +72,8 @@ steps:
 #   condition: and(succeededOrFailed(), eq(variables.RUN_TESTS, 'true'))
 
 # Build Assets (Composer Install)
-# - script: ./.ci/build/php
-#   displayName: 'Build PHP'
+- script: ./.ci/build/php
+  displayName: 'Build PHP'
 
 - script: ./.ci/deploy/pantheon/dev-multidev
   displayName: 'Deploy to Pantheon'
@@ -199,17 +199,22 @@ steps:
 - script: |
     git config user.name '$(Build.RequestedFor)'
     git config user.email '$(Build.RequestedForEmail)'
-    
-    git remote -v
-    git checkout fix-master-push
-    git fetch origin master
-    git branch
-    git checkout master
-    git merge --no-commit fix-master-push
-    composer -n build-assets
 
+    # Check out both branches so they exist on the pipeline
+    git checkout $(Build.SourceBranchName)
+    git checkout master
+
+    # Merge source branch onto latest version of master
+    git fetch origin master
+    git merge --no-commit $(Build.SourceBranchName)
+
+    # Build assets
+    composer -n build-assets
     git add --force -A .
     git commit -m 'Build $(Build.BuildId)'
+
+    # Show differences
+    git diff origin/master --name-only
 
     # git push --force https://$(pat)@github.com/ccswbs/drupal-8-composer.git HEAD:master
   displayName: 'Push to upstream'
