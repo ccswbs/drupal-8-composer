@@ -210,15 +210,15 @@ steps:
 
     # Build assets
     composer -n build-assets
+
+    # Commit changes
     git add --force -A .
     git commit -m 'Build $(Build.BuildId)'
 
-    # Show differences
-    git log --oneline
-
-    # git push --force https://$(pat)@github.com/ccswbs/drupal-8-composer.git HEAD:master
+    # Push to master
+    git push --force https://$(pat)@github.com/ccswbs/drupal-8-composer.git HEAD:master
   displayName: 'Push to upstream'
-  condition: and(succeeded(),eq(variables['Build.SourceBranch'],'refs/heads/fix-master-push'))
+  condition: and(succeeded(),eq(variables['Build.SourceBranch'],'refs/heads/develop'))
 
 # Clean up
 - script: ./.ci/env/clean
