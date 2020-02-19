@@ -214,7 +214,7 @@ steps:
     git commit -m 'Build $(Build.BuildId)'
 
     # Show differences
-    git diff origin/master --name-only
+    git log --oneline
 
     # git push --force https://$(pat)@github.com/ccswbs/drupal-8-composer.git HEAD:master
   displayName: 'Push to upstream'
