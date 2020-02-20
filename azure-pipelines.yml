@@ -199,8 +199,23 @@ steps:
 - script: |
     git config user.name '$(Build.RequestedFor)'
     git config user.email '$(Build.RequestedForEmail)'
+
+    # Check out both branches so they exist on the pipeline
+    git checkout $(Build.SourceBranchName)
+    git checkout master
+
+    # Merge source branch onto latest version of master
+    git fetch origin master
+    git merge --no-commit $(Build.SourceBranchName)
+
+    # Build assets
+    composer -n build-assets
+
+    # Commit changes
     git add --force -A .
     git commit -m 'Build $(Build.BuildId)'
+
+    # Push to master
     git push --force https://$(pat)@github.com/ccswbs/drupal-8-composer.git HEAD:master
   displayName: 'Push to upstream'
   condition: and(succeeded(),eq(variables['Build.SourceBranch'],'refs/heads/develop'))
