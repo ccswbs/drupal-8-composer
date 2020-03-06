@@ -1,9 +1,9 @@
 # Summary of Changes
 - Include a summary of changes made by this pull request
 
-# Pull Request Checklist
+## Pull Request Checklist
 
-## Is Content created by the story?
+### Is Content created by the story?
 - [ ] No
 - [ ] If yes, the content is:
    - [ ] Accessible
@@ -12,13 +12,13 @@
    - [ ] Governed by appropriate roles and permissions
    - [ ] Organized by taxonomy
 
-## Are there User-facing changes?
+### Are there User-facing changes?
 - [ ] No
 - [ ] If yes, then:
    - [ ] User documentation is updated
    - [ ] User training is updated
 
-## Are there Upstream Code changes?
+### Are there Upstream Code changes?
 - [ ] No
 - [ ] If yes, then:
    - [ ] Code is complete, commented, and mergeable against *develop* branch.
