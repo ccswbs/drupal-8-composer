@@ -9,11 +9,12 @@ namespace BoveyTest
     public class Authentication : DrupalTest
     {
         [TestInitialize]
-        [DeploymentItem("appsettings.json")]
+        [DeploymentItem("appsettings*.json")]
         public void Initialize()
         {
             var config = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json")
+                .AddJsonFile("appsettings.local.json", optional:true)
                 .Build();
             base.Initialize(config["TestQAHostname"], config["basePath"]);
             DrupalLogin(config["TestQAUsername"], config["TestQAPassword"]);
