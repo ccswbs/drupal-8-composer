@@ -1,5 +1,5 @@
 # Summary of Changes
-- Include a summary of changes made by this pull request
+- <*Include a summary of changes made by this pull request*>
 
 ## Pull Request Checklist
 
@@ -21,16 +21,15 @@
 ### Are there Upstream Code changes?
 - [ ] No
 - [ ] If yes, then:
-   - [ ] Code is complete, commented, and mergeable against *develop* branch.
+   - [ ] Code is complete and commented.
    - [ ] Code is secure to the best of our knowledge and does not contain anything that cannot be on a public repo (e.g. passwords)
    - Is a test necessary?
       - [ ] No
       - [ ] If yes, then:
          - [ ] Add a test if existing tests do not effectively test the code change
-         - [ ] Test builds without error
-   - [ ] Pull request (PR) created to merge against *develop*
+         - [ ] Test passes
+   - [ ] Pull request (PR) is mergeable with *develop* branch
    - [ ] PR has a meaningful title
    - [ ] PR has a summary of changes
    - [ ] PR is peer reviewed and meets team standards.
    - [ ] PR builds without error
-   - [ ] PR merged with *develop*
