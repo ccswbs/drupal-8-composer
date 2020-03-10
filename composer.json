@@ -19,7 +19,6 @@
         "drupal/config_direct_save": "^1.0",
         "drupal/config_installer": "^1.0",
         "drupal/console": "^1",
-        "drupal/core": "^8.8",
         "drupal/core-recommended": "^8.8",
         "drupal/domain": "^1.0@alpha",
         "drupal/domain_entity": "^1.0@alpha",

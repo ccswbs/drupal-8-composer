@@ -65,4 +65,5 @@ terminus -n env:clear-cache $TERMINUS_SITE.$TERMINUS_ENV </dev/null
 terminus -n build:secrets:set "$TERMINUS_SITE.$TERMINUS_ENV" token "$DEVOPS_TOKEN" --file='devops-secrets.json' --clear --skip-if-empty </dev/null
 
 # Apply upstream updates
+terminus connection:set "$TERMINUS_SITE.$TERMINUS_ENV" git
 terminus upstream:updates:apply --updatedb --accept-upstream -- "$TERMINUS_SITE.$TERMINUS_ENV"
