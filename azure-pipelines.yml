@@ -220,6 +220,12 @@ steps:
   displayName: 'Push to upstream'
   condition: and(succeeded(),eq(variables['Build.SourceBranch'],'refs/heads/develop'))
 
+# Publish artifact
+- task: PublishBuildArtifacts@1
+  inputs:
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    artifactName: build_artifact
+
 # Clean up
 - script: ./.ci/env/clean
   displayName: 'Clean up build environment'
