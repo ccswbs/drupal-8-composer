@@ -42,5 +42,25 @@ namespace BoveyTest
             var successfulBuildTriggerMessage = Driver.FindElementsByXPath($"//div[contains(@class, 'messages--status') and text()[contains(.,'Deployment triggered for environment')]]");
             Assert.AreEqual(successfulBuildTriggerMessage.Count, 1);
         }
+
+        [TestMethod]
+        public void BuildTriggerOnlyVisibleForPublisherAndAdmin()
+        {
+            var permissionIDStub = "trigger-deployments";
+            string[] permittedRoles = new string[] {"administrator", "publisher"};
+            
+            // Go to Permissions page
+            DrupalGet("/admin/people/permissions");
+
+            // Check if permitted roles have permission
+            foreach (string role in permittedRoles){
+                var adminPermission = Driver.FindElementsByXPath($"//input[contains(@id, 'edit-{role}-{permissionIDStub}') and contains(@checked, 'checked')]");
+                Assert.AreEqual(adminPermission.Count, 1);
+            }
+
+            // Check that no other roles have permission
+            var numberOfRolesWithPermission = Driver.FindElementsByXPath($"//input[contains(@id, '-{permissionIDStub}') and contains(@checked, 'checked')]");
+            Assert.AreEqual(numberOfRolesWithPermission.Count, permittedRoles.Length);
+        }
     }
 }
