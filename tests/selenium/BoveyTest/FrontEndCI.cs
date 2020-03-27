@@ -29,7 +29,7 @@ namespace BoveyTest
         [TestMethod]
         public void BuildTriggerSuccessful()
         {
-            var frontEndEnv = "stage_gatsby_frontend_environment";
+            var frontEndEnv = "preview_changes";
             var buildTriggerSubmitBtn = "edit-submit";
             
             // Go to Build Trigger deployment page
@@ -61,6 +61,7 @@ namespace BoveyTest
             // Check that no other roles have permission
             var numberOfRolesWithPermission = Driver.FindElementsByXPath($"//input[contains(@id, '-{permissionIDStub}') and contains(@checked, 'checked')]");
             Assert.AreEqual(numberOfRolesWithPermission.Count, permittedRoles.Length);
+
         }
     }
 }
