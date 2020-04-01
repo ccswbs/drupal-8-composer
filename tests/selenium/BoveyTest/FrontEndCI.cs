@@ -58,7 +58,7 @@ namespace BoveyTest
                 DrupalLogin(testUser.Name, testUser.Password);
 
                 // Go to Build Hook deployment page
-                DrupalGet("/admin/build_hooks/deployments/" + _frontEndEnv);
+                DrupalGet("admin/build_hooks/deployments/" + _frontEndEnv);
 
                 // Activate build hook
                 Click(buildHookSubmitBtn);
@@ -88,7 +88,7 @@ namespace BoveyTest
             DrupalLogin(testUser.Name, testUser.Password);
 
             // Confirm that build hook is visible for permitted roles
-            DrupalGet("/admin/build_hooks/deployments/" + _frontEndEnv);
+            DrupalGet("admin/build_hooks/deployments/" + _frontEndEnv);
             Assert.AreEqual(CheckIfPageTitleIsCorrect(_frontEndEnvTitle),true);
             
             // Update user to have all roles except permitted roles
@@ -100,7 +100,7 @@ namespace BoveyTest
             DrupalLogin(testUser.Name, testUser.Password);
 
             // Confirm that build hook is not visible for permitted roles
-            DrupalGet("/admin/build_hooks/deployments/" + _frontEndEnv);
+            DrupalGet("admin/build_hooks/deployments/" + _frontEndEnv);
             Assert.AreEqual(CheckIfPageTitleIsCorrect("Access denied"),true);
 
             // Clean up
@@ -171,7 +171,7 @@ namespace BoveyTest
         }
 
         void GoToEditUserPage(string name){
-            DrupalGet("/admin/people");
+            DrupalGet("admin/people");
             Driver.FindElementByXPath($"//a[@content='{name}']").Click();
             Driver.FindElementByXPath($"//a[text()='Edit']").Click();
         }
@@ -190,7 +190,7 @@ namespace BoveyTest
             var mail = name + "@example.com";
             var pass = RandomString(16);
 
-            DrupalGet("/admin/people/create");
+            DrupalGet("admin/people/create");
 
             Driver.FindElementByName("name").SendKeys(name);
             Driver.FindElementByName("mail").SendKeys(mail);
@@ -213,14 +213,14 @@ namespace BoveyTest
         }
 
         void TurnOnLDAPMixedMode(){
-            DrupalGet("/admin/config/people/ldap/authentication");
+            DrupalGet("admin/config/people/ldap/authentication");
             var checkbox = Driver.FindElementByXPath($"//input[@id='edit-authenticationmode-1']");
             ScrollAndClick(checkbox);
             Click("edit-submit");
         }
 
         void TurnOffLDAPMixedMode(){
-            DrupalGet("/admin/config/people/ldap/authentication");
+            DrupalGet("admin/config/people/ldap/authentication");
             var checkbox = Driver.FindElementByXPath($"//input[@id='edit-authenticationmode-2']");
             ScrollAndClick(checkbox);
             Click("edit-submit");
