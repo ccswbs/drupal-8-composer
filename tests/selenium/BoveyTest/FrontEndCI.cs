@@ -78,7 +78,7 @@ namespace BoveyTest
 
             // Confirm that build hook is visible for permitted roles
             DrupalGet("admin/build_hooks/deployments/" + _frontEndEnv);
-            Assert.AreEqual(CheckIfPageTitleIsCorrect(_frontEndEnvTitle),true);
+            Assert.AreEqual(CheckIfEditPageTitleIsCorrect(_frontEndEnvTitle),true);
             
             // Update user to have all roles except permitted roles
             DrupalLogout();
@@ -90,7 +90,7 @@ namespace BoveyTest
 
             // Confirm that build hook is not visible for permitted roles
             DrupalGet("admin/build_hooks/deployments/" + _frontEndEnv);
-            Assert.AreEqual(CheckIfPageTitleIsCorrect("Access denied"),true);
+            Assert.AreEqual(CheckIfEditPageTitleIsCorrect("Access denied"),true);
 
             // Clean up
             DrupalLogout();
