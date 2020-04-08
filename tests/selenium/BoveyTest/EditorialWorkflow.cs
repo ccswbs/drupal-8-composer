@@ -151,14 +151,9 @@ namespace BoveyTest
             // [WARNING] Users with (author OR editor) AND (reviewer, moderator, or publisher) roles can update content in review state
             // UsersCannot_UpdateContent_InPublishedState();
 
-            // [WARNING] Publisher cannot unpublish at the moment - no access to button
-            // OnlyPublisherCan_TransitionContent_FromPublishedToArchived();
-            
-            // [WARNING] Publisher cannot transition content at the moment - no access to button
-            // PublisherCan_TransitionContent_FromPublishedToArchived();
-
-            // [WARNING] Publisher cannot transition content at the moment - no access to button
-            // PublisherCan_TransitionContent_FromArchivedToPublished();
+            OnlyPublisherCan_TransitionContent_FromPublishedToArchived();
+            PublisherCan_TransitionContent_FromPublishedToArchived();
+            PublisherCan_TransitionContent_FromArchivedToPublished();
 
         }
 
