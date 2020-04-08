@@ -106,6 +106,11 @@ namespace BoveyTest
             ContentFlows_FromDraftToPublished("page");
         }
 
+        [TestMethod]
+        public void ArticleFlows_FromDraftToPublished(){
+            ContentFlows_FromDraftToPublished("article");
+        }
+
         public void ContentFlows_FromDraftToPublished(string contentType)
         {
             // ----- DRAFT PHASE ----
@@ -138,6 +143,7 @@ namespace BoveyTest
 
             // [WARNING] Users with (author OR editor) AND (reviewer, moderator, or publisher) roles can update content in review state
             // UsersCannot_UpdateContent_InModerateState();
+
             ModeratorCan_ViewContent_InModerateState();
             ModeratorCan_TransitionContent_FromModerateToPublished();
 
@@ -145,11 +151,13 @@ namespace BoveyTest
             // [WARNING] Users with (author OR editor) AND (reviewer, moderator, or publisher) roles can update content in review state
             // UsersCannot_UpdateContent_InPublishedState();
 
-
-// [WARNING] Publisher cannot unpublish at the moment - no access to button
-
-            // OnlyPublisherCan_UnpublishContent();
+            // [WARNING] Publisher cannot unpublish at the moment - no access to button
+            // OnlyPublisherCan_TransitionContent_FromPublishedToArchived();
+            
+            // [WARNING] Publisher cannot transition content at the moment - no access to button
             // PublisherCan_TransitionContent_FromPublishedToArchived();
+
+            // [WARNING] Publisher cannot transition content at the moment - no access to button
             // PublisherCan_TransitionContent_FromArchivedToPublished();
 
         }
@@ -157,6 +165,89 @@ namespace BoveyTest
         void AuthorCan_CreateDraft(string contentType) {
             UserCan_CreateContent(contentType, _testAuthor, _draftState, true);
         }
+
+        void AuthorCan_UpdateContent_InDraftState(){
+            var editText = "[Success] AuthorCan_UpdateContent_InDraftState";
+            UserCan_UpdateContentAndSave(_testAuthor, _testContentNodeEditPage, editText, _draftState);
+        }
+
+        void AuthorCan_UpdateContent_InEditState(){
+            var editText = "[Success] AuthorCan_UpdateContent_InEditState";
+            UserCan_UpdateContentAndSave(_testAuthor, _testContentNodeEditPage, editText, _editState);
+        }
+
+        void AuthorCan_TransitionContent_FromDraftToEdit(){
+            UserCan_TransitionContentAndSave(_testAuthor, _testContentNodeViewPage, _draftState, _editState);
+        }
+
+        void AuthorCan_TransitionContent_FromEditToDraft(){
+            UserCan_TransitionContentAndSave(_testAuthor, _testContentNodeViewPage, _editState, _draftState);
+        }
+
+        void EditorCan_UpdateContent_InEditState(){
+            var editText = "[Success] EditorCan_UpdateContent_InEditState";
+            UserCan_UpdateContentAndSave(_testEditor, _testContentNodeEditPage, editText, _editState);
+        }
+        
+        void EditorCan_TransitionContent_FromEditToDraft(){
+            UserCan_TransitionContentAndSave(_testEditor, _testContentNodeViewPage, _editState, _draftState);
+        }
+
+        void EditorCan_TransitionContent_FromEditToReview(){
+            UserCan_TransitionContentAndSave(_testEditor, _testContentNodeViewPage, _editState, _reviewState);
+        }
+
+        void ReviewerCan_ViewContent_InReviewState(){
+            UserCan_ViewContent(_testReviewer, _testContentNodeViewPage, _reviewState);
+        }
+
+        void ReviewerCan_TransitionContent_FromReviewToEdit(){
+            UserCan_TransitionContentAndSave(_testReviewer, _testContentNodeViewPage, _reviewState, _editState);
+        }
+
+        void ReviewerCannot_TransitionContent_FromEditToReview(){
+            UserCannot_TransitionContentAndSave(_testReviewer, _testContentNodeViewPage, _editState, _reviewState);
+        }
+        void ReviewerCan_TransitionContent_FromReviewToModerate(){
+            UserCan_TransitionContentAndSave(_testReviewer, _testContentNodeViewPage, _reviewState, _moderationState);
+        }
+
+        void ModeratorCan_ViewContent_InModerateState(){
+            UserCan_ViewContent(_testModerator, _testContentNodeViewPage, _moderationState);
+        }
+        
+        void ModeratorCan_TransitionContent_FromModerateToPublished(){
+            UserCan_TransitionContentAndSave(_testModerator, _testContentNodeViewPage, _moderationState, _publishedState);
+            AnonymousUserCan_ViewContent();
+        }
+
+        void PublisherCan_TransitionContent_FromPublishedToArchived(){
+            UserCan_TransitionContentAndSave(_testPublisher, _testContentNodeViewPage, _publishedState, _archivedState);
+            AnonymousUserCannot_ViewContent();
+        }
+
+        void PublisherCan_TransitionContent_FromArchivedToPublished(){
+            UserCan_TransitionContentAndSave(_testPublisher, _testContentNodeViewPage, _archivedState, _publishedState);
+            AnonymousUserCan_ViewContent();
+        }
+
+        void OnlyPublisherCan_TransitionContent_FromPublishedToArchived(){
+            UserCannot_TransitionContentAndSave(_testAllRolesButPublisherAdmin,_testContentNodeViewPage, _publishedState, _archivedState);
+            AnonymousUserCan_ViewContent();
+        }
+
+        void UsersCannot_UpdateContent_InReviewState(){
+            UserCannot_UpdateContentAndSave(_testAllRolesButAdmin, _testContentNodeEditPage, _reviewState);
+        }
+
+        void UsersCannot_UpdateContent_InModerateState(){
+            UserCannot_UpdateContentAndSave(_testAllRolesButAdmin, _testContentNodeEditPage, _moderationState);
+        }
+
+        void UsersCannot_UpdateContent_InPublishedState(){
+            UserCannot_UpdateContentAndSave(_testAllRolesButAdmin, _testContentNodeEditPage, _publishedState);         
+        }
+
         void UserCan_CreateContent(string contentType, DrupalUser userToCheck, string workflowState, bool needToLogin = false) {
             _testContentNode.Title = "Selenium Test Content for " + contentType;
             string editText = "[Success] UserCan_CreateContent.";
@@ -193,121 +284,11 @@ namespace BoveyTest
             _testContentNodeViewPage = "/node/" + _testContentNode.NodeID;
         }
 
-        void AuthorCan_UpdateContent_InDraftState(){
-            var editText = "[Success] AuthorCan_UpdateContent_InDraftState";
-            UserCan_UpdateContentAndSave(_testAuthor, _testContentNodeEditPage, editText, _draftState);
-        }
-
-        void AuthorCan_UpdateContent_InEditState(){
-            var editText = "[Success] AuthorCan_UpdateContent_InEditState";
-            UserCan_UpdateContentAndSave(_testAuthor, _testContentNodeEditPage, editText, _editState);
-        }
-
-        void EditorCan_UpdateContent_InEditState(){
-            var editText = "[Success] EditorCan_UpdateContent_InEditState";
-            UserCan_UpdateContentAndSave(_testEditor, _testContentNodeEditPage, editText, _editState);
-        }
-
-        void AuthorCan_TransitionContent_FromDraftToEdit(){
-            UserCan_TransitionContentAndSave(_testAuthor, _testContentNodeViewPage, _draftState, _editState);
-        }
-
-        void AuthorCan_TransitionContent_FromEditToDraft(){
-            UserCan_TransitionContentAndSave(_testAuthor, _testContentNodeViewPage, _editState, _draftState);
-        }
-
-        void EditorCan_TransitionContent_FromEditToDraft(){
-            UserCan_TransitionContentAndSave(_testEditor, _testContentNodeViewPage, _editState, _draftState);
-        }
-
-        void EditorCan_TransitionContent_FromEditToReview(){
-            UserCan_TransitionContentAndSave(_testEditor, _testContentNodeViewPage, _editState, _reviewState);
-        }
-
-        void ReviewerCan_ViewContent_InReviewState(){
-            UserCan_ViewContent(_testReviewer, _testContentNodeViewPage, _reviewState);
-        }
-
-        void ModeratorCan_ViewContent_InModerateState(){
-            UserCan_ViewContent(_testModerator, _testContentNodeViewPage, _moderationState);
-        }
-
         void UserCan_ViewContent(DrupalUser testUser, string nodeURL, string expectedWorkflowState){
             AdminCan_ConfirmContent_InExpectedWorkflowState(nodeURL, expectedWorkflowState);
             DrupalLogin(testUser.Name, testUser.Password);
             DrupalGet(nodeURL);
             Assert.AreEqual(CheckIfViewPageTitleIsCorrect(_testContentNode.Title),true);
-        }
-        
-        void UsersCannot_UpdateContent_InReviewState(){
-            UserCannot_UpdateContentAndSave(_testAllRolesButAdmin, _testContentNodeEditPage, _reviewState);
-        }
-
-        void UsersCannot_UpdateContent_InModerateState(){
-            UserCannot_UpdateContentAndSave(_testAllRolesButAdmin, _testContentNodeEditPage, _moderationState);
-        }
-
-        void UsersCannot_UpdateContent_InPublishedState(){
-            UserCannot_UpdateContentAndSave(_testAllRolesButAdmin, _testContentNodeEditPage, _publishedState);         
-        }
-
-        bool ContentIsPublished(){
-            // view content in published state as anonymous user
-            return false;
-        }
-
-        void ReviewerCan_TransitionContent_FromReviewToEdit(){
-            UserCan_TransitionContentAndSave(_testReviewer, _testContentNodeViewPage, _reviewState, _editState);
-        }
-
-        void ReviewerCannot_TransitionContent_FromEditToReview(){
-            UserCannot_TransitionContentAndSave(_testReviewer, _testContentNodeViewPage, _editState, _reviewState);
-        }
-        void ReviewerCan_TransitionContent_FromReviewToModerate(){
-            UserCan_TransitionContentAndSave(_testReviewer, _testContentNodeViewPage, _reviewState, _moderationState);
-        }
-
-        void ModeratorCan_TransitionContent_FromModerateToPublished(){
-            UserCan_TransitionContentAndSave(_testModerator, _testContentNodeViewPage, _moderationState, _publishedState);
-
-            // view content in published state as anonymous user
-            DrupalLogout();
-            DrupalGet(_testContentNodeViewPage);
-            CheckIfViewPageTitleIsCorrect(_testContentNode.Title);
-        }
-
-        void PublisherCan_TransitionContent_FromPublishedToArchived(){
-            // login as publisher
-            // transition content from published into unpublished state
-            // logout
-
-            // [access denied] view content in published state as anonymous user
-            if (ContentIsPublished() == false){
-                // content is visible to anonymous user
-                // [successful]
-            }
-        }
-
-        void PublisherCan_TransitionContent_FromArchivedToPublished(){
-            // login as publisher
-            // transition content from unpublished into published state
-            // logout
-
-            // view content in published state as anonymous user
-            if (ContentIsPublished() == true){
-                // content is visible to anonymous user
-                // [successful]
-            }
-        }
-
-        void OnlyPublisherCan_UnpublishContent(){
-            // login as all-roles-but-publisher-admin
-            DrupalLogin(_testAllRolesButPublisherAdmin.Name, _testAllRolesButPublisherAdmin.Password);
-            DrupalGet(_testContentNodeEditPage);
-
-            // [access denied] unpublish content
-            // [access denied] transition content from published into unpublished state
-            // logout
         }
 
         void UserCan_UpdateContentAndSave(DrupalUser testUser, string nodeEditURL, string text, string workflowState){
@@ -332,16 +313,6 @@ namespace BoveyTest
             DrupalLogin(testUser.Name, testUser.Password);
             DrupalGet(nodeEditURL);
             Assert.AreEqual(CheckIfEditPageTitleIsCorrect(_accessDenied),true);
-        }
-
-        void UpdateBodyField(string text){
-            // Wait for the CKEditor iframe to load and switch to iframe
-            Pause(2000);
-            var editorFrame = Driver.FindElementByXPath("//div[contains(@id, 'cke_1_contents')]/iframe");
-            Driver.SwitchTo().Frame(editorFrame);
-            var editorBody = Driver.FindElementByXPath("//body");
-            editorBody.SendKeys(text);
-            Driver.SwitchTo().DefaultContent();
         }
 
         void UserCan_TransitionContentAndSave(DrupalUser testUser, string nodeViewURL, string currentState, string destinationState){            
@@ -381,11 +352,35 @@ namespace BoveyTest
         void AdminCan_ConfirmContent_InExpectedWorkflowState(string nodeViewURL, string expectedState){
             DrupalLogout();
             DrupalLogin(_adminUser, _adminPass);
-            DrupalGet(nodeViewURL);
+            
             // confirm node is in expected workflow state
-            var expectedWorkflowState = Driver.FindElementsByXPath($"//div[contains(@id, 'edit-current') and text()[contains(.,'{expectedState}')] and label[contains(.,'Moderation state')]]");
+            DrupalGet(nodeViewURL + "/edit");
+            var expectedWorkflowState = Driver.FindElementsByXPath($"//div[contains(@id, 'edit-moderation-state-0-current') and text()[contains(.,'{expectedState}')]]");
             Assert.AreEqual(expectedWorkflowState.Count, 1);
+
             DrupalLogout();
+        }
+
+        void AnonymousUserCan_ViewContent(){
+            DrupalLogout();
+            DrupalGet(_testContentNodeViewPage);
+            CheckIfViewPageTitleIsCorrect(_testContentNode.Title);
+        }
+
+        void AnonymousUserCannot_ViewContent(){
+            DrupalLogout();
+            DrupalGet(_testContentNodeViewPage);
+            CheckIfViewPageTitleIsCorrect(_accessDenied);
+        }
+
+        void UpdateBodyField(string text){
+            // Wait for the CKEditor iframe to load and switch to iframe
+            Pause(2000);
+            var editorFrame = Driver.FindElementByXPath("//div[contains(@id, 'cke_1_contents')]/iframe");
+            Driver.SwitchTo().Frame(editorFrame);
+            var editorBody = Driver.FindElementByXPath("//body");
+            editorBody.SendKeys(text);
+            Driver.SwitchTo().DefaultContent();
         }
     }
 }
