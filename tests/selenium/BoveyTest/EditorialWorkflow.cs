@@ -1,10 +1,7 @@
-using System;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Test;
-
-using OpenQA.Selenium;
 
 namespace BoveyTest
 {
@@ -317,13 +314,23 @@ namespace BoveyTest
             DrupalLogin(testUser.Name, testUser.Password);
 
             // set node to destination state
-            DrupalGet(nodeViewURL);
-            Select("edit-new-state",destinationState);
-            ScrollAndClick("edit-submit");
+            if(currentState == _publishedState){
+                DrupalGet(nodeViewURL + "/edit");
+                Select("edit-moderation-state-0-state", destinationState);
+                ScrollAndClick("edit-submit");
 
-            // confirm node was successfully updated
-            var successfulTransitionContentMessage = Driver.FindElementsByXPath($"//div[contains(@class, 'messages--status') and text()[contains(.,'The moderation state has been updated.')]]");
-            Assert.AreEqual(successfulTransitionContentMessage.Count, 1);
+                // confirm node was successfully updated
+                var successfulTransitionContentMessage = Driver.FindElementsByXPath($"//div[contains(@class, 'messages--status') and text()[contains(.,' has been updated.')]]");
+                Assert.AreEqual(successfulTransitionContentMessage.Count, 1);                
+            }else{
+                DrupalGet(nodeViewURL);
+                Select("edit-new-state", destinationState);
+                ScrollAndClick("edit-submit");
+
+                // confirm node was successfully updated
+                var successfulTransitionContentMessage = Driver.FindElementsByXPath($"//div[contains(@class, 'messages--status') and text()[contains(.,'The moderation state has been updated.')]]");
+                Assert.AreEqual(successfulTransitionContentMessage.Count, 1);
+            }
 
             // confirm workflow state was successfully updated
             AdminCan_ConfirmContent_InExpectedWorkflowState(nodeViewURL, destinationState);
