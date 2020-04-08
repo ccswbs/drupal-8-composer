@@ -345,10 +345,17 @@ namespace BoveyTest
             // log back in as testUser
             DrupalLogin(testUser.Name, testUser.Password);
 
-            // set node to destination state
-            DrupalGet(nodeViewURL);
-            var expectedWorkflowState = Driver.FindElementsByXPath($"//div[contains(@id, 'edit-current') and text()[contains(.,'{destinationState}')] and label[contains(.,'Moderation state')]]");
-            Assert.AreEqual(expectedWorkflowState.Count, 0);
+            if(currentState == _publishedState){
+                // attempt to set node to destination state using controls on edit URL
+                DrupalGet(nodeViewURL + "/edit");
+                var expectedWorkflowState = Driver.FindElementsByXPath($"//select[contains(@id, 'edit-moderation-state-0-state') and option[text()[contains(.,'{destinationState}')]]]");
+                Assert.AreEqual(expectedWorkflowState.Count, 0);
+            }else{
+                // attempt to set node to destination state using controls on view URL
+                DrupalGet(nodeViewURL);
+                var expectedWorkflowState = Driver.FindElementsByXPath($"//select[contains(@id, 'edit-new-state') and option[text()[contains(.,'{destinationState}')]]]");
+                Assert.AreEqual(expectedWorkflowState.Count, 0);
+            }
         }
 
         void AdminCan_ConfirmContent_InExpectedWorkflowState(string nodeViewURL, string expectedState){
