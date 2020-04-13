@@ -156,41 +156,6 @@ steps:
 #     pathtoPublish: '$(Build.ArtifactStagingDirectory)'
 #     artifactName: BehatTestFailureScreenshots
 
-# Visual Regression Tests
-# - script: ./.ci/test/visual-regression/run
-#   displayName: '[BackstopJS] Run visual regression tests'
-#   condition: and(succeededOrFailed(), eq(variables.RUN_TESTS, 'true'))
-
-# - bash: |
-#     if [ -d backstop_data ]; then
-#       echo "##vso[task.setVariable variable=BACKSTOP_DATA_EXISTS]true"
-#     fi
-#   displayName: '[BackstopJS] Check if test results exist'
-#   condition: and(succeededOrFailed(), eq(variables.RUN_TESTS, 'true'))
-
-# - task: PublishTestResults@2
-#   displayName: '[BackstopJS] Publish test results'
-#   condition: and(succeededOrFailed(),eq(variables.BACKSTOP_DATA_EXISTS, 'true'),eq(variables.RUN_TESTS, 'true'))
-#   inputs:
-#     testResultsFormat: 'JUnit' # Options: JUnit, NUnit, VSTest, xUnit, cTest
-#     testResultsFiles: 'backstop_data/ci_report/*' 
-#     testRunTitle: 'BackstopJS Test Results'
-
-# - task: CopyFiles@2
-#   displayName: "[BackstopJS] Copy screenshots to Artifacts Directory"
-#   condition: and(succeededOrFailed(),eq(variables.BACKSTOP_DATA_EXISTS, 'true'),eq(variables.RUN_TESTS, 'true'))
-#   inputs:
-#       sourceFolder: 'backstop_data'
-#       contents: '**'
-#       targetFolder: '$(Build.ArtifactStagingDirectory)'
-
-# - task: PublishBuildArtifacts@1
-#   displayName: '[BackstopJS] Publish screenshots to Artifacts Directory'
-#   condition: and(succeededOrFailed(),eq(variables.BACKSTOP_DATA_EXISTS, 'true'),eq(variables.RUN_TESTS, 'true'))
-#   inputs:
-#     pathtoPublish: '$(Build.ArtifactStagingDirectory)'
-#     artifactName: BackstopJSTestScreenshots
-
 # Composer Lock Updater
 - script: true
   displayName: 'Composer lock updater'
