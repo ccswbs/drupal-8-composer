@@ -28,6 +28,7 @@
         "drupal/jsonapi_extras": "^3.13",
         "drupal/ldap": "3.0-beta7",
         "drupal/ldap_servers": "3.0-beta7",
+        "drupal/paragraphs": "^1.12",
         "drupal/pathauto": "^1.6",
         "drupal/system_status": "^2.9",
         "drupal/token": "^1.6",
