@@ -30,6 +30,7 @@
         "drupal/ldap_servers": "3.0-beta7",
         "drupal/paragraphs": "^1.12",
         "drupal/pathauto": "^1.6",
+        "drupal/redirect": "^1.6",
         "drupal/system_status": "^2.9",
         "drupal/token": "^1.6",
         "drush-ops/behat-drush-endpoint": "^9.3",
