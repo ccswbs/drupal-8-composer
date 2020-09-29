@@ -157,8 +157,8 @@ steps:
 #     artifactName: BehatTestFailureScreenshots
 
 # Composer Lock Updater
-- script: true
-  displayName: 'Composer lock updater'
+# - script: true
+#   displayName: 'Composer lock updater'
 
 # Deploy to Upstream
 - script: |
