@@ -1,0 +1,42 @@
+{
+    "name": "local/asset_bank",
+    "description": "Local composer file of Asset Bank Drupal 8 Module",
+    "keywords": [
+        "local",
+        "asset_bank"
+    ],
+    "homepage": "https://github.com/local/asset_bank",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "CCS_WDS",
+            "email": "ccs.websolutions@uoguelph.ca",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.0.8"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Local\\AssetBank\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Local\\AssetBank\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+
+    },
+    "config": {
+        "sort-packages": true
+    }
+}

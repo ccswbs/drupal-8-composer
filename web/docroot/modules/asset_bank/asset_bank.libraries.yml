@@ -1,0 +1,7 @@
+assetBankCallback:
+  version: 1.x
+  js:
+    js/assetBankCallback.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupalSettings
