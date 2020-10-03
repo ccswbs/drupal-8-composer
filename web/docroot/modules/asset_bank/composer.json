@@ -7,7 +7,7 @@
     ],
     "homepage": "https://github.com/local/asset_bank",
     "license": "MIT",
-    "type": "library",
+    "type": "drupal-module",
     "authors": [
         {
             "name": "CCS_WDS",
