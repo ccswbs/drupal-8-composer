@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8265740e9ae83a9283ab118be15d849f",
+    "content-hash": "36f6bc307e49281e54ecb8c8ee21d1f3",
     "packages": [
         {
             "name": "alchemy/zippy",
@@ -4222,7 +4222,7 @@
             "dist": {
                 "type": "path",
                 "url": "web/docroot/modules/asset_bank",
-                "reference": "3ec1fc6e9f3dbee0b261b00e3245d52e5cdb13ff"
+                "reference": "2f503908b88d3561db3e136c169f6b58a38f6e22"
             },
             "require": {
                 "php": "^7.0.8"
@@ -4264,7 +4264,10 @@
             "keywords": [
                 "asset_bank",
                 "local"
-            ]
+            ],
+            "transport-options": {
+                "symlink": false
+            }
         },
         {
             "name": "masterminds/html5",

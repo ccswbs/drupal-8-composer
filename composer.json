@@ -10,7 +10,10 @@
         },
         {
             "type": "path",
-            "url": "web/docroot/modules/asset_bank"
+            "url": "web/docroot/modules/asset_bank",
+            "options": {
+                "symlink": false
+            }
         }
     ],
     "require": {
