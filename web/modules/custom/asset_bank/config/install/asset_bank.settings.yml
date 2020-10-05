@@ -1,5 +1,5 @@
 # This file stores configuration defaults
 
 asset_bank:
-  url: ''
+  url: 'https://photos.uoguelph.ca/assetbank-uoguelph'
   name: 'Asset Bank'
