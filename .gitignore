@@ -61,4 +61,23 @@ Thumbs.db
 # SASS #
 ##########
 .sass-cache
+
 /.vs
+
+# Scaffold Files #
+##################
+web/.csslintrc
+web/.eslintignore
+web/.eslintrc.json
+web/.gitattributes
+web/.ht.router.php
+web/.htaccess
+web/INSTALL.txt
+web/README.txt
+web/autoload.php
+web/example.gitignore
+web/index.php
+web/robots.txt
+web/update.php
+web/web.config
+/.gitattributes
