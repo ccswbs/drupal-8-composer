@@ -1,0 +1,28 @@
+<?php
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ * This renders the module's help page
+ */
+function asset_bank_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.asset_bank':
+      return t('
+        <h2>Asset Bank integration for Drupal.</h2>
+        <h3>Instructions</h3>
+            <ol>
+                <li>Configure <em><a href="/admin/config/media/asset_bank" target="_blank">Asset Bank Module</a></em> to point to your Asset Bank instance</li>
+                <li>From <em>Configuration &gt; Content Authoring &gt; <a href="/admin/config/content/formats" target="_blank">Text formats and editors</a></em> drag the Asset Bank icon onto the ckeditor toolbar</li>
+                <li>If your CMS assets will not be served by your Drupal server please disable <strong>Restrict images to this site</strong> in <em>Configuration &gt; Content Authoring &gt; <a href="/admin/config/content/formats" target="_blank">Text formats and editors</a></em></li>
+            </ol>
+      ');
+  }
+}
+
+function asset_bank_editor_js_settings_alter(array &$settings) {
+  foreach ($settings['editor']['formats'] as $name => $value) {
+    $settings['editor']['formats'][$name]['editorSettings']['extraAllowedContent'] = array('video[*]', 'controls[*]', 'source[*]');
+  }
+}
