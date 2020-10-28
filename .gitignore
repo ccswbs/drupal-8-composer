@@ -11,7 +11,8 @@
 web/sites/default/files
 
 # Ignore Drupal's modules directory
-web/modules
+web/modules/contrib
+web/modules/README.txt
 
 # Ignore vendor directory
 vendor
