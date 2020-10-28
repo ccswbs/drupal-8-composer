@@ -1,0 +1,10 @@
+name: Asset Bank Module
+type: module
+description: Publish your Asset Bank images into Drupal.
+package: CKEditor
+dependencies:
+  - ckeditor
+  - media
+
+core: 8.x
+configure: asset_bank.form
