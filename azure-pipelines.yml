@@ -174,7 +174,7 @@ steps:
     git merge --no-commit $(Build.SourceBranchName)
 
     # Build assets
-    composer -n build-assets
+    sudo composer -n build-assets
 
     # Commit changes
     git add --force -A .
