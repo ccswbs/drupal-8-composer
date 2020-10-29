@@ -9,4 +9,6 @@ set -eo pipefail
 #
 
 # Build Composer Assets
-sudo composer -n build-assets
+
+sudo chown -R $USER $HOME/.composer/cache
+composer -n build-assets
