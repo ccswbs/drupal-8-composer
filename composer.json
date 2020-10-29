@@ -37,6 +37,7 @@
         "drupal/token": "^1.6",
         "drush-ops/behat-drush-endpoint": "^9.3",
         "drush/drush": "^8.4.5",
+        "pantheon-systems/drupal-integrations": "^8.0",
         "pantheon-systems/quicksilver-pushback": "^2",
         "simplesamlphp/simplesamlphp": "^1.18"
     },
