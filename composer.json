@@ -12,13 +12,13 @@
     "require": {
         "php": ">=7.0.8",
         "composer/installers": "^1.0.20",
-        "cweagans/composer-patches": "^1.0",
-        "drupal-composer/drupal-scaffold": "^2.0.1",
-        "drupal/build_hooks": "^2.2",
+        "cweagans/composer-patches": "^1.7",
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.7",
+        "drupal/build_hooks": "2.3.0",
         "drupal/build_hooks_azure": "2.0-beta2",
         "drupal/config_direct_save": "^1.0",
         "drupal/config_installer": "^1.0",
-        "drupal/console": "^1",
+        "drupal/core-composer-scaffold": "^8.9",
         "drupal/core-recommended": "^8.8",
         "drupal/domain": "^1.0@alpha",
         "drupal/domain_entity": "^1.0@alpha",
@@ -26,27 +26,25 @@
         "drupal/domain_site_settings": "^1.3",
         "drupal/externalauth": "^1.2",
         "drupal/jsonapi_extras": "^3.13",
-        "drupal/ldap": "3.0-beta7",
+        "drupal/ldap": "3.0.0-beta7",
         "drupal/ldap_servers": "3.0-beta7",
         "drupal/paragraphs": "^1.12",
         "drupal/pathauto": "^1.6",
         "drupal/redirect": "^1.6",
+        "drupal/simplesamlphp_auth": "^3.2",
         "drupal/svg_image": "^1.14",
         "drupal/system_status": "^2.9",
         "drupal/token": "^1.6",
         "drush-ops/behat-drush-endpoint": "^9.3",
-        "drush/drush": "~8.3",
+        "drush/drush": "^8.4.5",
         "pantheon-systems/quicksilver-pushback": "^2",
-        "rvtraveller/qs-composer-installer": "^1.1",
-        "simplesamlphp/simplesamlphp": "^1.18",
-        "zaporylie/composer-drupal-optimizations": "^1.0"
+        "simplesamlphp/simplesamlphp": "^1.18"
     },
     "require-dev": {
         "behat/behat": "3.*",
         "behat/mink": "^1.7",
         "behat/mink-extension": "^2.2",
         "behat/mink-goutte-driver": "^1.2",
-        "dealerdirect/phpcodesniffer-composer-installer": "^0.5.0",
         "dmore/behat-chrome-extension": "^1.3",
         "drupal/coder": "^8.3.1",
         "drupal/drupal-extension": "~3",
@@ -54,7 +52,7 @@
         "jcalderonzumba/gastonjs": "^1.0.2",
         "jcalderonzumba/mink-phantomjs-driver": "^0.3.1",
         "mikey179/vfsstream": "^1.2",
-        "phpunit/phpunit": "^4.8",
+        "phpunit/phpunit": "^6.5",
         "squizlabs/php_codesniffer": "^3.4.0",
         "symfony/css-selector": "^2.8"
     },
@@ -125,19 +123,15 @@
             "export-configuration": "drush config-export --yes"
         },
         "drupal-scaffold": {
-            "source": "https://raw.githubusercontent.com/pantheon-systems/drops-8-scaffolding/{version}/{path}",
-            "includes": [
-                "sites/default/default.services.pantheon.preproduction.yml",
-                "sites/default/settings.pantheon.php"
+            "allowed-packages": [
+                "pantheon-systems/drupal-integrations"
             ],
-            "excludes": [
-                ".csslintrc",
-                ".editorconfig",
-                ".eslintignore",
-                ".eslintrc.json",
-                ".htaccess",
-                "web.config"
-            ]
+            "locations": {
+                "web-root": "./web"
+            },
+            "file-mapping": {
+                "[project-root]/.editorconfig": false
+            }  
         }
     },
     "config": {
