@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5b62561be8ea6b9e48f7992d72c9b5f2",
+    "content-hash": "34c3548326c6e5c9c986efa43f9cc7dc",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1068,8 +1068,8 @@
                     "dev-1.x": "1.x-dev"
                 },
                 "drupal": {
-                    "version": "8.x-1.0-beta4+3-dev",
-                    "datestamp": "1600021421",
+                    "version": "8.x-1.0-beta4+2-dev",
+                    "datestamp": "1600020405",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Project has not opted into security advisory coverage!"
@@ -1102,7 +1102,8 @@
             "homepage": "https://www.drupal.org/project/authorization",
             "support": {
                 "source": "https://git.drupalcode.org/project/authorization"
-            }
+            },
+            "time": "2020-09-13T18:23:19+00:00"
         },
         {
             "name": "drupal/build_hooks",
@@ -11136,9 +11137,9 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "drupal/authorization": 20,
         "drupal/domain": 15,
-        "drupal/domain_entity": 15
+        "drupal/domain_entity": 15,
+        "drupal/ldap": 10
     },
     "prefer-stable": true,
     "prefer-lowest": false,
@@ -11148,6 +11149,5 @@
     "platform-dev": [],
     "platform-overrides": {
         "php": "7.0.8"
-    },
-    "plugin-api-version": "2.0.0"
+    }
 }
