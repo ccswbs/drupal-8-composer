@@ -11,6 +11,6 @@ set -eo pipefail
 # Build Composer Assets
 sudo chown -R $USER $HOME/.composer/
 composer --version
-composer self-update 1.10.16
+sudo composer self-update 1.10.16
 composer --version
 composer -n build-assets
