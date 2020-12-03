@@ -60,11 +60,10 @@ steps:
 #   displayName: 'Retrieve cached terminus'
 
 - script: ./.ci/env/set
-  displayName: 'Initialize build environment'
+  displayName: 'Install build tools'
 
 - script: ./.ci/env/set-tests
-  displayName: 'Initialize test environment'
-  condition: eq(variables.RUN_TESTS, 'true')
+  displayName: 'Install test tools'
 
 # Run Static Tests
 # - script: ./.ci/test/static/run
@@ -73,22 +72,22 @@ steps:
 
 # Build Assets (Composer Install)
 - script: ./.ci/build/php
-  displayName: 'Build PHP'
+  displayName: 'Composer Install'
 
 - script: ./.ci/deploy/pantheon/dev-multidev
-  displayName: 'Deploy to Pantheon'
-  condition: and(succeededOrFailed(), eq(variables.RUN_TESTS, 'true'))
+  displayName: 'Deploy to Pantheon CI Multidev for Testing'
+  condition: succeeded()
 
 # Run Selenium Tests
 - task: NuGetAuthenticate@0
   displayName: '[Selenium] Authenticate to get packages'
-  condition: and(succeeded(), eq(variables.RUN_TESTS, 'true'))
+  condition: succeeded()
   inputs:
     nuGetServiceConnections: DrupalTestServiceConnection
 
 - task: DotNetCoreCLI@2
   displayName: '[Selenium] Restore packages'
-  condition: and(succeeded(), eq(variables.RUN_TESTS, 'true'))
+  condition: succeeded()
   inputs:
     command: restore
     projects: '$(Build.SourcesDirectory)/tests/selenium/**/*.csproj'
@@ -106,7 +105,7 @@ steps:
 # File transform
 - task: FileTransform@1
   displayName: '[Selenium] Replace site-specific tokens in appsettings.json'
-  condition: and(succeeded(), eq(variables.RUN_TESTS, 'true'))
+  condition: succeeded()
   inputs:
     folderPath: '$(Build.SourcesDirectory)/tests/selenium/BoveyTest'
     fileType: json
@@ -114,7 +113,7 @@ steps:
 
 - task: DotNetCoreCLI@2
   displayName: '[Selenium] Run tests'
-  condition: and(succeeded(), eq(variables.RUN_TESTS, 'true'))
+  condition: succeeded()
   inputs:
     command: test
     projects: '$(Build.SourcesDirectory)/tests/selenium/**/*.csproj'
@@ -182,17 +181,33 @@ steps:
 
     # Push to master
     git push --force https://$(pat)@github.com/ccswbs/drupal-8-composer.git HEAD:master
-  displayName: 'Push to upstream'
+  displayName: 'Deploy to upstream'
   condition: and(succeeded(),eq(variables['Build.SourceBranch'],'refs/heads/develop'))
 
-# Publish artifact
+# Pull upstream to Bovey Dev
+- script: ./.ci/deploy/pantheon/dev
+  displayName: 'Deploy to Pantheon Bovey dev'
+  condition: succeeded()
+
+# Run Gatsby Build (Drupal Source = Bovey Dev) using submodule of gus
+# Deploy built artifact from gatsby build to azure (Dev)
+# Pull upstream to Bovey Test
+# Run Gatsby Build (Drupal Source = Bovey Test) using submodule of gus
+# Deploy built artifact from gatsby build to azure (Test)
+# Run Gatsby Build (Drupal Source = Bovey Live) using submodule of gus
+# Deploy built artifact from gatsby build to azure (Reference)
+# Run visual regression tests (available via gus)
+# Pull upstream to Bovey Live
+# Run Gatsby Build (Drupal Source = Bovey Live) using submodule of gus
+
+  # Publish artifact
 - task: ArchiveFiles@2
   displayName: 'Archive $(Build.SourcesDirectory)'
   inputs:
     rootFolderOrFile: '$(Build.SourcesDirectory)'
     includeRootFolder: false
 
-- task: PublishBuildArtifacts@1
+# - task: PublishBuildArtifacts@1
   displayName: Publish Build Artifact
   inputs:
     pathtoPublish: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
