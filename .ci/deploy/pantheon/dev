@@ -1,0 +1,6 @@
+#!/bin/bash
+
+set -eo pipefail
+
+terminus connection:set bovey.dev git </dev/null
+terminus upstream:updates:apply --updatedb --accept-upstream -- bovey.dev </dev/null
