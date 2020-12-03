@@ -1,0 +1,4 @@
+[submodule ".ci/gus"]
+	path = .ci/gus
+	url = git@github.com:ccswbs/gus.git
+	branch = master
