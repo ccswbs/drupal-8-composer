@@ -44,8 +44,8 @@ pool:
 steps:
 
 - checkout: self
-  persistCredentials: true
   submodules: true
+  persistCredentials: true
 
 - script: ./.ci/env/set
   displayName: 'Install backend build tools'
