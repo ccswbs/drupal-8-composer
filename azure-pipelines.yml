@@ -22,13 +22,18 @@ variables:
   TestQAPassword: $(test.site.password)
   # (TODO) Use variables to access Azure Key Vault once available
   # _service_keyvault: $(ServiceKeyvault)
-  # _service_connection: $(ServiceConnection)
+  _service_connection: $(ServiceConnection)
   MY_DEVOP_TOKEN: $(devops.token)
   MY_DEVOP_URL: $(System.TeamFoundationCollectionUri)
   MY_DEVOP_PROJ: $(System.TeamProject)
   DIR_TERMINUS: $(Pipeline.Workspace)/.terminus
-  DIR_DRUSH: /usr/local/bin/drush
-  RUN_TESTS: $(run.tests)
+  DIR_DRUSH: '/usr/local/bin/drush'
+  # RUN_TESTS: $(run.tests)
+  _gatsby_folder: '.ci/gus'
+  _gatsby_cache_folder: '.ci/gus/.cache'
+  _gatsby_public_folder: '.ci/gus/public'
+  _site: $(Site)
+  _zone: $(Zone)
 
 trigger:
 - develop
@@ -45,25 +50,11 @@ steps:
 - checkout: self
   persistCredentials: true
 
-# Cache drush
-# - task: CacheBeta@1
-#   inputs:
-#     key: 'drush_cache | "$(Agent.OS)" | "$(Build.SourceBranch)" | "$(terminus.site)"'
-#     path: $(DIR_DRUSH)
-#   displayName: 'Retrieve cached drush'
-
-# Cache terminus
-# - task: CacheBeta@1
-#   inputs:
-#     key: 'terminus_cache | "$(Agent.OS)" | "$(Build.SourceBranch)" | "$(terminus.site)"'
-#     path: $(DIR_TERMINUS)
-#   displayName: 'Retrieve cached terminus'
-
 - script: ./.ci/env/set
-  displayName: 'Install build tools'
+  displayName: 'Install backend build tools'
 
 - script: ./.ci/env/set-tests
-  displayName: 'Install test tools'
+  displayName: 'Install backend test tools'
 
 # Run Static Tests
 # - script: ./.ci/test/static/run
@@ -119,78 +110,127 @@ steps:
     projects: '$(Build.SourcesDirectory)/tests/selenium/**/*.csproj'
     publishTestResults: true
 
-# Behat Tests
-# - script: ./.ci/test/behat/initialize
-#   displayName: '[Behat] Initialize tests'
-#   condition: and(succeededOrFailed(), eq(variables.RUN_TESTS, 'true'))
-
-# - script: ./.ci/test/behat/run
-#   displayName: '[Behat] Run tests'
-#   condition: and(succeededOrFailed(), eq(variables.RUN_TESTS, 'true'))
-
-# - script: ./.ci/test/behat/cleanup
-#   displayName: '[Behat] Clean up tests'
-#   condition: and(succeededOrFailed(), eq(variables.RUN_TESTS, 'true'))
-
-# - task: PublishTestResults@2
-#   displayName: '[Behat] Publish results'
-#   condition: and(succeededOrFailed(), eq(variables.RUN_TESTS, 'true'))
-#   inputs:
-#     testResultsFormat: 'JUnit' # Options: JUnit, NUnit, VSTest, xUnit, cTest
-#     testRunTitle: 'Behat Test Results'
-#     testResultsFiles: '$(Common.TestResultsDirectory)/*' 
-
-# - task: CopyFiles@2
-#   displayName: "[Behat] Copy screenshots to Artifacts Directory"
-#   condition: and(failed(), eq(variables.RUN_TESTS, 'true'))
-#   inputs:
-#       sourceFolder: 'var/behat_screenshots'
-#       contents: '**'
-#       targetFolder: '$(Build.ArtifactStagingDirectory)'
-
-# - task: PublishBuildArtifacts@1
-#   displayName: '[Behat] Publish screenshots to Artifacts Directory'
-#   condition: and(failed(), eq(variables.RUN_TESTS, 'true'))
-#   inputs:
-#     pathtoPublish: '$(Build.ArtifactStagingDirectory)'
-#     artifactName: BehatTestFailureScreenshots
-
-# Composer Lock Updater
-# - script: true
-#   displayName: 'Composer lock updater'
-
 # Deploy to Upstream
-- script: |
-    git config user.name '$(Build.RequestedFor)'
-    git config user.email '$(Build.RequestedForEmail)'
-
-    # Check out both branches so they exist on the pipeline
-    git checkout $(Build.SourceBranchName)
-    git checkout master
-
-    # Merge source branch onto latest version of master
-    git fetch origin master
-    git merge --no-commit $(Build.SourceBranchName)
-
-    # Build assets
-    composer -n build-assets
-
-    # Commit changes
-    git add --force -A .
-    git commit -m 'Build $(Build.BuildId)'
-
-    # Push to master
-    git push --force https://$(pat)@github.com/ccswbs/drupal-8-composer.git HEAD:master
+- script: ./.ci/deploy/github/upstream
   displayName: 'Deploy to upstream'
   condition: and(succeeded(),eq(variables['Build.SourceBranch'],'refs/heads/develop'))
 
-# Pull upstream to Bovey Dev
+# Deploy upstream to Bovey Dev
 - script: ./.ci/deploy/pantheon/dev
   displayName: 'Deploy to Pantheon Bovey dev'
   condition: succeeded()
 
-# Run Gatsby Build (Drupal Source = Bovey Dev) using submodule of gus
+# Prepare for Gatsby builds
+- script: ./.ci/env/set
+  workingDirectory: $(_gatsby_folder)
+  displayName: 'Initialize frontend build tools'
+  condition: succeeded()
+
+- script: 'npm install --only=dev gatsby-cli'
+  workingDirectory: $(_gatsby_folder)
+  displayName: 'Install Gatsby-CLI'
+  condition: succeeded()
+
+- task: Npm@1
+  displayName: 'npm install'
+  condition: succeeded()
+  inputs:
+    workingDir: $(_gatsby_folder)
+    verbose: false
+
+# Output Dev environment variables for gus and azure
+- bash: |
+    echo "##vso[task.setvariable variable=_gatsby_source]dev"
+    echo "##vso[task.setvariable variable=_env]dev"
+  displayName: 'Set environment to DEV'
+  condition: succeeded()
+
+# Prepare to deploy
+- script: ./.ci/deploy/azure/set
+  displayName: 'Prep variables for Azure deployment'
+  condition: succeeded()
+
+# Retrieve caches
+- task: CacheBeta@1
+  inputs:
+    key: 'gatsby_cache | "$(Agent.OS)" | "$(Build.SourceBranch)" | "$(_site)" | "$(_zone)"'
+    path: $(_gatsby_cache_folder)
+  displayName: 'Retrieve cached Gatsby .cache folder'
+
+- task: CacheBeta@1
+  inputs:
+    key: 'gatsby_public | "$(Agent.OS)" | "$(Build.SourceBranch)" | "$(_site)" | "$(_zone)"'
+    path: $(_gatsby_public_folder)
+  displayName: 'Retrieve cached Gatsby public folder'
+
+# Build Gatsby (Drupal Source = Bovey Dev) using submodule of gus
+- script: |
+    npx gatsby build --prefix-paths
+  workingDirectory: $(_gatsby_folder)
+  displayName: 'Gatsby build (Dev)'
+  condition: succeeded()
+
 # Deploy built artifact from gatsby build to azure (Dev)
+- task: "AzureResourceGroupDeployment@2"
+  displayName: 'Create or update resource group'
+  inputs:
+    azureSubscription: '$(_service_connection)'
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: '$(_rg_name)'
+    location: 'East US'
+    templateLocation: 'Linked artifact'
+    csmFile: '$(_gatsby_folder)/azuredeploy.json'
+    overrideParameters: '-env $(_env) -site $(_site) -zone $(_zone) -pantheonsitelabel $(_pantheonsitelabel)'
+    deploymentMode: 'Complete'
+    deploymentOutputs: 'outputConnectionString'
+
+- task: AzureCLI@1
+  displayName: 'Enable custom https using CDN Managed certificate'
+  inputs:
+    azureSubscription: '$(_service_connection)'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      _zone_name=`echo $(_zone) | sed 's/\./\-/'`
+      https_exists=`az cdn custom-domain show --endpoint-name $(_endpoint_name) -n $(_env)$(_site)-$_zone_name --profile-name $(_cdn_name) -g $(_rg_name) | jq '.customHttpsProvisioningState' -r`
+
+      if [ $https_exists == "Enabled" ]; then
+        echo "##[DEBUG] Custom https already enabled."
+      else
+        echo "##[DEBUG] Setting up custom https. If this step fails, you can manually enable Custom HTTPS for $(_endpoint_name) on the portal.azure.com dashboard."
+        az cdn custom-domain enable-https --endpoint-name $(_endpoint_name) -n $(_env)$(_site)-$_zone_name --profile-name $(_cdn_name) -g $(_rg_name)
+      fi
+
+- pwsh: |
+    $outputs = ConvertFrom-Json '$(outputConnectionString)'
+    foreach ($output in $outputs.PSObject.Properties) {
+          Write-Host "##vso[task.setvariable variable=_connectionstring]$($output.Value.value)"
+    }
+  displayName: 'Output parsed connection string'
+
+- task: AzureCLI@1
+  displayName: 'Enable static-website for storage account and set index to index.html'
+  inputs:
+    azureSubscription: '$(_service_connection)'
+    scriptLocation: 'inlineScript'
+    inlineScript: 'az storage blob service-properties update --account-name ''$(_storage_name)'' --static-website  --index-document index.html'
+
+- task: AzureCLI@1
+  displayName: 'Upload storage content to static site'
+  inputs:
+    azureSubscription: '$(_service_connection)'
+    scriptLocation: 'inlineScript'
+    inlineScript: 'az storage blob sync -s ''public'' -c ''$web'' --connection-string ''$(_connectionstring)'''
+
+- task: AzureCLI@2
+  displayName: 'Purge the site cache'
+  inputs:
+    azureSubscription: '$(_service_connection)'
+    scriptType: shell
+    scriptLocation: 'inlineScript'
+    inlineScript: 'az cdn endpoint purge -g $(_rg_name) -n $(_endpoint_name) --profile-name $(_cdn_name) --content-paths "/*" --no-wait'
+
+
+
 # Pull upstream to Bovey Test
 # Run Gatsby Build (Drupal Source = Bovey Test) using submodule of gus
 # Deploy built artifact from gatsby build to azure (Test)
