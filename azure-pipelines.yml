@@ -95,9 +95,9 @@ steps:
     publishTestResults: true
 
 # Deploy to Upstream
-- script: ./.ci/deploy/github/upstream
-  displayName: 'Deploy to upstream'
-  condition: and(succeeded(),eq(variables['Build.SourceBranch'],'refs/heads/develop'))
+# - script: ./.ci/deploy/github/upstream
+#   displayName: 'Deploy to upstream'
+#   condition: and(succeeded(),eq(variables['Build.SourceBranch'],'refs/heads/develop'))
 
 # Deploy upstream to Bovey Dev
 - script: ./.ci/deploy/pantheon/dev
