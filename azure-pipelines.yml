@@ -126,92 +126,105 @@ steps:
 - bash: |
     echo "##vso[task.setvariable variable=_gatsby_source]dev"
     echo "##vso[task.setvariable variable=_env]solo"
+    echo "##vso[task.setvariable variable=_pantheonsitelabel]$(PantheonSiteLabel)"
+    echo "##vso[task.setvariable variable=_rg_name]$(Env)$(Site)rg"
+    echo "##vso[task.setvariable variable=_storage_name]$(Env)$(Site)storage"
+    echo "##vso[task.setvariable variable=_cdn_name]$(Env)$(Site)cdn"
+    echo "##vso[task.setvariable variable=_endpoint_name]$(Env)$(Site)endpoint"
+
+    echo $(_gatsby_source)
+    echo $(_env)
+    echo $(_pantheonsitelabel)
+    echo $(_rg_name)
+    echo $(_storage_name)
+    echo $(_cdn_name)
+    echo $(_endpoint_name)
   displayName: 'Set environment to SOLO'
   condition: succeeded()
 
 # Prepare to deploy
-- script: ./.ci/deploy/azure/set
-  displayName: 'Prep variables for Azure deployment'
-  condition: succeeded()
+# - script: ./.ci/deploy/azure/set
+#   displayName: 'Prep variables for Azure deployment'
+#   condition: succeeded()
 
 # Retrieve caches
-- task: CacheBeta@1
-  inputs:
-    key: 'gatsby_cache | "$(Agent.OS)" | "$(Build.SourceBranch)" | "$(_site)" | "$(_zone)"'
-    path: $(_gatsby_cache_folder)
-  displayName: 'Retrieve cached Gatsby .cache folder'
+# - task: CacheBeta@1
+#   inputs:
+#     key: 'gatsby_cache | "$(Agent.OS)" | "$(Build.SourceBranch)" | "$(_site)" | "$(_zone)"'
+#     path: $(_gatsby_cache_folder)
+#   displayName: 'Retrieve cached Gatsby .cache folder'
 
-- task: CacheBeta@1
-  inputs:
-    key: 'gatsby_public | "$(Agent.OS)" | "$(Build.SourceBranch)" | "$(_site)" | "$(_zone)"'
-    path: $(_gatsby_public_folder)
-  displayName: 'Retrieve cached Gatsby public folder'
+# - task: CacheBeta@1
+#   inputs:
+#     key: 'gatsby_public | "$(Agent.OS)" | "$(Build.SourceBranch)" | "$(_site)" | "$(_zone)"'
+#     path: $(_gatsby_public_folder)
+#   displayName: 'Retrieve cached Gatsby public folder'
 
 # Build Gatsby (Drupal Source = Bovey Dev) using submodule of gus
-- script: |
-    npx gatsby build --prefix-paths
-  workingDirectory: $(_gatsby_folder)
-  displayName: 'Gatsby build (Dev)'
-  condition: succeeded()
+# - script: |
+#     npx gatsby build --prefix-paths
+#   workingDirectory: $(_gatsby_folder)
+#   displayName: 'Gatsby build (Dev)'
+#   condition: succeeded()
 
 # Deploy built artifact from gatsby build to azure (Dev)
-- task: "AzureResourceGroupDeployment@2"
-  displayName: 'Create or update resource group'
-  inputs:
-    azureSubscription: '$(_service_connection)'
-    action: 'Create Or Update Resource Group'
-    resourceGroupName: '$(_rg_name)'
-    location: 'East US'
-    templateLocation: 'Linked artifact'
-    csmFile: '$(_gatsby_folder)/azuredeploy.json'
-    overrideParameters: '-env $(_env) -site $(_site) -zone $(_zone) -pantheonsitelabel $(_pantheonsitelabel)'
-    deploymentMode: 'Complete'
-    deploymentOutputs: 'outputConnectionString'
+# - task: "AzureResourceGroupDeployment@2"
+#   displayName: 'Create or update resource group'
+#   inputs:
+#     azureSubscription: '$(_service_connection)'
+#     action: 'Create Or Update Resource Group'
+#     resourceGroupName: '$(_rg_name)'
+#     location: 'East US'
+#     templateLocation: 'Linked artifact'
+#     csmFile: '$(_gatsby_folder)/azuredeploy.json'
+#     overrideParameters: '-env $(_env) -site $(_site) -zone $(_zone) -pantheonsitelabel $(_pantheonsitelabel)'
+#     deploymentMode: 'Complete'
+#     deploymentOutputs: 'outputConnectionString'
 
-- task: AzureCLI@1
-  displayName: 'Enable custom https using CDN Managed certificate'
-  inputs:
-    azureSubscription: '$(_service_connection)'
-    scriptLocation: 'inlineScript'
-    inlineScript: |
-      _zone_name=`echo $(_zone) | sed 's/\./\-/'`
-      https_exists=`az cdn custom-domain show --endpoint-name $(_endpoint_name) -n $(_env)$(_site)-$_zone_name --profile-name $(_cdn_name) -g $(_rg_name) | jq '.customHttpsProvisioningState' -r`
+# - task: AzureCLI@1
+#   displayName: 'Enable custom https using CDN Managed certificate'
+#   inputs:
+#     azureSubscription: '$(_service_connection)'
+#     scriptLocation: 'inlineScript'
+#     inlineScript: |
+#       _zone_name=`echo $(_zone) | sed 's/\./\-/'`
+#       https_exists=`az cdn custom-domain show --endpoint-name $(_endpoint_name) -n $(_env)$(_site)-$_zone_name --profile-name $(_cdn_name) -g $(_rg_name) | jq '.customHttpsProvisioningState' -r`
 
-      if [ $https_exists == "Enabled" ]; then
-        echo "##[DEBUG] Custom https already enabled."
-      else
-        echo "##[DEBUG] Setting up custom https. If this step fails, you can manually enable Custom HTTPS for $(_endpoint_name) on the portal.azure.com dashboard."
-        az cdn custom-domain enable-https --endpoint-name $(_endpoint_name) -n $(_env)$(_site)-$_zone_name --profile-name $(_cdn_name) -g $(_rg_name)
-      fi
+#       if [ $https_exists == "Enabled" ]; then
+#         echo "##[DEBUG] Custom https already enabled."
+#       else
+#         echo "##[DEBUG] Setting up custom https. If this step fails, you can manually enable Custom HTTPS for $(_endpoint_name) on the portal.azure.com dashboard."
+#         az cdn custom-domain enable-https --endpoint-name $(_endpoint_name) -n $(_env)$(_site)-$_zone_name --profile-name $(_cdn_name) -g $(_rg_name)
+#       fi
 
-- pwsh: |
-    $outputs = ConvertFrom-Json '$(outputConnectionString)'
-    foreach ($output in $outputs.PSObject.Properties) {
-          Write-Host "##vso[task.setvariable variable=_connectionstring]$($output.Value.value)"
-    }
-  displayName: 'Output parsed connection string'
+# - pwsh: |
+#     $outputs = ConvertFrom-Json '$(outputConnectionString)'
+#     foreach ($output in $outputs.PSObject.Properties) {
+#           Write-Host "##vso[task.setvariable variable=_connectionstring]$($output.Value.value)"
+#     }
+#   displayName: 'Output parsed connection string'
 
-- task: AzureCLI@1
-  displayName: 'Enable static-website for storage account and set index to index.html'
-  inputs:
-    azureSubscription: '$(_service_connection)'
-    scriptLocation: 'inlineScript'
-    inlineScript: 'az storage blob service-properties update --account-name ''$(_storage_name)'' --static-website  --index-document index.html'
+# - task: AzureCLI@1
+#   displayName: 'Enable static-website for storage account and set index to index.html'
+#   inputs:
+#     azureSubscription: '$(_service_connection)'
+#     scriptLocation: 'inlineScript'
+#     inlineScript: 'az storage blob service-properties update --account-name ''$(_storage_name)'' --static-website  --index-document index.html'
 
-- task: AzureCLI@1
-  displayName: 'Upload storage content to static site'
-  inputs:
-    azureSubscription: '$(_service_connection)'
-    scriptLocation: 'inlineScript'
-    inlineScript: 'az storage blob sync -s ''public'' -c ''$web'' --connection-string ''$(_connectionstring)'''
+# - task: AzureCLI@1
+#   displayName: 'Upload storage content to static site'
+#   inputs:
+#     azureSubscription: '$(_service_connection)'
+#     scriptLocation: 'inlineScript'
+#     inlineScript: 'az storage blob sync -s ''public'' -c ''$web'' --connection-string ''$(_connectionstring)'''
 
-- task: AzureCLI@2
-  displayName: 'Purge the site cache'
-  inputs:
-    azureSubscription: '$(_service_connection)'
-    scriptType: shell
-    scriptLocation: 'inlineScript'
-    inlineScript: 'az cdn endpoint purge -g $(_rg_name) -n $(_endpoint_name) --profile-name $(_cdn_name) --content-paths "/*" --no-wait'
+# - task: AzureCLI@2
+#   displayName: 'Purge the site cache'
+#   inputs:
+#     azureSubscription: '$(_service_connection)'
+#     scriptType: shell
+#     scriptLocation: 'inlineScript'
+#     inlineScript: 'az cdn endpoint purge -g $(_rg_name) -n $(_endpoint_name) --profile-name $(_cdn_name) --content-paths "/*" --no-wait'
 
 # Pull upstream to Bovey Test
 # Run Gatsby Build (Drupal Source = Bovey Test) using submodule of gus
