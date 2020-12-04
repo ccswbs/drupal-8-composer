@@ -6,29 +6,25 @@
 #
 # See: https://docs.microsoft.com/en-us/azure/devops/pipelines/process/variables
 #
-# TERMINUS_SITE:  Name of the Pantheon site to run tests on, e.g. my_site
-# TERMINUS_TOKEN: The Pantheon machine token
-# DEVOPS_TOKEN:   The Azure DevOps personal access token
-# GIT_EMAIL:      The email address to use when making commits
+#   TestQAHostname: Drupal site for running Selenium tests
+#   TestQAUsername: Username for logging into Drupal site (secret)
+#   TestQAPassword: Password for logging into Drupal site (secret)
 #
-# TEST_SITE_NAME: The name of the test site to provide when installing.
-# ADMIN_PASSWORD: The admin password to use when installing.
-# ADMIN_EMAIL:    The email address to give the admin when installing.
+# Under variable groups, create a variable group called "ugconthub-gatsby-variables"
+#
+#   PantheonSiteLabel: Affiliated Pantheon site e.g. "bovey"
+#   ServiceConnection: Our Azure service connection (set up on Azure)
+#   Site: Affiliated Front-end site e.g. ugconthub
+#   Zone: Affiliated domain zone e.g. uoguelph.dev
+#   terminus.token: The Pantheon machine token
+#
 #=========================================================================
 
 variables:
   phpVersion: 7.2
   TestQAUsername: $(test.site.username)
   TestQAPassword: $(test.site.password)
-  # (TODO) Use variables to access Azure Key Vault once available
-  # _service_keyvault: $(ServiceKeyvault)
   _service_connection: $(ServiceConnection)
-  MY_DEVOP_TOKEN: $(devops.token)
-  MY_DEVOP_URL: $(System.TeamFoundationCollectionUri)
-  MY_DEVOP_PROJ: $(System.TeamProject)
-  DIR_TERMINUS: $(Pipeline.Workspace)/.terminus
-  DIR_DRUSH: '/usr/local/bin/drush'
-  # RUN_TESTS: $(run.tests)
   _gatsby_folder: '.ci/gus'
   _gatsby_cache_folder: '.ci/gus/.cache'
   _gatsby_public_folder: '.ci/gus/public'
@@ -56,11 +52,6 @@ steps:
 - script: ./.ci/env/set-tests
   displayName: 'Install backend test tools'
 
-# Run Static Tests
-# - script: ./.ci/test/static/run
-#   displayName: 'Static tests'
-#   condition: and(succeededOrFailed(), eq(variables.RUN_TESTS, 'true'))
-
 # Build Assets (Composer Install)
 - script: ./.ci/build/php
   displayName: 'Composer Install'
@@ -85,13 +76,6 @@ steps:
     feedsToUse: select
     vstsFeed: 'CCS/DrupalTest'
     includeNuGetOrg: true
-
-# (TODO) Use Azure Key Vault once available
-# - task: AzureKeyVault@1
-#   inputs:
-#     azureSubscription: $(_service_connection)
-#     keyVaultName: $(_service_keyvault)
-#     secretsFilter: 'BoveyQAUsername, BoveyQAPassword'
 
 # File transform
 - task: FileTransform@1
@@ -228,8 +212,6 @@ steps:
     scriptType: shell
     scriptLocation: 'inlineScript'
     inlineScript: 'az cdn endpoint purge -g $(_rg_name) -n $(_endpoint_name) --profile-name $(_cdn_name) --content-paths "/*" --no-wait'
-
-
 
 # Pull upstream to Bovey Test
 # Run Gatsby Build (Drupal Source = Bovey Test) using submodule of gus
