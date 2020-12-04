@@ -139,6 +139,8 @@ steps:
   condition: succeeded()
 
 - bash: |
+    echo "$(_zone)"
+    echo "$(_site)"
     echo "$_GATSBY_SOURCE"
     echo "$_ENV"
     echo "$_PANTHEONSITELABEL"
