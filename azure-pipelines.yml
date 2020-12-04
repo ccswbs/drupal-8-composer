@@ -6,9 +6,9 @@
 #
 # See: https://docs.microsoft.com/en-us/azure/devops/pipelines/process/variables
 #
-#   TestQAHostname: Drupal site for running Selenium tests
-#   TestQAUsername: Username for logging into Drupal site (secret)
-#   TestQAPassword: Password for logging into Drupal site (secret)
+#   terminus.site: Drupal site for running Selenium tests
+#   test.site.username: Username for logging into Drupal site (secret)
+#   test.site.password: Password for logging into Drupal site (secret)
 #
 # Under variable groups, create a variable group called "ugconthub-gatsby-variables"
 #
@@ -54,7 +54,7 @@ steps:
 
 # Build Assets (Composer Install)
 - script: ./.ci/build/php
-  displayName: 'Composer Install'
+  displayName: 'Instal Drupal with composer'
 
 - script: ./.ci/deploy/pantheon/dev-multidev
   displayName: 'Deploy to Pantheon CI Multidev for Testing'
