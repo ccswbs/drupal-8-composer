@@ -47,21 +47,27 @@ steps:
   submodules: true
   persistCredentials: true
 
-# - script: ./.ci/env/set
-#   displayName: 'Install backend build tools'
+# --------- Install Tools -------- #
 
-# - script: ./.ci/env/set-tests
-#   displayName: 'Install backend test tools'
+- script: ./.ci/env/set
+  displayName: 'Install backend build tools'
 
-# Build Assets (Composer Install)
-# - script: ./.ci/build/php
-#   displayName: 'Install Drupal with composer'
+- script: ./.ci/env/set-tests
+  displayName: 'Install backend test tools'
+
+# --------- Install Drupal -------- #
+
+- script: ./.ci/build/php
+  displayName: 'Install Drupal with composer'
+
+# --------- Deploy to Pantheon CI Multidev for testing -------- #
 
 # - script: ./.ci/deploy/pantheon/dev-multidev
 #   displayName: 'Deploy to Pantheon CI Multidev for Testing'
 #   condition: succeeded()
 
-# Run Selenium Tests
+# --------- Run Selenium Tests -------- #
+
 # - task: NuGetAuthenticate@0
 #   displayName: '[Selenium] Authenticate to get packages'
 #   condition: succeeded()
@@ -94,41 +100,51 @@ steps:
 #     projects: '$(Build.SourcesDirectory)/tests/selenium/**/*.csproj'
 #     publishTestResults: true
 
-# Deploy to Upstream
+# --------- Deploy Code to Upstream on Github -------- #
+
 # - script: ./.ci/deploy/github/upstream
 #   displayName: 'Deploy to upstream'
 #   condition: and(succeeded(),eq(variables['Build.SourceBranch'],'refs/heads/develop'))
+
+# --------- Pull Upstream to Bovey Dev -------- #
 
 # Deploy upstream to Bovey Dev
 # - script: ./.ci/deploy/pantheon/dev
 #   displayName: 'Deploy to Pantheon Bovey dev'
 #   condition: succeeded()
 
-# Prepare for Gatsby builds
-# - script: ./.ci/env/set
-#   workingDirectory: $(_gatsby_folder)
-#   displayName: 'Initialize frontend build tools'
-#   condition: succeeded()
+# --------- Install Frontend Tools -------- #
 
-# - script: 'npm install --only=dev gatsby-cli'
-#   workingDirectory: $(_gatsby_folder)
-#   displayName: 'Install Gatsby-CLI'
-#   condition: succeeded()
+- script: ./.ci/env/set
+  workingDirectory: $(_gatsby_folder)
+  displayName: 'Initialize frontend build tools'
+  condition: succeeded()
 
-# - task: Npm@1
-#   displayName: 'npm install'
-#   condition: succeeded()
-#   inputs:
-#     workingDir: $(_gatsby_folder)
-#     verbose: false
+- script: 'npm install --only=dev gatsby-cli'
+  workingDirectory: $(_gatsby_folder)
+  displayName: 'Install Gatsby-CLI'
+  condition: succeeded()
 
-# Output Dev environment variables for gus and azure
+- task: Npm@1
+  displayName: 'npm install'
+  condition: succeeded()
+  inputs:
+    workingDir: $(_gatsby_folder)
+    verbose: false
+
+# --------- Build Gatsby using Bovey Dev as source -------- #
+# Change _env variable from "solo" to "dev" if using pipeline for real
+
 - bash: |
     echo "##vso[task.setvariable variable=_gatsby_source]dev"
     echo "##vso[task.setvariable variable=_env]solo"
-  displayName: 'Set environment variables'
+  displayName: 'Set environment variables for DEV frontend'
   condition: succeeded()
 
+# Prepare to deploy
+# - script: ./.ci/deploy/azure/set
+#   displayName: 'Set Azure deploy variables'
+#   condition: succeeded()
 - bash: |
     echo "##vso[task.setvariable variable=_pantheonsitelabel]$(PantheonSiteLabel)"
     echo "##vso[task.setvariable variable=_rg_name]$(_env)$(_site)rg"
@@ -138,102 +154,100 @@ steps:
   displayName: 'Set Azure deploy variables'
   condition: succeeded()
 
-- bash: |
-    echo "$(_zone)"
-    echo "$(_site)"
-    echo "$_GATSBY_SOURCE"
-    echo "$_ENV"
-    echo "$_PANTHEONSITELABEL"
-    echo "$_RG_NAME"
-    echo "$_STORAGE_NAME"
-    echo "$(_cdn_name)"
-    echo "$(_endpoint_name)"
-  displayName: 'Check environment variables'
-  condition: succeeded()
-
-# Prepare to deploy
-# - script: ./.ci/deploy/azure/set
-#   displayName: 'Prep variables for Azure deployment'
+# - bash: |
+#     echo "$(_zone)"
+#     echo "$(_site)"
+#     echo "$_GATSBY_SOURCE"
+#     echo "$_ENV"
+#     echo "$_PANTHEONSITELABEL"
+#     echo "$_RG_NAME"
+#     echo "$_STORAGE_NAME"
+#     echo "$(_cdn_name)"
+#     echo "$(_endpoint_name)"
+#   displayName: 'Check environment variables'
 #   condition: succeeded()
 
 # Retrieve caches
-# - task: CacheBeta@1
-#   inputs:
-#     key: 'gatsby_cache | "$(Agent.OS)" | "$(Build.SourceBranch)" | "$(_site)" | "$(_zone)"'
-#     path: $(_gatsby_cache_folder)
-#   displayName: 'Retrieve cached Gatsby .cache folder'
+- task: CacheBeta@1
+  inputs:
+    key: 'gatsby_cache | "$(Agent.OS)" | "$(Build.SourceBranch)" | "$(_site)" | "$(_zone)"'
+    path: $(_gatsby_cache_folder)
+  displayName: 'Retrieve cached Gatsby .cache folder'
 
-# - task: CacheBeta@1
-#   inputs:
-#     key: 'gatsby_public | "$(Agent.OS)" | "$(Build.SourceBranch)" | "$(_site)" | "$(_zone)"'
-#     path: $(_gatsby_public_folder)
-#   displayName: 'Retrieve cached Gatsby public folder'
+- task: CacheBeta@1
+  inputs:
+    key: 'gatsby_public | "$(Agent.OS)" | "$(Build.SourceBranch)" | "$(_site)" | "$(_zone)"'
+    path: $(_gatsby_public_folder)
+  displayName: 'Retrieve cached Gatsby public folder'
 
 # Build Gatsby (Drupal Source = Bovey Dev) using submodule of gus
-# - script: |
-#     npx gatsby build --prefix-paths
-#   workingDirectory: $(_gatsby_folder)
-#   displayName: 'Gatsby build (Dev)'
-#   condition: succeeded()
+- script: |
+    npx gatsby build --prefix-paths
+  workingDirectory: $(_gatsby_folder)
+  displayName: 'Gatsby build (Dev)'
+  condition: succeeded()
+
+# --------- Deploy Gatsby site to Dev (temporarily "Solo") -------- #
+# Change _env variable from "solo" to "dev" if using pipeline for real
 
 # Deploy built artifact from gatsby build to azure (Dev)
-# - task: "AzureResourceGroupDeployment@2"
-#   displayName: 'Create or update resource group'
-#   inputs:
-#     azureSubscription: '$(_service_connection)'
-#     action: 'Create Or Update Resource Group'
-#     resourceGroupName: '$(_rg_name)'
-#     location: 'East US'
-#     templateLocation: 'Linked artifact'
-#     csmFile: '$(_gatsby_folder)/azuredeploy.json'
-#     overrideParameters: '-env $(_env) -site $(_site) -zone $(_zone) -pantheonsitelabel $(_pantheonsitelabel)'
-#     deploymentMode: 'Complete'
-#     deploymentOutputs: 'outputConnectionString'
+- task: "AzureResourceGroupDeployment@2"
+  displayName: 'Create or update resource group'
+  inputs:
+    azureSubscription: '$(_service_connection)'
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: '$(_rg_name)'
+    location: 'East US'
+    templateLocation: 'Linked artifact'
+    csmFile: '$(_gatsby_folder)/azuredeploy.json'
+    overrideParameters: '-env $(_env) -site $(_site) -zone $(_zone) -pantheonsitelabel $(_pantheonsitelabel)'
+    deploymentMode: 'Complete'
+    deploymentOutputs: 'outputConnectionString'
 
-# - task: AzureCLI@1
-#   displayName: 'Enable custom https using CDN Managed certificate'
-#   inputs:
-#     azureSubscription: '$(_service_connection)'
-#     scriptLocation: 'inlineScript'
-#     inlineScript: |
-#       _zone_name=`echo $(_zone) | sed 's/\./\-/'`
-#       https_exists=`az cdn custom-domain show --endpoint-name $(_endpoint_name) -n $(_env)$(_site)-$_zone_name --profile-name $(_cdn_name) -g $(_rg_name) | jq '.customHttpsProvisioningState' -r`
+- task: AzureCLI@1
+  displayName: 'Enable custom https using CDN Managed certificate'
+  inputs:
+    azureSubscription: '$(_service_connection)'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      _zone_name=`echo $(_zone) | sed 's/\./\-/'`
+      https_exists=`az cdn custom-domain show --endpoint-name $(_endpoint_name) -n $(_env)$(_site)-$_zone_name --profile-name $(_cdn_name) -g $(_rg_name) | jq '.customHttpsProvisioningState' -r`
 
-#       if [ $https_exists == "Enabled" ]; then
-#         echo "##[DEBUG] Custom https already enabled."
-#       else
-#         echo "##[DEBUG] Setting up custom https. If this step fails, you can manually enable Custom HTTPS for $(_endpoint_name) on the portal.azure.com dashboard."
-#         az cdn custom-domain enable-https --endpoint-name $(_endpoint_name) -n $(_env)$(_site)-$_zone_name --profile-name $(_cdn_name) -g $(_rg_name)
-#       fi
+      if [ $https_exists == "Enabled" ]; then
+        echo "##[DEBUG] Custom https already enabled."
+      else
+        echo "##[DEBUG] Setting up custom https. If this step fails, you can manually enable Custom HTTPS for $(_endpoint_name) on the portal.azure.com dashboard."
+        az cdn custom-domain enable-https --endpoint-name $(_endpoint_name) -n $(_env)$(_site)-$_zone_name --profile-name $(_cdn_name) -g $(_rg_name)
+      fi
 
-# - pwsh: |
-#     $outputs = ConvertFrom-Json '$(outputConnectionString)'
-#     foreach ($output in $outputs.PSObject.Properties) {
-#           Write-Host "##vso[task.setvariable variable=_connectionstring]$($output.Value.value)"
-#     }
-#   displayName: 'Output parsed connection string'
+- pwsh: |
+    $outputs = ConvertFrom-Json '$(outputConnectionString)'
+    foreach ($output in $outputs.PSObject.Properties) {
+          Write-Host "##vso[task.setvariable variable=_connectionstring]$($output.Value.value)"
+    }
+  displayName: 'Output parsed connection string'
 
-# - task: AzureCLI@1
-#   displayName: 'Enable static-website for storage account and set index to index.html'
-#   inputs:
-#     azureSubscription: '$(_service_connection)'
-#     scriptLocation: 'inlineScript'
-#     inlineScript: 'az storage blob service-properties update --account-name ''$(_storage_name)'' --static-website  --index-document index.html'
+- task: AzureCLI@1
+  displayName: 'Enable static-website for storage account and set index to index.html'
+  inputs:
+    azureSubscription: '$(_service_connection)'
+    scriptLocation: 'inlineScript'
+    inlineScript: 'az storage blob service-properties update --account-name ''$(_storage_name)'' --static-website  --index-document index.html'
 
-# - task: AzureCLI@1
-#   displayName: 'Upload storage content to static site'
-#   inputs:
-#     azureSubscription: '$(_service_connection)'
-#     scriptLocation: 'inlineScript'
-#     inlineScript: 'az storage blob sync -s ''public'' -c ''$web'' --connection-string ''$(_connectionstring)'''
+- task: AzureCLI@1
+  displayName: 'Upload storage content to static site'
+  inputs:
+    azureSubscription: '$(_service_connection)'
+    scriptLocation: 'inlineScript'
+    inlineScript: 'az storage blob sync -s ''public'' -c ''$web'' --connection-string ''$(_connectionstring)'''
 
-# - task: AzureCLI@2
-#   displayName: 'Purge the site cache'
-#   inputs:
-#     azureSubscription: '$(_service_connection)'
-#     scriptType: shell
-#     scriptLocation: 'inlineScript'
-#     inlineScript: 'az cdn endpoint purge -g $(_rg_name) -n $(_endpoint_name) --profile-name $(_cdn_name) --content-paths "/*" --no-wait'
+- task: AzureCLI@2
+  displayName: 'Purge the site cache'
+  inputs:
+    azureSubscription: '$(_service_connection)'
+    scriptType: shell
+    scriptLocation: 'inlineScript'
+    inlineScript: 'az cdn endpoint purge -g $(_rg_name) -n $(_endpoint_name) --profile-name $(_cdn_name) --content-paths "/*" --no-wait'
 
 # Pull upstream to Bovey Test
 # Run Gatsby Build (Drupal Source = Bovey Test) using submodule of gus
@@ -258,6 +272,6 @@ steps:
 #     artifactName: build_artifact
 
 # Clean up
-# - script: ./.ci/env/clean
-#   displayName: 'Clean up build environment'
-#   condition: always()
+- script: ./.ci/env/clean
+  displayName: 'Clean up build environment'
+  condition: always()
