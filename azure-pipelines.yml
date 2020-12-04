@@ -239,13 +239,15 @@ steps:
     scriptLocation: 'inlineScript'
     inlineScript: 'az storage blob sync -s ''$(_gatsby_folder)/public'' -c ''$web'' --connection-string ''$(_connectionstring)'''
 
-- task: AzureCLI@2
+- task: AzureCLI@1
   displayName: 'Purge the site cache'
   inputs:
     azureSubscription: '$(_service_connection)'
-    scriptType: shell
     scriptLocation: 'inlineScript'
     inlineScript: 'az cdn endpoint purge -g $(_rg_name) -n $(_endpoint_name) --profile-name $(_cdn_name) --content-paths "/*" --no-wait'
+
+
+# --------- REMAINING STEPS -------- #
 
 # Pull upstream to Bovey Test
 # Run Gatsby Build (Drupal Source = Bovey Test) using submodule of gus
