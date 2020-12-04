@@ -125,8 +125,8 @@ steps:
 # Output Dev environment variables for gus and azure
 - bash: |
     echo "##vso[task.setvariable variable=_gatsby_source]dev"
-    echo "##vso[task.setvariable variable=_env]dev"
-  displayName: 'Set environment to DEV'
+    echo "##vso[task.setvariable variable=_env]solo"
+  displayName: 'Set environment to SOLO'
   condition: succeeded()
 
 # Prepare to deploy
