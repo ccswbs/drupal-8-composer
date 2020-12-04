@@ -54,45 +54,44 @@ steps:
 
 # Build Assets (Composer Install)
 - script: ./.ci/build/php
-  displayName: 'Instal Drupal with composer'
+  displayName: 'Install Drupal with composer'
 
-- script: ./.ci/deploy/pantheon/dev-multidev
-  displayName: 'Deploy to Pantheon CI Multidev for Testing'
-  condition: succeeded()
+# - script: ./.ci/deploy/pantheon/dev-multidev
+#   displayName: 'Deploy to Pantheon CI Multidev for Testing'
+#   condition: succeeded()
 
 # Run Selenium Tests
-- task: NuGetAuthenticate@0
-  displayName: '[Selenium] Authenticate to get packages'
-  condition: succeeded()
-  inputs:
-    nuGetServiceConnections: DrupalTestServiceConnection
+# - task: NuGetAuthenticate@0
+#   displayName: '[Selenium] Authenticate to get packages'
+#   condition: succeeded()
+#   inputs:
+#     nuGetServiceConnections: DrupalTestServiceConnection
 
-- task: DotNetCoreCLI@2
-  displayName: '[Selenium] Restore packages'
-  condition: succeeded()
-  inputs:
-    command: restore
-    projects: '$(Build.SourcesDirectory)/tests/selenium/**/*.csproj'
-    feedsToUse: select
-    vstsFeed: 'CCS/DrupalTest'
-    includeNuGetOrg: true
+# - task: DotNetCoreCLI@2
+#   displayName: '[Selenium] Restore packages'
+#   condition: succeeded()
+#   inputs:
+#     command: restore
+#     projects: '$(Build.SourcesDirectory)/tests/selenium/**/*.csproj'
+#     feedsToUse: select
+#     vstsFeed: 'CCS/DrupalTest'
+#     includeNuGetOrg: true
 
-# File transform
-- task: FileTransform@1
-  displayName: '[Selenium] Replace site-specific tokens in appsettings.json'
-  condition: succeeded()
-  inputs:
-    folderPath: '$(Build.SourcesDirectory)/tests/selenium/BoveyTest'
-    fileType: json
-    targetFiles: appsettings.json
+# - task: FileTransform@1
+#   displayName: '[Selenium] Replace site-specific tokens in appsettings.json'
+#   condition: succeeded()
+#   inputs:
+#     folderPath: '$(Build.SourcesDirectory)/tests/selenium/BoveyTest'
+#     fileType: json
+#     targetFiles: appsettings.json
 
-- task: DotNetCoreCLI@2
-  displayName: '[Selenium] Run tests'
-  condition: succeeded()
-  inputs:
-    command: test
-    projects: '$(Build.SourcesDirectory)/tests/selenium/**/*.csproj'
-    publishTestResults: true
+# - task: DotNetCoreCLI@2
+#   displayName: '[Selenium] Run tests'
+#   condition: succeeded()
+#   inputs:
+#     command: test
+#     projects: '$(Build.SourcesDirectory)/tests/selenium/**/*.csproj'
+#     publishTestResults: true
 
 # Deploy to Upstream
 # - script: ./.ci/deploy/github/upstream
