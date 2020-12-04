@@ -45,6 +45,7 @@ steps:
 
 - checkout: self
   persistCredentials: true
+  submodules: true
 
 - script: ./.ci/env/set
   displayName: 'Install backend build tools'
