@@ -47,15 +47,15 @@ steps:
   submodules: true
   persistCredentials: true
 
-- script: ./.ci/env/set
-  displayName: 'Install backend build tools'
+# - script: ./.ci/env/set
+#   displayName: 'Install backend build tools'
 
-- script: ./.ci/env/set-tests
-  displayName: 'Install backend test tools'
+# - script: ./.ci/env/set-tests
+#   displayName: 'Install backend test tools'
 
 # Build Assets (Composer Install)
-- script: ./.ci/build/php
-  displayName: 'Install Drupal with composer'
+# - script: ./.ci/build/php
+#   displayName: 'Install Drupal with composer'
 
 # - script: ./.ci/deploy/pantheon/dev-multidev
 #   displayName: 'Deploy to Pantheon CI Multidev for Testing'
@@ -100,46 +100,46 @@ steps:
 #   condition: and(succeeded(),eq(variables['Build.SourceBranch'],'refs/heads/develop'))
 
 # Deploy upstream to Bovey Dev
-- script: ./.ci/deploy/pantheon/dev
-  displayName: 'Deploy to Pantheon Bovey dev'
-  condition: succeeded()
+# - script: ./.ci/deploy/pantheon/dev
+#   displayName: 'Deploy to Pantheon Bovey dev'
+#   condition: succeeded()
 
 # Prepare for Gatsby builds
-- script: ./.ci/env/set
-  workingDirectory: $(_gatsby_folder)
-  displayName: 'Initialize frontend build tools'
-  condition: succeeded()
+# - script: ./.ci/env/set
+#   workingDirectory: $(_gatsby_folder)
+#   displayName: 'Initialize frontend build tools'
+#   condition: succeeded()
 
-- script: 'npm install --only=dev gatsby-cli'
-  workingDirectory: $(_gatsby_folder)
-  displayName: 'Install Gatsby-CLI'
-  condition: succeeded()
+# - script: 'npm install --only=dev gatsby-cli'
+#   workingDirectory: $(_gatsby_folder)
+#   displayName: 'Install Gatsby-CLI'
+#   condition: succeeded()
 
-- task: Npm@1
-  displayName: 'npm install'
-  condition: succeeded()
-  inputs:
-    workingDir: $(_gatsby_folder)
-    verbose: false
+# - task: Npm@1
+#   displayName: 'npm install'
+#   condition: succeeded()
+#   inputs:
+#     workingDir: $(_gatsby_folder)
+#     verbose: false
 
 # Output Dev environment variables for gus and azure
 - bash: |
     echo "##vso[task.setvariable variable=_gatsby_source]dev"
     echo "##vso[task.setvariable variable=_env]solo"
+
     echo "##vso[task.setvariable variable=_pantheonsitelabel]$(PantheonSiteLabel)"
     echo "##vso[task.setvariable variable=_rg_name]$(Env)$(Site)rg"
     echo "##vso[task.setvariable variable=_storage_name]$(Env)$(Site)storage"
     echo "##vso[task.setvariable variable=_cdn_name]$(Env)$(Site)cdn"
     echo "##vso[task.setvariable variable=_endpoint_name]$(Env)$(Site)endpoint"
-
-    echo $(_gatsby_source)
-    echo $(_env)
-    echo $(_pantheonsitelabel)
-    echo $(_rg_name)
-    echo $(_storage_name)
-    echo $(_cdn_name)
-    echo $(_endpoint_name)
-  displayName: 'Set environment to SOLO'
+    echo "$(_gatsby_source)"
+    echo "$(_env)"
+    echo "$(_pantheonsitelabel)"
+    echo "$(_rg_name)"
+    echo "$(_storage_name)"
+    echo "$(_cdn_name)"
+    echo "$(_endpoint_name)"
+  displayName: 'Set environment variables'
   condition: succeeded()
 
 # Prepare to deploy
@@ -236,19 +236,19 @@ steps:
 # Run Gatsby Build (Drupal Source = Bovey Live) using submodule of gus
 
   # Publish artifact
-- task: ArchiveFiles@2
-  displayName: 'Archive $(Build.SourcesDirectory)'
-  inputs:
-    rootFolderOrFile: '$(Build.SourcesDirectory)'
-    includeRootFolder: false
+# - task: ArchiveFiles@2
+#   displayName: 'Archive $(Build.SourcesDirectory)'
+#   inputs:
+#     rootFolderOrFile: '$(Build.SourcesDirectory)'
+#     includeRootFolder: false
 
-- task: PublishBuildArtifacts@1
-  displayName: Publish Build Artifact
-  inputs:
-    pathtoPublish: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-    artifactName: build_artifact
+# - task: PublishBuildArtifacts@1
+#   displayName: Publish Build Artifact
+#   inputs:
+#     pathtoPublish: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+#     artifactName: build_artifact
 
 # Clean up
-- script: ./.ci/env/clean
-  displayName: 'Clean up build environment'
-  condition: always()
+# - script: ./.ci/env/clean
+#   displayName: 'Clean up build environment'
+#   condition: always()
