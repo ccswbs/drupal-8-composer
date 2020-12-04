@@ -128,18 +128,22 @@ steps:
     echo "##vso[task.setvariable variable=_env]solo"
 
     echo "##vso[task.setvariable variable=_pantheonsitelabel]$(PantheonSiteLabel)"
-    echo "##vso[task.setvariable variable=_rg_name]$(Env)$(Site)rg"
-    echo "##vso[task.setvariable variable=_storage_name]$(Env)$(Site)storage"
-    echo "##vso[task.setvariable variable=_cdn_name]$(Env)$(Site)cdn"
-    echo "##vso[task.setvariable variable=_endpoint_name]$(Env)$(Site)endpoint"
-    echo "$(_gatsby_source)"
-    echo "$(_env)"
-    echo "$(_pantheonsitelabel)"
-    echo "$(_rg_name)"
-    echo "$(_storage_name)"
+    echo "##vso[task.setvariable variable=_rg_name]$(_env)$(Site)rg"
+    echo "##vso[task.setvariable variable=_storage_name]$(_env)$(Site)storage"
+    echo "##vso[task.setvariable variable=_cdn_name]$(_env)$(Site)cdn"
+    echo "##vso[task.setvariable variable=_endpoint_name]$(_env)$(Site)endpoint"
+  displayName: 'Set environment variables'
+  condition: succeeded()
+
+- bash: |
+    echo "$_GATSBY_SOURCE"
+    echo "$_ENV"
+    echo "$_PANTHEONSITELABEL"
+    echo "$_RG_NAME)"
+    echo "$_STORAGE_NAME)"
     echo "$(_cdn_name)"
     echo "$(_endpoint_name)"
-  displayName: 'Set environment variables'
+  displayName: 'Check environment variables'
   condition: succeeded()
 
 # Prepare to deploy
