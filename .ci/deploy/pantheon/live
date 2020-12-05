@@ -1,0 +1,6 @@
+#!/bin/bash
+
+set -eo pipefail
+
+terminus env:deploy bovey.live --note="Deploy upstream updates" --cc --updatedb </dev/null
+terminus drush bovey.live -- config:import -y </dev/null

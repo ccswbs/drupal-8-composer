@@ -1,0 +1,6 @@
+#!/bin/bash
+
+set -eo pipefail
+
+terminus env:deploy --sync-content --cc --updatedb -- bovey.test </dev/null
+terminus drush bovey.test -- config:import -y </dev/null
