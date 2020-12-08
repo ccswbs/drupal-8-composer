@@ -519,11 +519,11 @@ steps:
 
 # --------- Prep variables for Live -------- #
 
-# - bash: |
-#     echo "##vso[task.setvariable variable=_gatsby_source]live"
-#     echo "##vso[task.setvariable variable=_env]live"
-#   displayName: '[test] Set environment variables'
-#   condition: succeeded()
+- bash: |
+    echo "##vso[task.setvariable variable=_gatsby_source]live"
+    echo "##vso[task.setvariable variable=_env]live"
+  displayName: '[test] Set environment variables'
+  condition: succeeded()
 
 # ----- Retrieve caches ----- #
 
@@ -548,27 +548,27 @@ steps:
 
 # --------- Build Gatsby using Bovey Live as source -------- #
 
-# - script: |
-#     npx gatsby build --prefix-paths
-#   workingDirectory: $(_gatsby_folder)
-#   displayName: '[live] Gatsby build (Live)'
-#   condition: succeeded()
+- script: |
+    npx gatsby build --prefix-paths
+  workingDirectory: $(_gatsby_folder)
+  displayName: '[live] Gatsby build (Live)'
+  condition: succeeded()
 
 # ------------------------------------------- #
 # ------------- PUBLISH ARTIFACT ------------ #
 # ------------------------------------------- #
 
-# - task: ArchiveFiles@2
-#   displayName: 'Archive $(Build.SourcesDirectory)/$(_gatsby_public_folder)'
-#   inputs:
-#     rootFolderOrFile: '$(Build.SourcesDirectory)/$(_gatsby_public_folder)'
-#     includeRootFolder: false
+- task: ArchiveFiles@2
+  displayName: 'Archive $(Build.SourcesDirectory)/$(_gatsby_public_folder)'
+  inputs:
+    rootFolderOrFile: '$(Build.SourcesDirectory)/$(_gatsby_public_folder)'
+    includeRootFolder: false
 
-# - task: PublishBuildArtifacts@1
-#   displayName: Publish Build Artifact
-#   inputs:
-#     pathtoPublish: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-#     artifactName: gatsby_build_artifact
+- task: PublishBuildArtifacts@1
+  displayName: Publish Build Artifact
+  inputs:
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    artifactName: gatsby_build_artifact
 
 
 # --------- Clean up -------- #
