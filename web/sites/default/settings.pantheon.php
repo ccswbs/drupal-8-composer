@@ -15,14 +15,7 @@
 /**
  * Version of Pantheon files.
  *
- * This is a monotonically-increasing sequence number that is
- * incremented whenever a change is made to any Pantheon file.
- * Not changed if Drupal core is updated without any change to
- * any Pantheon file.
- *
- * The Pantheon version is included in the git tag only if a
- * release is made that includes changes to Pantheon files, but
- * not to any Drupal files.
+ * This is a monotonically-increasing sequence number.
  */
 if (!defined("PANTHEON_VERSION")) {
   define("PANTHEON_VERSION", "4");
@@ -71,10 +64,10 @@ $is_installer_url = (strpos($_SERVER['SCRIPT_NAME'], '/core/install.php') === 0)
  *
  */
 if ($is_installer_url) {
-  $settings['config_sync_directory'] =  'sites/default/files';
+  $settings['config_sync_directory'] = 'sites/default/files';
 }
 else {
-  $settings['config_sync_directory'] = 'sites/default/config';
+  $settings['config_sync_directory'] = getenv('DOCROOT') ? '../config' : 'sites/default/config';
 }
 
 
@@ -201,4 +194,3 @@ if (empty($settings['file_scan_ignore_directories'])) {
     'bower_components',
   ];
 }
-
