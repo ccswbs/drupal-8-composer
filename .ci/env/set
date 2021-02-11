@@ -12,9 +12,10 @@ php -version
 sudo phpdismod -s cli xdebug
 
 # Install Terminus
-sudo mkdir -p /opt/terminus &&
-curl -O https://raw.githubusercontent.com/pantheon-systems/terminus-installer/master/builds/installer.phar &&
-sudo php installer.phar install --install-dir=/opt/terminus --bin-dir=/usr/bin
+sudo apt update
+sudo apt -y install php php-cli php-fpm php-json php-common php-mysql php-zip php-gd php-mbstring php-curl php-xml php-pear php-bcmath
+curl -L https://github.com/pantheon-systems/terminus/releases/download/$(curl --silent "https://api.github.com/repos/pantheon-systems/terminus/releases/latest" | perl -nle'print $& while m{"tag_name": "\K.*?(?=")}g')/terminus.phar --output terminus
+sudo install terminus /usr/local/bin
 
 # Check Versions
 composer --version
@@ -27,5 +28,6 @@ git config --global user.name "$BUILD_REQUESTEDFORID"
 
 # Authenticate terminus
 terminus auth:login --machine-token="$TERMINUS_TOKEN" </dev/null
+terminus ssh-key:list --field=id | xargs -n1 terminus ssh-key:remove
 ssh-keygen -N "" -f ~/.ssh/id_rsa &&
 terminus ssh-key:add ~/.ssh/id_rsa.pub </dev/null
