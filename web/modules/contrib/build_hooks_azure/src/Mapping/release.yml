@@ -1,0 +1,15 @@
+url_parameter:
+  definition: definitionId
+  min_date: minCreatedTime
+  max_date: maxCreatedTime
+
+fields:
+  id: id
+  name: name
+  status: status
+  created : createdOn
+  updated : modifiedOn
+  reason : reason
+  logs_url : logsContainerUrl
+  url : url
+  author: createdBy

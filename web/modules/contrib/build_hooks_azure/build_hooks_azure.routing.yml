@@ -1,0 +1,32 @@
+
+build_hooks_azure.build_hook_azure_config_form:
+  path: '/admin/config/build_hooks/azure'
+  defaults:
+    _form: '\Drupal\build_hooks_azure\Form\AzureConfigForm'
+    _title: 'Build hooks Azure settings'
+  requirements:
+    _permission: 'manage frontend environments'
+  options:
+    _admin_route: TRUE
+
+build_hooks_azure.detail_last_trigger:
+  path: '/admin/config/build_hooks/azure'
+  defaults:
+    _form: '\Drupal\build_hooks_azure\Form\AzureConfigForm'
+    _title: 'Build hooks Azure settings'
+  requirements:
+    _permission: 'manage frontend environments'
+  options:
+    _admin_route: TRUE
+
+build_hooks_azure.last_deploy_trigger:
+  path: '/admin/build_hooks/deployments/{frontend_environment}/last-trigger'
+  defaults:
+    _controller: '\Drupal\build_hooks_azure\Controller\LastTrigger::detail'
+  options:
+    _admin_route: TRUE
+    parameters:
+      frontend_environment:
+        type: entity:frontend_environment
+  requirements:
+    _permission: 'manage frontend environments'

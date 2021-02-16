@@ -1,0 +1,13 @@
+name: 'Build Hooks for Azure'
+type: module
+description: 'Supports creating frontend environments connected to azure environments.'
+# core: '8.x'
+package: 'Build hooks'
+dependencies:
+  - drupal:build_hooks
+
+# Information added by Drupal.org packaging script on 2019-06-04
+version: '8.x-2.0-beta2'
+core: '8.x'
+project: 'build_hooks_azure'
+datestamp: 1559657296

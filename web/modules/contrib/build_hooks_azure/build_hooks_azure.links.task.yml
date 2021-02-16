@@ -1,0 +1,6 @@
+build_hooks_azure.last_deploy_detail:
+  route_name: build_hooks_azure.last_deploy_trigger
+  title: 'Last deploy detail'
+  base_route: entity.frontend_environment.edit_form
+  weight: 200
+

@@ -1,0 +1,5 @@
+build_hooks_azure.build_hook_azure_config_form:
+  title: 'Build Hooks Azure settings'
+  route_name: build_hooks_azure.build_hook_azure_config_form
+  description: 'Set global settings for Azure environments and deployments.'
+  parent: build_hooks.admin_config_build_hooks

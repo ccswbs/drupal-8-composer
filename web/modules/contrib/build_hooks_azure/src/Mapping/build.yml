@@ -1,0 +1,17 @@
+url_parameter:
+  definition: definitions
+  min_date: minTime
+  max_date: maxTime
+
+fields:
+  id: id
+  name: name
+  status: status
+  created: createdDate
+  updated: modifiedOn
+  reason: reason
+  author: authoredBy
+  logs_url:
+    logs: logs
+    url: url
+  url : url

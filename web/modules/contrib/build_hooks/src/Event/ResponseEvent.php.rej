@@ -1,0 +1,60 @@
+--- src/Event/ResponseEvent.php
++++ src/Event/ResponseEvent.php
+@@ -19,21 +19,23 @@ class ResponseEvent extends Event {
+   /**
+    * The http client response.
+    *
+-   * @var ResponseInterface.
++   * @var \Psr\Http\Message\ResponseInterface
++   *   The response of http client.
+    */
+   protected $response;
+ 
+   /**
+-   * The build hook plugin.
++   * The frontend environment entity.
+    *
+-   * @var \Drupal\build_hooks\Plugin\FrontendEnvironmentInterface
++   * @var \Drupal\build_hooks\Entity\FrontendEnvironmentInterface
+    */
+-  protected $plugin;
++  protected $frontendEnvironment;
+ 
+   /**
+    * Set the response.
+    *
+    * @param \Psr\Http\Message\ResponseInterface $response
++   *   The response of http client.
+    */
+   public function setResponse(ResponseInterface $response) {
+     $this->response = $response;
+@@ -50,15 +52,24 @@ class ResponseEvent extends Event {
+   }
+ 
+   /**
+-   * Set the plugin.
++   * Set the frontend environment.
+    *
+-   * @param \Drupal\build_hooks\Plugin\FrontendEnvironmentInterface $plugin
+-   *   The build hook plugin.
++   * @return \Drupal\build_hooks\Entity\FrontendEnvironmentInterface
++   *   The frontend environment entity.
+    */
+-  public function setPlugin(FrontendEnvironmentInterface $plugin) {
+-    $this->plugin = $plugin;
++  public function setFrontendEnvironment() {
++    return $this->frontendEnvironment->getPlugin();
+   }
+ 
++  /**
++   * Get the frontend environment.
++   *
++   * @return \Drupal\build_hooks\Entity\FrontendEnvironmentInterface
++   *   The frontend environment entity.
++   */
++  public function getFrontendEnvironment() {
++    return $this->frontendEnvironment;
++  }
+ 
+   /**
+    * Get the plugin.

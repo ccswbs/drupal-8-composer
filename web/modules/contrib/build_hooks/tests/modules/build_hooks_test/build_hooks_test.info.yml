@@ -1,0 +1,11 @@
+name: Build Hooks test
+description: 'Test functionality for Build Hooks module'
+package: Testing
+type: module
+dependencies:
+  - build_hooks:build_hooks
+
+# Information added by Drupal.org packaging script on 2021-01-05
+version: '8.x-2.5'
+project: 'build_hooks'
+datestamp: 1609815970

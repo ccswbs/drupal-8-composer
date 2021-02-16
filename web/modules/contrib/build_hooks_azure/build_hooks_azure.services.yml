@@ -1,0 +1,10 @@
+services:
+  build_hooks_azure.azure_manager:
+    class: Drupal\build_hooks_azure\AzureManager
+    arguments: ['@config.factory', '@http_client', '@date.formatter','@module_handler']
+
+  build_hooks_azure.response:
+    class: Drupal\build_hooks_azure\EventSubscriber\ResponseSubscriber
+    arguments: ['@cache.default']
+    tags:
+      - { name: event_subscriber }

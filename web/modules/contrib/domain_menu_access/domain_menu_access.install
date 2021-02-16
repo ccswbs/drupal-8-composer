@@ -1,0 +1,38 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Domain Menu Access module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function domain_menu_access_install() {
+  $text = [];
+  $text['menu_link_content'] = [
+    'name' => 'menu_link_content',
+    'label' => 'Send for all affiliates',
+    'description' => 'Make this menu entry available on all domains.',
+  ];
+  domain_access_confirm_fields('menu_link_content', 'menu_link_content', $text);
+}
+
+/**
+ * Implements hook_uninstall().
+ *
+ * Removes access control fields on uninstall.
+ */
+function domain_menu_access_uninstall() {
+  $field_storage_config = \Drupal::entityTypeManager()
+    ->getStorage('field_storage_config');
+
+  $id = 'menu_link_content.' . DOMAIN_ACCESS_FIELD;
+  if ($field = $field_storage_config->load($id)) {
+    $field->delete();
+  }
+  $id = 'menu_link_content.' . DOMAIN_ACCESS_ALL_FIELD;
+  if ($field = $field_storage_config->load($id)) {
+    $field->delete();
+  }
+}

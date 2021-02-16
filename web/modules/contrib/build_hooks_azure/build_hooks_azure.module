@@ -1,0 +1,37 @@
+<?php
+
+/**
+ * @file
+ *
+ */
+
+use Drupal\Core\Template\Attribute;
+
+/**
+ * Implements hook_theme()
+ */
+function build_hooks_azure_theme($existing, $type, $theme, $path) {
+  return [
+    'build_hooks_azure_description_list' => [
+      'variables' => [
+        'items' => [],
+        'attributes' => [],
+      ],
+    ],
+  ];
+}
+
+function build_hooks_azure_preprocess_build_hooks_azure_description_list(&$variables) {
+  $variables['attributes'] = new Attribute($variables['attributes']);
+  foreach ($variables['items'] as $key => &$item) {
+    if (empty($item['dt']) || empty($item['dd'])) {
+      unset($variables['items'][$key]);
+      continue;
+    }
+    foreach ($item as $tag => $definition) {
+      if (!empty($item[$tag]['attributes'])) {
+        $item[$tag]['attributes'] = new Attribute($variables['attributes']);
+      }
+    }
+  }
+}

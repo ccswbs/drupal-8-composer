@@ -1,0 +1,27 @@
+--- src/Trigger.php
++++ src/Trigger.php
+@@ -198,7 +197,7 @@ class Trigger implements TriggerInterface {
+     $plugin = $frontendEnvironment->getPlugin();
+     $buildHookDetails = $plugin->getBuildHookDetails();
+     try {
+-      $response = $this->triggerBuildHook($buildHookDetails, $plugin);
++      $response = $this->triggerBuildHook($buildHookDetails, $frontendEnvironment);
+       if ($response->getStatusCode() == 200) {
+         // If the call was successful, set the latest deployment time
+         // for this environment.
+@@ -239,13 +238,13 @@ class Trigger implements TriggerInterface {
+    *
+    * @throws \GuzzleHttp\Exception\GuzzleException
+    */
+-  private function triggerBuildHook(BuildHookDetails $buildHookDetails, PluginEnv $plugin) {
++  private function triggerBuildHook(BuildHookDetails $buildHookDetails, FrontendEnvironmentInterface $frontendEnvironment) {
+     $response = $this->httpClient->request(
+       $buildHookDetails->getMethod(),
+       $buildHookDetails->getUrl(),
+       $buildHookDetails->getBody()
+     );
+-    $event = new ResponseEvent($response, $plugin);
++    $event = new ResponseEvent($response, $frontendEnvironment);
+     $this->eventDispatcher->dispatch(ResponseEvent::EVENT_NAME, $event);
+     return $response;
+   }

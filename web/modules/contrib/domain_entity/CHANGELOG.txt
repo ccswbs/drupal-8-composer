@@ -1,0 +1,5 @@
+Domain Access Entity 8.x-1.0-beta1 , 2020-06-27
+-----------------------------------------------
+#3137567: Remove deprecated method or function for Drupal 9 Compatibility
+#3124730: More granular permissions and check out permissions like domain access module
+#3151767: Exception: The "DomainEntitySettings::getFormAccess" method is not callable as a _custom_access callback
