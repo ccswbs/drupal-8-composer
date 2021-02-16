@@ -4,6 +4,15 @@
 sudo apt update
 sudo apt -y install php php-cli php-fpm php-json php-common php-mysql php-zip php-gd php-mbstring php-curl php-xml php-pear php-bcmath
 
+# Use PHP 7.2
+PHPVERSION=7.2
+sudo update-alternatives --set php /usr/bin/php$PHPVERSION
+sudo update-alternatives --set phar /usr/bin/phar$PHPVERSION
+sudo update-alternatives --set phpdbg /usr/bin/phpdbg$PHPVERSION
+sudo update-alternatives --set php-cgi /usr/bin/php-cgi$PHPVERSION
+sudo update-alternatives --set phar.phar /usr/bin/phar.phar$PHPVERSION
+php -version
+
 # Disable xdebug
 sudo phpdismod -s cli xdebug
 
