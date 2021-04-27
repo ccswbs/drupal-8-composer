@@ -18,7 +18,7 @@
         "drupal/config_direct_save": "^1.0",
         "drupal/config_installer": "^1.0",
         "drupal/console": "^1",
-		"drupal/core-composer-scaffold": "^8.8.1",
+        "drupal/core-composer-scaffold": "^8.8.1",
         "drupal/core-recommended": "^8.8",
         "drupal/domain": "^1.0@alpha",
         "drupal/domain_entity": "^1.0@alpha",
@@ -32,12 +32,13 @@
         "drupal/paragraphs": "^1.12",
         "drupal/pathauto": "^1.6",
         "drupal/redirect": "^1.6",
+        "drupal/simplesamlphp_auth": "^3.2",
         "drupal/svg_image": "^1.14",
         "drupal/system_status": "^2.9",
         "drupal/token": "^1.6",
         "drush-ops/behat-drush-endpoint": "^9.3",
         "drush/drush": "^8.4.5",
-		"pantheon-systems/drupal-integrations": "^8",
+        "pantheon-systems/drupal-integrations": "^8",
         "pantheon-systems/quicksilver-pushback": "^2",
         "rvtraveller/qs-composer-installer": "^1.1",
         "simplesamlphp/simplesamlphp": "^1.18",
@@ -110,6 +111,9 @@
             "web/private/scripts/quicksilver/{$name}/": ["type:quicksilver-script"]
         },
         "patches": {
+            "drupal/simplesamlphp_auth":{
+                "Fix SAML login Redirect Link": "https://www.drupal.org/files/issues/2020-12-12/simplesamlphp_auth-saml_login_redirect-3112851-10.patch"
+            },
             "drupal/ldap":{
                 "Fix LDAP Help Redirect Link": "https://www.drupal.org/files/issues/2019-09-03/3076155-ldap-help-redirect-4.patch"
             },
