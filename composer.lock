@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7724ee426ff82751d0eeb93e0c96aa7f",
+    "content-hash": "6dc988cfd205027a72f23a4e9d903906",
     "packages": [
         {
             "name": "alchemy/zippy",
@@ -1227,60 +1227,6 @@
                 "source": "https://github.com/doctrine/lexer/tree/1.0.2"
             },
             "time": "2019-06-08T11:03:04+00:00"
-        },
-        {
-            "name": "drupal/authorization",
-            "version": "dev-1.x",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupalcode.org/project/authorization.git",
-                "reference": "e06cd21d4a8865f003ecec1fc10c4a5caf395cc0"
-            },
-            "require": {
-                "drupal/core": "^8.7.7 || ^9",
-                "drupal/externalauth": "*"
-            },
-            "type": "drupal-module",
-            "extra": {
-                "branch-alias": {
-                    "dev-1.x": "1.x-dev"
-                },
-                "drupal": {
-                    "version": "8.x-1.0-beta5+3-dev",
-                    "datestamp": "1608635452",
-                    "security-coverage": {
-                        "status": "not-covered",
-                        "message": "Project has not opted into security advisory coverage!"
-                    }
-                }
-            },
-            "notification-url": "https://packages.drupal.org/8/downloads",
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "grahl",
-                    "homepage": "https://www.drupal.org/user/146040"
-                },
-                {
-                    "name": "johnbarclay",
-                    "homepage": "https://www.drupal.org/user/225037"
-                },
-                {
-                    "name": "queenvictoria",
-                    "homepage": "https://www.drupal.org/user/856454"
-                },
-                {
-                    "name": "webflo",
-                    "homepage": "https://www.drupal.org/user/254778"
-                }
-            ],
-            "description": "An abstraction layer for providers and consumers of authorizations.",
-            "homepage": "https://www.drupal.org/project/authorization",
-            "support": {
-                "source": "https://git.drupalcode.org/project/authorization"
-            }
         },
         {
             "name": "drupal/build_hooks",
@@ -2914,133 +2860,6 @@
             }
         },
         {
-            "name": "drupal/ldap",
-            "version": "3.0.0-beta7",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupalcode.org/project/ldap.git",
-                "reference": "8.x-3.0-beta7"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/ldap-8.x-3.0-beta7.zip",
-                "reference": "8.x-3.0-beta7",
-                "shasum": "496db3a39948e36378b76e34b363ad89ae32811c"
-            },
-            "require": {
-                "drupal/authorization": "1.x-dev",
-                "drupal/core": "~8.0",
-                "drupal/externalauth": "^1.0",
-                "drupal/ldap_servers": "*"
-            },
-            "require-dev": {
-                "drupal/authorization": "*",
-                "drupal/externalauth": "*",
-                "drupal/ldap_servers": "*",
-                "drupal/ldap_user": "*"
-            },
-            "type": "drupal-module",
-            "extra": {
-                "drupal": {
-                    "version": "8.x-3.0-beta7",
-                    "datestamp": "1559320088",
-                    "security-coverage": {
-                        "status": "not-covered",
-                        "message": "Beta releases are not covered by Drupal security advisories."
-                    }
-                }
-            },
-            "notification-url": "https://packages.drupal.org/8/downloads",
-            "license": [
-                "GPL-2.0+"
-            ],
-            "authors": [
-                {
-                    "name": "dgtlmoon",
-                    "homepage": "https://www.drupal.org/user/25027"
-                },
-                {
-                    "name": "grahl",
-                    "homepage": "https://www.drupal.org/user/146040"
-                },
-                {
-                    "name": "johnbarclay",
-                    "homepage": "https://www.drupal.org/user/225037"
-                },
-                {
-                    "name": "larowlan",
-                    "homepage": "https://www.drupal.org/user/395439"
-                },
-                {
-                    "name": "queenvictoria",
-                    "homepage": "https://www.drupal.org/user/856454"
-                },
-                {
-                    "name": "welly",
-                    "homepage": "https://www.drupal.org/user/354705"
-                }
-            ],
-            "description": "Lightweight Directory Access Protocol (LDAP)",
-            "homepage": "https://www.drupal.org/project/ldap",
-            "support": {
-                "source": "https://git.drupalcode.org/project/ldap"
-            }
-        },
-        {
-            "name": "drupal/ldap_servers",
-            "version": "3.0.0-beta7",
-            "require": {
-                "drupal/core": "~8.0",
-                "drupal/ldap": "^3"
-            },
-            "type": "metapackage",
-            "extra": {
-                "drupal": {
-                    "version": "8.x-3.0-beta7",
-                    "datestamp": "1559320088",
-                    "security-coverage": {
-                        "status": "not-covered",
-                        "message": "Beta releases are not covered by Drupal security advisories."
-                    }
-                }
-            },
-            "notification-url": "https://packages.drupal.org/8/downloads",
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "dgtlmoon",
-                    "homepage": "https://www.drupal.org/user/25027"
-                },
-                {
-                    "name": "grahl",
-                    "homepage": "https://www.drupal.org/user/146040"
-                },
-                {
-                    "name": "johnbarclay",
-                    "homepage": "https://www.drupal.org/user/225037"
-                },
-                {
-                    "name": "larowlan",
-                    "homepage": "https://www.drupal.org/user/395439"
-                },
-                {
-                    "name": "queenvictoria",
-                    "homepage": "https://www.drupal.org/user/856454"
-                },
-                {
-                    "name": "welly",
-                    "homepage": "https://www.drupal.org/user/354705"
-                }
-            ],
-            "description": "Implements LDAP Server Configuration",
-            "homepage": "https://www.drupal.org/project/ldap",
-            "support": {
-                "source": "https://git.drupalcode.org/project/ldap"
-            }
-        },
-        {
             "name": "drupal/paragraphs",
             "version": "1.12.0",
             "source": {
@@ -3239,6 +3058,72 @@
             "homepage": "https://www.drupal.org/project/redirect",
             "support": {
                 "source": "https://git.drupalcode.org/project/redirect"
+            }
+        },
+        {
+            "name": "drupal/simplesamlphp_auth",
+            "version": "3.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/simplesamlphp_auth.git",
+                "reference": "8.x-3.2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/simplesamlphp_auth-8.x-3.2.zip",
+                "reference": "8.x-3.2",
+                "shasum": "a5a2b10fc873eb8669929ad1a6d9599e47a2ca99"
+            },
+            "require": {
+                "drupal/core": "^8.7|^9.0",
+                "drupal/externalauth": "^1.1",
+                "simplesamlphp/simplesamlphp": "^1.18.2"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-3.2",
+                    "datestamp": "1580423953",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Berdir",
+                    "homepage": "https://www.drupal.org/user/214652"
+                },
+                {
+                    "name": "colan",
+                    "homepage": "https://www.drupal.org/user/58704"
+                },
+                {
+                    "name": "dakku",
+                    "homepage": "https://www.drupal.org/user/97634"
+                },
+                {
+                    "name": "geekwisdom",
+                    "homepage": "https://www.drupal.org/user/1662"
+                },
+                {
+                    "name": "snufkin",
+                    "homepage": "https://www.drupal.org/user/58645"
+                },
+                {
+                    "name": "svendecabooter",
+                    "homepage": "https://www.drupal.org/user/35369"
+                }
+            ],
+            "description": "Allows users to authenticate to a remote SAML identity provider (IdP) via a locally configured SimpleSAMLphp service point (SP).",
+            "homepage": "https://www.drupal.org/project/simplesamlphp_auth",
+            "support": {
+                "source": "https://git.drupalcode.org/project/simplesamlphp_auth"
             }
         },
         {
@@ -6525,22 +6410,22 @@
         },
         {
             "name": "simplesamlphp/simplesamlphp-module-discopower",
-            "version": "v0.9.3",
+            "version": "v0.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/simplesamlphp/simplesamlphp-module-discopower.git",
-                "reference": "c892926e8186d0a2c638f7032dfc30540c1f92fb"
+                "reference": "006c0617610f1bae11cf4d17e8ce4c509239a60e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/simplesamlphp/simplesamlphp-module-discopower/zipball/c892926e8186d0a2c638f7032dfc30540c1f92fb",
-                "reference": "c892926e8186d0a2c638f7032dfc30540c1f92fb",
+                "url": "https://api.github.com/repos/simplesamlphp/simplesamlphp-module-discopower/zipball/006c0617610f1bae11cf4d17e8ce4c509239a60e",
+                "reference": "006c0617610f1bae11cf4d17e8ce4c509239a60e",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.6",
                 "simplesamlphp/composer-module-installer": "~1.1",
-                "webmozart/assert": "~1.4 <1.6"
+                "webmozart/assert": "~1.4"
             },
             "require-dev": {
                 "phpunit/phpunit": "~5.7",
@@ -6572,7 +6457,7 @@
                 "issues": "https://github.com/tvdijen/simplesamlphp-module-discopower/issues",
                 "source": "https://github.com/tvdijen/simplesamlphp-module-discopower"
             },
-            "time": "2019-12-13T07:51:43+00:00"
+            "time": "2019-11-27T20:34:37+00:00"
         },
         {
             "name": "simplesamlphp/simplesamlphp-module-exampleattributeserver",
@@ -9951,31 +9836,30 @@
         },
         {
             "name": "webmozart/assert",
-            "version": "1.5.0",
+            "version": "1.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webmozarts/assert.git",
-                "reference": "88e6d84706d09a236046d686bbea96f07b3a34f4"
+                "reference": "bafc69caeb4d49c39fd0779086c03a3738cbb389"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webmozarts/assert/zipball/88e6d84706d09a236046d686bbea96f07b3a34f4",
-                "reference": "88e6d84706d09a236046d686bbea96f07b3a34f4",
+                "url": "https://api.github.com/repos/webmozarts/assert/zipball/bafc69caeb4d49c39fd0779086c03a3738cbb389",
+                "reference": "bafc69caeb4d49c39fd0779086c03a3738cbb389",
                 "shasum": ""
             },
             "require": {
-                "php": "^5.3.3 || ^7.0",
+                "php": "^5.3.3 || ^7.0 || ^8.0",
                 "symfony/polyfill-ctype": "^1.8"
+            },
+            "conflict": {
+                "phpstan/phpstan": "<0.12.20",
+                "vimeo/psalm": "<3.9.1"
             },
             "require-dev": {
                 "phpunit/phpunit": "^4.8.36 || ^7.5.13"
             },
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.3-dev"
-                }
-            },
             "autoload": {
                 "psr-4": {
                     "Webmozart\\Assert\\": "src/"
@@ -9999,9 +9883,9 @@
             ],
             "support": {
                 "issues": "https://github.com/webmozarts/assert/issues",
-                "source": "https://github.com/webmozarts/assert/tree/1.5.0"
+                "source": "https://github.com/webmozarts/assert/tree/1.9.1"
             },
-            "time": "2019-08-24T08:43:50+00:00"
+            "time": "2020-07-08T17:02:28+00:00"
         },
         {
             "name": "webmozart/path-util",
