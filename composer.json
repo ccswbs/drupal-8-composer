@@ -116,7 +116,7 @@
                 "Fix SAML login Redirect Link": "https://www.drupal.org/files/issues/2020-12-12/simplesamlphp_auth-saml_login_redirect-3112851-10.patch"
             },
             "drupal/build_hooks":{
-                "Response event should send frontend environment entity instead of plugin": "https://www.drupal.org/files/issues/2019-06-03/3059157-build_hooks-event-2.patch" 
+                "Response event should send frontend environment entity instead of plugin": "https://www.drupal.org/files/issues/2021-03-30/3059157-6.patch" 
             },
             "drupal/build_hooks_azure":{
                 "Our patch for build request format": "https://gist.githubusercontent.com/mmafe/ef067167e2f17d58c3ae10e6e0bb4bd3/raw/ef54239242ab7473c2157c135cf7fddcd54dce43/bha_id-2.patch"
