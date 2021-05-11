@@ -29,6 +29,7 @@
         "drupal/jsonapi_menu_items": "^1.1",
         "drupal/paragraphs": "^1.12",
         "drupal/pathauto": "^1.6",
+        "drupal/r4032login": "2.1",
         "drupal/redirect": "^1.6",
         "drupal/simplesamlphp_auth": "^3.2",
         "drupal/svg_image": "^1.14",
