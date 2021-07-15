@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a1bdcbdff11f5badc2ab189c86fe6afb",
+    "content-hash": "22b71898dce9ed19ded4fe254a713f7a",
     "packages": [
         {
             "name": "alchemy/zippy",
@@ -1232,17 +1232,17 @@
         },
         {
             "name": "drupal/build_hooks",
-            "version": "3.1.4",
+            "version": "3.2.1",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/build_hooks.git",
-                "reference": "3.1.4"
+                "reference": "3.2.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/build_hooks-3.1.4.zip",
-                "reference": "3.1.4",
-                "shasum": "72c897f89c2203a3b32ae73654451edd6603e934"
+                "url": "https://ftp.drupal.org/files/projects/build_hooks-3.2.1.zip",
+                "reference": "3.2.1",
+                "shasum": "e18e2f882b838d6b79c31211e79a4444a1430ea2"
             },
             "require": {
                 "drupal/core": "^8 || ^9",
@@ -1251,8 +1251,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "3.1.4",
-                    "datestamp": "1621488838",
+                    "version": "3.2.1",
+                    "datestamp": "1625097195",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -1286,17 +1286,17 @@
         },
         {
             "name": "drupal/config_direct_save",
-            "version": "1.2.0",
+            "version": "2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/config_direct_save.git",
-                "reference": "8.x-1.2"
+                "reference": "8.x-2.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/config_direct_save-8.x-1.2.zip",
-                "reference": "8.x-1.2",
-                "shasum": "6447e507e4050d2b90c216937eec2d2acd7d3a6b"
+                "url": "https://ftp.drupal.org/files/projects/config_direct_save-8.x-2.1.zip",
+                "reference": "8.x-2.1",
+                "shasum": "24a3668db87b1bf001b038614dc3865d2ec5e374"
             },
             "require": {
                 "drupal/core": "^8 || ^9"
@@ -1304,8 +1304,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.2",
-                    "datestamp": "1591743069",
+                    "version": "8.x-2.1",
+                    "datestamp": "1618700636",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -2071,17 +2071,17 @@
         },
         {
             "name": "drupal/domain",
-            "version": "1.0.0-beta5",
+            "version": "1.0.0-beta6",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/domain.git",
-                "reference": "8.x-1.0-beta5"
+                "reference": "8.x-1.0-beta6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/domain-8.x-1.0-beta5.zip",
-                "reference": "8.x-1.0-beta5",
-                "shasum": "c61ccbbe81dc630f9d731956b3adb2581a880284"
+                "url": "https://ftp.drupal.org/files/projects/domain-8.x-1.0-beta6.zip",
+                "reference": "8.x-1.0-beta6",
+                "shasum": "dc5fd01c4af748c59d74dcb749b3761ef000b4a1"
             },
             "require": {
                 "drupal/core": "^8 || ^9"
@@ -2093,8 +2093,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.0-beta5",
-                    "datestamp": "1614266198",
+                    "version": "8.x-1.0-beta6",
+                    "datestamp": "1624563597",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Beta releases are not covered by Drupal security advisories."
@@ -2123,7 +2123,7 @@
         },
         {
             "name": "drupal/domain_access",
-            "version": "1.0.0-beta5",
+            "version": "1.0.0-beta6",
             "require": {
                 "drupal/core": "^8 || ^9",
                 "drupal/domain": "*"
@@ -2131,8 +2131,8 @@
             "type": "metapackage",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.0-beta5",
-                    "datestamp": "1614266198",
+                    "version": "8.x-1.0-beta6",
+                    "datestamp": "1624563597",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Beta releases are not covered by Drupal security advisories."
@@ -2396,17 +2396,17 @@
         },
         {
             "name": "drupal/externalauth",
-            "version": "1.3.0",
+            "version": "1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/externalauth.git",
-                "reference": "8.x-1.3"
+                "reference": "8.x-1.4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/externalauth-8.x-1.3.zip",
-                "reference": "8.x-1.3",
-                "shasum": "b1b38e6718fe66bd38fc894dab1f9d7a7d60f10b"
+                "url": "https://ftp.drupal.org/files/projects/externalauth-8.x-1.4.zip",
+                "reference": "8.x-1.4",
+                "shasum": "caea7d2d5a890adad9e6b5beaa2cf139727266d6"
             },
             "require": {
                 "drupal/core": "^8 || ^9"
@@ -2414,8 +2414,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.3",
-                    "datestamp": "1587629529",
+                    "version": "8.x-1.4",
+                    "datestamp": "1624457459",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -2448,17 +2448,17 @@
         },
         {
             "name": "drupal/gatsby",
-            "version": "1.0.0-rc4",
+            "version": "1.0.0-rc5",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/gatsby.git",
-                "reference": "8.x-1.0-rc4"
+                "reference": "8.x-1.0-rc5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/gatsby-8.x-1.0-rc4.zip",
-                "reference": "8.x-1.0-rc4",
-                "shasum": "f3967681c0176b46b6a8e98b9f955b1e633dd568"
+                "url": "https://ftp.drupal.org/files/projects/gatsby-8.x-1.0-rc5.zip",
+                "reference": "8.x-1.0-rc5",
+                "shasum": "1b63102160a680912772ebad7b0dd1182eaa9c0c"
             },
             "require": {
                 "drupal/core": "^8 || ^9",
@@ -2471,8 +2471,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.0-rc4",
-                    "datestamp": "1623708158",
+                    "version": "8.x-1.0-rc5",
+                    "datestamp": "1625852355",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "RC releases are not covered by Drupal security advisories."
@@ -2521,17 +2521,17 @@
         },
         {
             "name": "drupal/jsonapi_extras",
-            "version": "3.18.0",
+            "version": "3.19.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/jsonapi_extras.git",
-                "reference": "8.x-3.18"
+                "reference": "8.x-3.19"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/jsonapi_extras-8.x-3.18.zip",
-                "reference": "8.x-3.18",
-                "shasum": "360812a8d4dc3380676f53134192897adb05a6d3"
+                "url": "https://ftp.drupal.org/files/projects/jsonapi_extras-8.x-3.19.zip",
+                "reference": "8.x-3.19",
+                "shasum": "c608c004427136f33777d0e7e4485c1a91fcd563"
             },
             "require": {
                 "drupal/core": "^8 || ^9",
@@ -2544,8 +2544,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-3.18",
-                    "datestamp": "1623673108",
+                    "version": "8.x-3.19",
+                    "datestamp": "1625144988",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -3653,16 +3653,16 @@
         },
         {
             "name": "gettext/gettext",
-            "version": "v4.8.4",
+            "version": "v4.8.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-gettext/Gettext.git",
-                "reference": "58bc0f7f37e78efb0f9758f93d4a0f669f0f84a1"
+                "reference": "ef2e312dff383fc0e4cd62dd39042e1157f137d4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-gettext/Gettext/zipball/58bc0f7f37e78efb0f9758f93d4a0f669f0f84a1",
-                "reference": "58bc0f7f37e78efb0f9758f93d4a0f669f0f84a1",
+                "url": "https://api.github.com/repos/php-gettext/Gettext/zipball/ef2e312dff383fc0e4cd62dd39042e1157f137d4",
+                "reference": "ef2e312dff383fc0e4cd62dd39042e1157f137d4",
                 "shasum": ""
             },
             "require": {
@@ -3670,7 +3670,7 @@
                 "php": ">=5.4.0"
             },
             "require-dev": {
-                "illuminate/view": "*",
+                "illuminate/view": "^5.0.x-dev",
                 "phpunit/phpunit": "^4.8|^5.7|^6.5",
                 "squizlabs/php_codesniffer": "^3.0",
                 "symfony/yaml": "~2",
@@ -3714,7 +3714,7 @@
             "support": {
                 "email": "oom@oscarotero.com",
                 "issues": "https://github.com/oscarotero/Gettext/issues",
-                "source": "https://github.com/php-gettext/Gettext/tree/v4.8.4"
+                "source": "https://github.com/php-gettext/Gettext/tree/v4.8.5"
             },
             "funding": [
                 {
@@ -3730,27 +3730,26 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2021-03-10T19:35:49+00:00"
+            "time": "2021-07-13T16:45:53+00:00"
         },
         {
             "name": "gettext/languages",
-            "version": "2.6.0",
+            "version": "2.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-gettext/Languages.git",
-                "reference": "38ea0482f649e0802e475f0ed19fa993bcb7a618"
+                "reference": "4ad818b6341e177b7c508ec4c37e18932a7b788a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-gettext/Languages/zipball/38ea0482f649e0802e475f0ed19fa993bcb7a618",
-                "reference": "38ea0482f649e0802e475f0ed19fa993bcb7a618",
+                "url": "https://api.github.com/repos/php-gettext/Languages/zipball/4ad818b6341e177b7c508ec4c37e18932a7b788a",
+                "reference": "4ad818b6341e177b7c508ec4c37e18932a7b788a",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^2.16.0",
                 "phpunit/phpunit": "^4.8 || ^5.7 || ^6.5 || ^7.5 || ^8.4"
             },
             "bin": [
@@ -3793,9 +3792,19 @@
             ],
             "support": {
                 "issues": "https://github.com/php-gettext/Languages/issues",
-                "source": "https://github.com/php-gettext/Languages/tree/2.6.0"
+                "source": "https://github.com/php-gettext/Languages/tree/2.8.1"
             },
-            "time": "2019-11-13T10:30:21+00:00"
+            "funding": [
+                {
+                    "url": "https://paypal.me/mlocati",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/mlocati",
+                    "type": "github"
+                }
+            ],
+            "time": "2021-07-14T15:03:58+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -4476,16 +4485,16 @@
         },
         {
             "name": "nikic/php-parser",
-            "version": "v4.10.5",
+            "version": "v4.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "4432ba399e47c66624bc73c8c0f811e5c109576f"
+                "reference": "fe14cf3672a149364fb66dfe11bf6549af899f94"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/4432ba399e47c66624bc73c8c0f811e5c109576f",
-                "reference": "4432ba399e47c66624bc73c8c0f811e5c109576f",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/fe14cf3672a149364fb66dfe11bf6549af899f94",
+                "reference": "fe14cf3672a149364fb66dfe11bf6549af899f94",
                 "shasum": ""
             },
             "require": {
@@ -4526,9 +4535,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nikic/PHP-Parser/issues",
-                "source": "https://github.com/nikic/PHP-Parser/tree/v4.10.5"
+                "source": "https://github.com/nikic/PHP-Parser/tree/v4.11.0"
             },
-            "time": "2021-05-03T19:11:20+00:00"
+            "time": "2021-07-03T13:36:55+00:00"
         },
         {
             "name": "pantheon-systems/drupal-integrations",
@@ -10928,16 +10937,16 @@
         },
         {
             "name": "instaclick/php-webdriver",
-            "version": "1.4.7",
+            "version": "1.4.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/instaclick/php-webdriver.git",
-                "reference": "b5f330e900e9b3edfc18024a5ec8c07136075712"
+                "reference": "961b12178cb71f8667afaf2f66ab3e000e060e1c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/instaclick/php-webdriver/zipball/b5f330e900e9b3edfc18024a5ec8c07136075712",
-                "reference": "b5f330e900e9b3edfc18024a5ec8c07136075712",
+                "url": "https://api.github.com/repos/instaclick/php-webdriver/zipball/961b12178cb71f8667afaf2f66ab3e000e060e1c",
+                "reference": "961b12178cb71f8667afaf2f66ab3e000e060e1c",
                 "shasum": ""
             },
             "require": {
@@ -10985,9 +10994,9 @@
             ],
             "support": {
                 "issues": "https://github.com/instaclick/php-webdriver/issues",
-                "source": "https://github.com/instaclick/php-webdriver/tree/1.x"
+                "source": "https://github.com/instaclick/php-webdriver/tree/1.4.9"
             },
-            "time": "2019-09-25T09:05:11+00:00"
+            "time": "2021-06-28T22:23:20+00:00"
         },
         {
             "name": "jcalderonzumba/gastonjs",
@@ -12204,16 +12213,16 @@
         },
         {
             "name": "sirbrillig/phpcs-variable-analysis",
-            "version": "v2.11.1",
+            "version": "v2.11.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sirbrillig/phpcs-variable-analysis.git",
-                "reference": "9df9ade5961a3505d0d24b0e6be2ab82e335f753"
+                "reference": "3fad28475bfbdbf8aa5c440f8a8f89824983d85e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sirbrillig/phpcs-variable-analysis/zipball/9df9ade5961a3505d0d24b0e6be2ab82e335f753",
-                "reference": "9df9ade5961a3505d0d24b0e6be2ab82e335f753",
+                "url": "https://api.github.com/repos/sirbrillig/phpcs-variable-analysis/zipball/3fad28475bfbdbf8aa5c440f8a8f89824983d85e",
+                "reference": "3fad28475bfbdbf8aa5c440f8a8f89824983d85e",
                 "shasum": ""
             },
             "require": {
@@ -12253,7 +12262,7 @@
                 "source": "https://github.com/sirbrillig/phpcs-variable-analysis",
                 "wiki": "https://github.com/sirbrillig/phpcs-variable-analysis/wiki"
             },
-            "time": "2021-06-18T20:54:59+00:00"
+            "time": "2021-07-06T23:45:17+00:00"
         },
         {
             "name": "squizlabs/php_codesniffer",
