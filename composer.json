@@ -31,7 +31,7 @@
         "drupal/svg_image": "^1.14",
         "drupal/system_status": "^2.9",
         "drupal/token": "^1.6",
-        "drupal/upgrade_status": "^3.7",
+        "drupal/upgrade_status": "3.8",
         "drupal/workbench": "^1.3",
         "drush-ops/behat-drush-endpoint": "^9.3",
         "drush/drush": "10",
