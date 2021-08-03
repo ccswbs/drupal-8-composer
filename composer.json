@@ -24,6 +24,7 @@
         "drupal/gatsby": "^1.0@RC",
         "drupal/jsonapi_extras": "^3.13",
         "drupal/jsonapi_menu_items": "^1.1",
+        "drupal/moderated_content_bulk_publish": "^2.0",
         "drupal/paragraphs": "^1.12",
         "drupal/pathauto": "^1.6",
         "drupal/redirect": "^1.6",
