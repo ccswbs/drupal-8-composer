@@ -1,5 +1,0 @@
-# This file stores configuration defaults
-
-asset_bank:
-  url: ''
-  name: 'Asset Bank'
