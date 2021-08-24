@@ -26,6 +26,7 @@
         "drupal/moderated_content_bulk_publish": "^2.0",
         "drupal/paragraphs": "^1.12",
         "drupal/pathauto": "^1.6",
+        "drupal/pathologic": "^1.0@alpha",
         "drupal/redirect": "^1.6",
         "drupal/simplesamlphp_auth": "^3.2",
         "drupal/svg_image": "^1.14",
