@@ -1,0 +1,12 @@
+gatsby_fastbuilds.gatsby_fastbuilds_admin_form:
+  title: 'Fastbuilds Settings'
+  route_name: gatsby_fastbuilds.gatsby_fastbuilds_admin_form
+  description: 'Configure Gatsby Fastbuilds settings'
+  base_route: gatsby.gatsby_admin_form
+  weight: 10
+gatsby_fastbuilds.gatsby_fastbuilds_log:
+  title: 'Fastbuilds Log'
+  route_name: gatsby_fastbuilds.gatsby_fastbuilds_log
+  description: 'View Gatsby Fastbuilds Log'
+  base_route: gatsby.gatsby_admin_form
+  weight: 20

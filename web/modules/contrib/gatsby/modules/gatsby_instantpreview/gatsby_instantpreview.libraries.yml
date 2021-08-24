@@ -1,0 +1,4 @@
+gatsby_admin:
+  version: VERSION
+  js:
+    js/gatsby_admin.js: {}

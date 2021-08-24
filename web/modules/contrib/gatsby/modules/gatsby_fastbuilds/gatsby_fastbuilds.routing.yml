@@ -1,0 +1,29 @@
+
+gatsby_fastbuilds.gatsby_fastbuilds_controller_sync:
+  path: '/gatsby-fastbuilds/sync/{last_fetch}'
+  defaults:
+    _controller: '\Drupal\gatsby_fastbuilds\Controller\GatsbyFastbuildsController::sync'
+    _title: 'Gatsby Fastbuild Sync'
+  options:
+    _auth: ['basic_auth', 'cookie']
+  requirements:
+    _permission: 'sync gatsby fastbuild log entities'
+    last_fetch: '[0-9]+'
+gatsby_fastbuilds.gatsby_fastbuilds_admin_form:
+  path: '/admin/config/services/gatsby/fastbuilds'
+  defaults:
+    _form: '\Drupal\gatsby_fastbuilds\Form\GatsbyFastbuildsAdminForm'
+    _title: 'Fastbuilds Settings'
+  requirements:
+    _permission: 'administer gatsby log entity entities'
+  options:
+    _admin_route: TRUE
+gatsby_fastbuilds.gatsby_fastbuilds_log:
+  path: '/admin/config/services/gatsby/fastbuilds-log'
+  defaults:
+    _entity_list: 'gatsby_log_entity'
+    _title: 'Fastbuilds Log'
+  requirements:
+    _permission: 'administer gatsby log entity entities'
+  options:
+    _admin_route: TRUE

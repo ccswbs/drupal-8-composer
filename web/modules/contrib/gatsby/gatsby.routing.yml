@@ -1,0 +1,9 @@
+gatsby.gatsby_admin_form:
+  path: '/admin/config/services/gatsby/settings'
+  defaults:
+    _form: '\Drupal\gatsby\Form\GatsbyAdminForm'
+    _title: 'Gatsby Integration Settings'
+  requirements:
+    _permission: 'administer gatsby'
+  options:
+    _admin_route: TRUE

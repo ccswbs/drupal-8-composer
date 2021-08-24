@@ -1,0 +1,4 @@
+administer gatsby:
+  title: 'Administer Gatsby settings'
+  description: 'Administer configuration settings for the Gatsby module.'
+  restrict access: TRUE

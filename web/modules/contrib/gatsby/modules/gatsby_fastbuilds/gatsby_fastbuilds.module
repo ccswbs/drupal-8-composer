@@ -1,0 +1,116 @@
+<?php
+
+/**
+ * @file
+ * Contains gatsby_fastbuilds.module.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\node\NodeInterface;
+
+/**
+ * Implements hook_entity_update().
+ */
+function gatsby_fastbuilds_entity_update(EntityInterface $entity) {
+  $gatsbyPreview = \Drupal::service('gatsby.gatsby_preview');
+  if (!$entity instanceof ContentEntityInterface || !$gatsbyPreview->isPreviewEntity($entity)) {
+    return;
+  }
+
+  if (\Drupal::config('gatsby_fastbuilds.settings')->get('log_published')) {
+    if (!($entity instanceof NodeInterface)) {
+      return;
+    }
+
+    if ($entity->isPublished()) {
+      \Drupal::service('gatsby.gatsby_logger')->logEntityWithRelationships($entity, 'update');
+    }
+    elseif ($entity->original->isPublished() && $entity->isDefaultRevision()) {
+      // If an entity was unpublished then trigger a delete log to remove that
+      // content from Gatsby.
+      \Drupal::service('gatsby.gatsby_logger')->logEntity($entity, 'delete');
+    }
+  }
+  else {
+    \Drupal::service('gatsby.gatsby_logger')->logEntity($entity, 'update');
+  }
+}
+
+/**
+ * Implements hook_entity_insert().
+ */
+function gatsby_fastbuilds_entity_insert(EntityInterface $entity) {
+  $gatsbyPreview = \Drupal::service('gatsby.gatsby_preview');
+  if (!$entity instanceof ContentEntityInterface || !$gatsbyPreview->isPreviewEntity($entity)) {
+    return;
+  }
+
+  if (\Drupal::config('gatsby_fastbuilds.settings')->get('log_published')) {
+    if (!($entity instanceof NodeInterface) || !$entity->isPublished()) {
+      return;
+    }
+
+    \Drupal::service('gatsby.gatsby_logger')->logEntityWithRelationships($entity, 'insert');
+  }
+  else {
+    \Drupal::service('gatsby.gatsby_logger')->logEntity($entity, 'insert');
+  }
+
+}
+
+/**
+ * Implements hook_entity_delete().
+ */
+function gatsby_fastbuilds_entity_delete(EntityInterface $entity) {
+  $gatsbyPreview = \Drupal::service('gatsby.gatsby_preview');
+  if (!$entity instanceof ContentEntityInterface || !$gatsbyPreview->isPreviewEntity($entity)) {
+    return;
+  }
+
+  \Drupal::service('gatsby.gatsby_logger')->logEntity($entity, 'delete');
+}
+
+/**
+ * Implements hook_cron().
+ */
+function gatsby_fastbuilds_cron() {
+
+  // Do not delete entities if delete setting is not enabled.
+  if (!\Drupal::config('gatsby_fastbuilds.settings')->get('delete_log_entities')) {
+    return;
+  }
+
+  // Make sure a valid expiration setting is set.
+  $expiration = \Drupal::config('gatsby_fastbuilds.settings')->get('log_expiration');
+  if (!$expiration) {
+    return;
+  }
+
+  \Drupal::service('gatsby.gatsby_logger')
+    ->deleteExpiredLoggedEntities(time() - $expiration);
+
+  $last_logtime = \Drupal::service('gatsby.gatsby_logger')
+    ->getOldestLoggedEntityTimestamp();
+
+  // Set last logtime as current time if there are no log entries.
+  if (!$last_logtime) {
+    $last_logtime = time();
+  }
+
+  // Store the log time of the last log entry in order to validate future syncs.
+  \Drupal::state()
+    ->set('gatsby_fastbuilds.last_logtime', $last_logtime);
+}
+
+/**
+ * Implements hook_form_id_alter().
+ */
+function gatsby_fastbuilds_form_gatsby_admin_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Add some additional information to the preview_entity_types description.
+  $description = t('@existing These entities will also be logged and available for Gatsby Fastbuilds.', [
+    '@existing' => $form['preview_entity_types']['#description'],
+  ]);
+  $form['preview_entity_types']['#description'] = $description;
+}

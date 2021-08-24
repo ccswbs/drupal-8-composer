@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * @file
+ * Install, update, and uninstall functions for the gatsby_fastbuilds module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function gatsby_fastbuilds_install() {
+  // Gatsby's hook_node_insert must run after all other modules have modified
+  // the entity.
+  module_set_weight('gatsby_fastbuilds', 101);
+}

@@ -1,0 +1,13 @@
+gatsby_fastbuilds.settings:
+  type: config_object
+  label: 'Gatsby Fastbuilds Settings'
+  mapping:
+    log_published:
+      type: boolean
+      label: 'Only log entities for published content'
+    delete_log_entities:
+      type: boolean
+      label: 'Delete Old Gatsby Fastbuilds Log Entities'
+    log_expiration:
+      type: string
+      label: 'Fastbuilds Log Expiration'

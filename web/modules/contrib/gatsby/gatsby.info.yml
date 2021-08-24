@@ -1,0 +1,14 @@
+name: 'Gatsby'
+type: module
+description: 'Improves integration with GatsbyJS including adding Live Preview and Incremental Builds'
+core: 8.x
+core_version_requirement: ^8 || ^9
+package: 'Gatsby'
+configure: gatsby.gatsby_admin_form
+dependencies:
+  - drupal:path_alias
+
+# Information added by Drupal.org packaging script on 2021-07-09
+version: '8.x-1.0-rc5'
+project: 'gatsby'
+datestamp: 1625852357

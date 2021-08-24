@@ -1,0 +1,12 @@
+open_preview:
+  version: VERSION
+  js:
+    js/open_preview.js: {}
+  css:
+    theme:
+      css/open_preview.css: {}
+iframe_preview:
+  version: VERSION
+  css:
+    theme:
+      css/iframe_preview.css: {}

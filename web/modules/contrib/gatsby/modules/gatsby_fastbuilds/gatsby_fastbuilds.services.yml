@@ -1,0 +1,4 @@
+services:
+  gatsby.gatsby_logger:
+    class: Drupal\gatsby_fastbuilds\GatsbyEntityLogger
+    arguments: ['@config.factory', '@entity_type.manager', '@gatsby.gatsby_instantpreview']

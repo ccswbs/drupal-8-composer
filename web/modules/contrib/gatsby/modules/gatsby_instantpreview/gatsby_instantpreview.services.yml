@@ -1,0 +1,10 @@
+services:
+  gatsby.gatsby_instantpreview:
+    class: Drupal\gatsby_instantpreview\GatsbyInstantPreview
+    decorates: gatsby.gatsby_preview
+    decoration_priority: 1
+    arguments: ['@gatsby.gatsby_instantpreview.inner', '@http_client', '@config.factory', '@entity_type.manager', '@logger.factory', '@jsonapi_extras.entity.to_jsonapi', '@entity.repository']
+  gatsby_instantpreview.route_subscriber:
+    class: 'Drupal\gatsby_instantpreview\Routing\GatsbyInstantPreviewRouteSubscriber'
+    tags:
+      - { name: event_subscriber }

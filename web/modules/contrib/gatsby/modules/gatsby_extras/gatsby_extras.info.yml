@@ -1,0 +1,14 @@
+name: 'Gatsby JSON:API Extras'
+type: module
+description: 'Adds additional enhancers when using Gatsby with JSON:API'
+core: 8.x
+core_version_requirement: ^8 || ^9
+package: 'Gatsby'
+dependencies:
+  - gatsby:gatsby
+  - drupal:jsonapi
+
+# Information added by Drupal.org packaging script on 2021-07-09
+version: '8.x-1.0-rc5'
+project: 'gatsby'
+datestamp: 1625852357

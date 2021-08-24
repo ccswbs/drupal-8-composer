@@ -1,0 +1,6 @@
+gatsby.gatsby_admin_form:
+  title: 'Gatsby Settings'
+  route_name: gatsby.gatsby_admin_form
+  description: 'Gatsby Integration Settings to configure Live Preview and Incremental Builds'
+  parent: system.admin_config_services
+  weight: 99

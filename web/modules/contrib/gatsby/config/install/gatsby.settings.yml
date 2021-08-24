@@ -1,0 +1,6 @@
+server_url: ''
+path_mapping: ''
+incrementalbuild_url: ''
+build_published: true
+preview_entity_types: []
+preview_callback_url: ''

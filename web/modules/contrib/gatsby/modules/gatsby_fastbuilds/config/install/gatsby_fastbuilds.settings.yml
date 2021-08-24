@@ -1,0 +1,3 @@
+log_published: 0
+delete_log_entities: 0
+log_expiration: '604800'
