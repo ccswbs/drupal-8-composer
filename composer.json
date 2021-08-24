@@ -20,6 +20,7 @@
         "drupal/domain": "^1.0@alpha",
         "drupal/domain_entity": "^1.0@alpha",
         "drupal/externalauth": "^1.2",
+        "drupal/feeds": "^3.0-alpha10",
         "drupal/gatsby": "^1.0@RC",
         "drupal/jsonapi_extras": "^3.13",
         "drupal/jsonapi_menu_items": "^1.1",
